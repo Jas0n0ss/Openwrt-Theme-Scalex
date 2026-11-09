@@ -274,6 +274,7 @@ htdocs/luci-static/echo/css/
 ├── login.css           # 登录页
 ├── adaptive.css        # 第三方 LuCI app 兼容
 ├── bootstrap-compat.css
+├── legacy.css          # Lua / LuCI 18.06 兼容层
 └── openwrt.css         # OpenWrt preset 映射
 ```
 
@@ -283,6 +284,7 @@ JS：
 - `theme-echo.js`：外观三态、meta theme-color、系统主题跟随。
 - `dashboard-echo.js`：RPC 数据、Hero/Vitals/网络面板、空状态。
 - `ui-echo.js`：第三方 app 表格/表单/弹窗增强。
+- `js/legacy.js`：18.06 服务端导航 / 下拉 / 移动 Sheet / 主题切换（ES5，无模块加载器）。
 
 字体、颜色、圆角、间距全部走 token；组件不写死十六进制值。
 
@@ -291,7 +293,8 @@ JS：
 ## 9. 已知边界
 
 - 使用 CSS 玻璃而非 WebGPU 折射，低端设备性能更好，但不会有真实透镜形变。
+- WebKit（Safari 引擎）与 Linux Firefox 已通过 Playwright 冒烟测试；物理 Safari / Firefox 尚未实机覆盖。
 - LuCI 原生页面的极端第三方布局仍可能突破 `#maincontent` 的最大宽度；`adaptive.css` 提供回退。
-- 旧版 LEDE 18.06 / Lua 模板已移除；2.0 只支持 ucode 模板的 OpenWrt 23.05+ / ImmortalWrt。
+- 2.0 主路径为 ucode 模板（OpenWrt 23.05+ / ImmortalWrt）。LEDE 18.06 保留基础 Lua 兼容层：服务端导航、L3 tabs、主题切换和移动 Sheet，但未在实机覆盖。
 - 图标为自绘 SVG，不依赖 SF Symbols 授权。
 - 主题不内嵌 SF Pro 字体。

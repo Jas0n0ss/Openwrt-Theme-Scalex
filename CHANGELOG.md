@@ -1,5 +1,32 @@
 # Changelog
 
+## 2.0.1 — 2026-11-09
+
+Real OpenWrt 24.10 install and runtime fixes, plus Safari/WebKit and Firefox coverage.
+
+### Fixed
+
+- **IPK format**: OpenWrt 24.10's opkg rejected the old GNU ar wrapper. Packages are now modern gzipped tars containing `debian-binary`, `data.tar.gz` and `control.tar.gz`, built with USTAR (no PAX typeflag `x`).
+- **File permissions**: packaged files are normalised to `0644` and directories to `0755`; previously new SVG/CSS files could be installed as `0600`, causing uhttpd 403 responses.
+- **Login template**: removed `http.prepare_content()` and `ubus.call()` from the sysauth scope (neither exists there); hostname now comes from `/proc/sys/kernel/hostname`; form posts to the current URL instead of the non-existent `/login`.
+- **Footer**: replaced unsupported regex-literal tests with `lc()` + `index()`; `version.distname` handling now works on real ucode.
+- **Header**: include LuCI's translations endpoint and `cbi.js` (`String.prototype.format`); without them `L.require()` failed and the navigation never rendered.
+- **Menu core**: `menu-bootstrap-core.js` returned a plain object; LuCI 24.10 requires a `baseclass` constructor. It is now a proper class.
+- **Dashboard injection**: place the hero after security alerts, not before them.
+- **UI enhancer**: do not double-wrap Echo's own dashboard tables.
+- **UCI defaults**: restore executable bit; first-install theme registration now runs.
+
+### Added
+
+- Real OpenWrt 24.10 userland test harness (`tests/real-router.sh`) using `uhttpd` + `ucode` in a disposable container.
+- Safari/WebKit and Firefox (Linux Playwright container) smoke runs.
+- Basic Lua/LuCI 18.06 compatibility shell (`luasrc/`, `legacy.css`, `legacy.js`) with server-rendered navigation, tabs, theme switch and mobile sheet.
+- `tests/legacy-smoke.py` and a static legacy fixture.
+
+### Changed
+
+- 2.0.0 remains the visual release; 2.0.1 is the installable release. The broken v2.0.0 GitHub release is superseded.
+
 ## 2.0.0 — 2026-11-09
 
 Echo 2.0 是一次完整的视觉与交互重做。

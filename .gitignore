@@ -13,3 +13,6 @@ release/
 .venv/
 tests/artifacts/
 __pycache__/
+
+# Local scratch
+.tmp/

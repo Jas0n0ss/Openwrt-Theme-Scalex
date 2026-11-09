@@ -135,7 +135,16 @@ return baseclass.extend({
 	},
 
 	_buildTopEntries: function(topChildren) {
-		return EchoMenu.sortTopChildren(topChildren);
+		return EchoMenu.sortTopChildren(topChildren.filter(function(node) {
+			return node.name !== 'logout';
+		}));
+	},
+
+	_menuRoot: function(tree) {
+		var children = ui.menu.getChildren(tree);
+		if (children.length === 1 && children[0].name === 'admin')
+			return children[0];
+		return tree;
 	},
 
 	render: function(tree) {
@@ -157,7 +166,7 @@ return baseclass.extend({
 		}
 		document.body.classList.remove('has-content-tabs');
 
-		var topChildren = ui.menu.getChildren(tree);
+		var topChildren = ui.menu.getChildren(this._menuRoot(tree));
 		if (topChildren.length === 0) return;
 
 		var self = this;
@@ -223,9 +232,10 @@ return baseclass.extend({
 	},
 
 	_makeL2Item: function(l2, topNode) {
+		var idx = (L.env.dispatchpath[0] === 'admin') ? 2 : 1;
 		return {
 			node: l2,
-			active: L.env.dispatchpath[1] === l2.name,
+			active: L.env.dispatchpath[idx] === l2.name,
 			url: EchoMenu.l2ItemHref(topNode, l2)
 		};
 	},
@@ -301,10 +311,14 @@ return baseclass.extend({
 	},
 
 	renderLogoutItem: function() {
+		var logoutUrl = (L.env.requestpath[0] === 'admin')
+			? L.url('admin', 'logout')
+			: L.url('logout');
+
 		return E('div', { 'class': 'nav-section nav-logout' }, [
 			E('a', {
 				'class': 'nav-top nav-logout-link',
-				'href': L.url('logout'),
+				'href': logoutUrl,
 				'title': _('Logout')
 			}, [
 				this.getIcon('logout', _('Logout')),

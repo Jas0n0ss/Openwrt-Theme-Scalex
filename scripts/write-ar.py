@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Write and read GNU ar archives (OpenWrt .ipk format)."""
+"""Read and write OpenWrt .ipk archives.
+
+OpenWrt 24.10+ ships .ipk files as a gzipped tar containing debian-binary,
+data.tar.gz and control.tar.gz. Older releases used a GNU ar wrapper; the
+reader below accepts both so verification works across firmware generations.
+"""
 import io
 import struct
 import sys
@@ -13,8 +18,9 @@ def pad(n: int) -> int:
 
 
 def ar_header(name: str, size: int) -> bytes:
-    name_field = (name if name.endswith("/") else name + "/").encode("ascii")[:16]
-    name_field = name_field.ljust(16, b" ")
+    # OpenWrt's opkg expects plain member names (debian-binary, control.tar.gz,
+    # data.tar.gz). A trailing slash makes the package "malformed".
+    name_field = name.encode("ascii")[:16].ljust(16, b" ")
     return b"".join([
         name_field,
         str(int(time.time())).encode("ascii").ljust(12)[:12],
@@ -55,8 +61,27 @@ def read_ar_member(data: bytes, name: str) -> bytes | None:
     return None
 
 
+def read_ipk_member(data: bytes, name: str) -> bytes | None:
+    """Read a member from either a modern tar.gz IPK or a legacy ar IPK."""
+    if data.startswith(b"!<arch>\n"):
+        return read_ar_member(data, name)
+
+    try:
+        with tarfile.open(fileobj=io.BytesIO(data), mode="r:gz") as outer:
+            for member_name in (name, "./" + name):
+                try:
+                    member = outer.getmember(member_name)
+                except KeyError:
+                    continue
+                handle = outer.extractfile(member)
+                return handle.read() if handle else None
+    except tarfile.TarError:
+        return None
+    return None
+
+
 def extract_ipk_data(ipk_path: Path, out_dir: Path) -> None:
-    payload = read_ar_member(ipk_path.read_bytes(), "data.tar.gz")
+    payload = read_ipk_member(ipk_path.read_bytes(), "data.tar.gz")
     if payload is None:
         raise SystemExit(f"data.tar.gz not found in {ipk_path}")
     out_dir.mkdir(parents=True, exist_ok=True)

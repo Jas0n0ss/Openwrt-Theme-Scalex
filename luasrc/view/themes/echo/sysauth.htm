@@ -1,0 +1,124 @@
+<%#
+  luci-theme-echo 2.0 — legacy (Lua / LuCI 18.06) sign-in.
+-%>
+<%
+	local util = require "luci.util"
+	local http = require "luci.http"
+	local boardinfo = util.ubus("system", "board") or {}
+	local hostname = striptags(boardinfo.hostname or "OpenWrt")
+
+	local uci = require("luci.model.uci").cursor()
+	local primary = uci:get("echo", "global", "primary") or "#0071E3"
+	local dark_primary = uci:get("echo", "global", "dark_primary") or "#0A84FF"
+	local font_size = uci:get("echo", "global", "font_size") or "16"
+
+	http.prepare_content("text/html")
+-%>
+<!DOCTYPE html>
+<html lang="<%=luci.i18n.context.lang%>" data-theme="auto">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta name="theme-color" content="#f5f5f7" id="meta-theme-color">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<title>Log in - <%=hostname%></title>
+	<link rel="icon" href="<%=media%>/img/favicon.svg" type="image/svg+xml">
+	<script>
+	(function () {
+		var mode = 'auto';
+		try { mode = localStorage.getItem('echo-theme') || 'auto'; } catch (e) {}
+		if (['auto', 'light', 'dark'].indexOf(mode) < 0) mode = 'auto';
+		var dark = mode === 'dark' || (mode === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+		document.documentElement.setAttribute('data-theme', mode);
+		document.documentElement.setAttribute('data-darkmode', dark ? 'true' : 'false');
+	})();
+	</script>
+	<link rel="stylesheet" href="<%=media%>/css/echo.css">
+	<style>
+		html { font-size: <%=font_size%>px; }
+		:root {
+			--echo-accent: <%=primary%>;
+			--echo-accent-hover: <%=primary%>;
+		}
+		html[data-theme="dark"] {
+			--echo-accent: <%=dark_primary%>;
+			--echo-accent-hover: <%=dark_primary%>;
+		}
+	</style>
+</head>
+<body class="echo-login theme-openwrt echo-legacy">
+
+<div class="login-theme">
+	<div class="theme-switch" role="group" aria-label="Appearance">
+		<button type="button" data-theme-mode="auto" aria-pressed="true" aria-label="Theme: Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg></button>
+		<button type="button" data-theme-mode="light" aria-pressed="false" aria-label="Theme: Light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></button>
+		<button type="button" data-theme-mode="dark" aria-pressed="false" aria-label="Theme: Dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.4A8.4 8.4 0 0 1 9.6 4a8.5 8.5 0 1 0 10.4 10.4Z"/></svg></button>
+	</div>
+</div>
+
+<main class="echo-login-card">
+	<% if fuser then %>
+	<div class="echo-login-error" role="alert">Invalid username and/or password! Please try again.</div>
+	<% end %>
+
+	<div class="echo-login-brand">
+		<img class="echo-login-mark" src="<%=media%>/img/echo-mark.svg" alt="" width="58" height="58">
+		<h1 class="echo-login-hostname"><%=hostname%></h1>
+		<p class="echo-login-subtitle">Sign in to manage your router</p>
+	</div>
+
+	<form method="post" class="echo-login-form">
+		<div class="cbi-value">
+			<label class="cbi-value-title" for="luci_username">Username</label>
+			<div class="cbi-value-field">
+				<input class="cbi-input-text" type="text" name="luci_username" id="luci_username" value="root" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+			</div>
+		</div>
+		<div class="cbi-value">
+			<label class="cbi-value-title" for="luci_password">Password</label>
+			<div class="cbi-value-field">
+				<div class="echo-password-wrap">
+					<input class="cbi-input-password" type="password" name="luci_password" id="luci_password" autocomplete="current-password" required>
+					<button type="button" class="echo-password-toggle" id="echo-password-toggle" aria-label="Show password" aria-pressed="false">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3.1"/></svg>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="cbi-page-actions">
+			<button class="cbi-button cbi-button-apply" type="submit">Log in</button>
+		</div>
+	</form>
+
+	<div class="echo-login-footer">
+		<div class="echo-login-hint">
+			<span class="echo-symbol echo-symbol-shield" aria-hidden="true"></span>
+			<span>Secured by OpenWrt</span>
+		</div>
+		<div style="margin-top:8px">
+			<a class="footer-link" href="https://openwrt.org" target="_blank" rel="noopener noreferrer">OpenWrt</a>
+			<span class="footer-dot" aria-hidden="true" style="display:inline-block;margin:0 6px;vertical-align:middle"></span>
+			<a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-echo" target="_blank" rel="noopener noreferrer">Echo 2.0.1</a>
+		</div>
+	</div>
+</main>
+
+<script>
+(function () {
+	var pw = document.getElementById('luci_password');
+	var toggle = document.getElementById('echo-password-toggle');
+	if (pw && toggle) {
+		toggle.addEventListener('click', function () {
+			var show = pw.type === 'password';
+			pw.type = show ? 'text' : 'password';
+			toggle.setAttribute('aria-pressed', show ? 'true' : 'false');
+			toggle.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+			pw.focus();
+		});
+	}
+	if (pw) pw.focus();
+})();
+</script>
+<script src="<%=media%>/js/legacy.js"></script>
+</body>
+</html>

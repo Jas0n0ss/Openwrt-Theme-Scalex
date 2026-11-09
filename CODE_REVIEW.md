@@ -1,8 +1,9 @@
 # Echo 2.0 — 代码与设计审查
 
-审查范围：`htdocs/`、`ucode/`、`luci-app-echo-config/`、`demo/`、`scripts/`、`tests/`。
+审查范围：`htdocs/`、`ucode/`、`luasrc/`、`luci-app-echo-config/`、`demo/`、`scripts/`、`tests/`。
 验证方式：静态检查 + 本地浏览器（Chrome / Playwright）+ IPK 构建与解包校验。
-未覆盖：真实 OpenWrt 路由器上的 uhttpd / rpcd 运行、不同 LuCI 插件组合、Safari / Firefox 实机。
+已覆盖：OpenWrt 24.10 x86_64 userland（Docker/QEMU）中的 opkg、uhttpd、ucode 模板与登录页；WebKit 27.2 与 Linux Firefox 157。
+未覆盖：物理路由器、不同 LuCI 插件组合、macOS Safari / Firefox 实机。
 
 ---
 
@@ -34,11 +35,18 @@
 | Sheet 的 `hidden` 被 `display:flex` 覆盖 | 生产环境可能默认显示 | 增加 `.echo-sheet[hidden] / .echo-scrim[hidden]` |
 | 登录页主题按钮无脚本 | 登录页外观切换无效 | 增加内联主题控制器与初始状态同步 |
 | IPK 包含 macOS `._*` AppleDouble | 包体膨胀、解包脏文件 | `COPYFILE_DISABLE=1` + tar exclude |
-| 旧版 Lua 模板仍加载已删除的 `dark.css` | LEDE 构建报错/样式错乱 | 2.0 移除 `luasrc/`，文档明确不支持 |
+| 旧版 Lua 模板缺失 | LEDE 18.06 无法使用 2.0 | 恢复基础 Lua 兼容层（服务端导航 + legacy.js） |
 | 移动端 Sheet 打开时背景仍可聚焦 | 屏幕阅读器/键盘穿透 | `#echo-app.inert = true`，关闭时恢复 |
 | 仪表盘注入到安全警告之前 | 未设密码 / initramfs 警告被埋到首屏下方 | 注入点改为最后一个 `.alert-message` 之后 |
 | `ui-echo.js` 重复包裹仪表盘表格 | 卡片内再套一层边框，移动端重排失效 | 跳过 `.echo-data-table` / `.echo-panel` 内表格 |
 | UCI defaults 文件权限 644 | 首次安装可能不执行主题注册 | 源文件与构建产物统一 `chmod 755` |
+| IPK 使用旧 ar 封装 | OpenWrt 24.10 opkg 报 “Malformed package” | 改为 tar.gz 外层 + USTAR 内层 |
+| 打包文件保留 0600 | uhttpd 以 nobody 运行，SVG/CSS 返回 403 | 构建时统一 0644 / 0755 |
+| sysauth 调用 `http` / `ubus` | 登录页 500（sysauth scope 无这两个对象） | 改为读 `/proc/sys/kernel/hostname`，移除 `http.prepare_content` |
+| 登录表单 action 指向 `/login` | 登录 POST 404 | 省略 action，提交当前 URL |
+| footer 使用 regex 字面量 | 主页面 500 “not an array or object” | 改用 `lc()` + `index()` |
+| header 未加载 `cbi.js` / translations | `L.require` 失败、导航不渲染 | 补齐 LuCI 脚本 |
+| `menu-bootstrap-core` 返回普通对象 | LuCI 24.10 报 “factory yields invalid constructor” | 改为 `baseclass.extend` 类 |
 
 ---
 
@@ -74,7 +82,7 @@
 - [x] 正文对比度 ≥ 4.5:1（浅/深均实测）
 - [x] 移动触控目标 ≥ 44px
 
-**未验证**：VoiceOver / NVDA 实机朗读顺序；Safari 的 `inert` 与 `backdrop-filter` 表现。
+**未验证**：VoiceOver / NVDA 实机朗读顺序；iOS Safari 的 `inert` 与 `backdrop-filter` 表现。
 
 ---
 
@@ -99,9 +107,9 @@
 | ImmortalWrt | 同 ucode，未实机 |
 | Bootstrap cascade.css | 已用真实 `cascade.css` 做本地集成页验证 |
 | 第三方 LuCI app | `ui-echo.js` 自动包裹表格、Tab、Modal、iframe |
-| LEDE 18.06 / Lua | 2.0 移除 |
-| Safari | 未实机；依赖 `-webkit-backdrop-filter` 前缀 |
-| Firefox | 未实机；`backdrop-filter` 支持，`corner-shape` 自动忽略 |
+| LEDE 18.06 / Lua | 基础兼容层，未实机 |
+| Safari / WebKit | Playwright WebKit 27.2 通过；依赖 `-webkit-backdrop-filter` 前缀 |
+| Firefox | Linux Playwright Firefox 157 通过；`corner-shape` 自动忽略 |
 
 ---
 
@@ -109,16 +117,25 @@
 
 ```text
 $ ./scripts/build-ipk.sh
-Built: dist/luci-theme-echo_2.0.0-1_all.ipk (48K)
-Built: dist/luci-app-echo-config_2.0.0-1_all.ipk (8.0K)
+Built: dist/luci-theme-echo_2.0.1-1_all.ipk (48K)
+Built: dist/luci-app-echo-config_2.0.1-1_all.ipk (8.0K)
 
 $ ./scripts/verify-ipk.sh
-OK: luci-theme-echo_2.0.0-1_all
-OK: luci-app-echo-config_2.0.0-1_all
-All checks passed for v2.0.0
+OK: luci-theme-echo_2.0.1-1_all
+OK: luci-app-echo-config_2.0.1-1_all
+All checks passed for v2.0.1
 
 $ python tests/ui-smoke.py --channel chrome
-PASS — 8 widths, desktop, mobile sheet, sign-in, settings
+PASS [chromium] — 8 widths, desktop, mobile sheet, sign-in, settings
+PASS [webkit] — 8 widths, desktop, mobile sheet, sign-in, settings
+PASS [firefox/Linux] — desktop and mobile, no overflow
+PASS [legacy/chromium]
+
+$ tests/real-router.sh start
+Echo 2.0.1 — OpenWrt 24.10 sandbox
+login page: 403 (403 is expected)
+CSS asset:  200
+# browser: login form + header/nav rendered; no JS page errors.
 ```
 
 覆盖宽度：320 / 360 / 390 / 768 / 980 / 1024 / 1280 / 1440。
@@ -126,10 +143,19 @@ PASS — 8 widths, desktop, mobile sheet, sign-in, settings
 
 ---
 
-## 8. 后续建议
+## 8. 剩余风险
 
-1. 在真实 OpenWrt 23.05 / 24.10 上跑一次 `uhttpd` + LuCI，验证 `dispatcher.build_url` 与 `inert`。
+- 物理路由器未测试；OpenWrt 24.10 容器已验证 opkg、uhttpd、登录页、头部导航与静态资源。
+- 容器内的 LuCI `status/overview` 视图本身没有完成加载（rootfs 的 view/alias 与浏览器 sandbox 状态导致）；Echo 仪表盘的数据绑定仍需在完整固件上回归。
+- macOS 上 Playwright Firefox 引擎无法创建 profile；Linux 容器中的 Firefox 157 已通过。
+- 18.06 Lua 模板只做了 Lua 语法检查与静态 fixture 测试，未在真实 18.06 固件运行。
+
+---
+
+## 9. 后续建议
+
+1. 在物理 OpenWrt 23.05 / 24.10 上回归 `uhttpd` + LuCI，重点验证仪表盘 RPC 与移动 `inert`。
 2. 用 `luci-app-*` 组合（Docker、OpenClash、AdGuard Home、Statistics）做页面级回归。
 3. 为 `ui-echo.js` 增加对 `.cbi-section > h3` 重复标题的隐藏规则。
-4. 增加 Firefox / Safari 的 Playwright 项目。
+4. 增加 macOS / iOS 实机 Safari 与 Firefox 回归。
 5. 若固件空间允许，加入 CSS 压缩步骤（csstidy / lightningcss），目标 < 30KB。

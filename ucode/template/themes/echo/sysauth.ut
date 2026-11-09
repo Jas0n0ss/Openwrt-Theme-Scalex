@@ -4,8 +4,8 @@
   import { cursor } from 'uci';
 
   const echo_version = trim(readfile('/usr/share/ucode/luci/template/themes/echo/version')) ?? '?';
-  const boardinfo = ubus.call('system', 'board');
-  const hostname = striptags(boardinfo?.hostname ?? 'OpenWrt');
+  /* The sysauth scope has no ubus object; read the kernel hostname instead. */
+  const hostname = striptags(trim(readfile('/proc/sys/kernel/hostname')) ?? 'OpenWrt');
 
   let echo_primary = '#0071e3';
   let echo_dark_primary = '#0a84ff';
@@ -23,7 +23,6 @@
   if (echo_preset == 'be88u')
     echo_preset = 'openwrt';
 
-  http.prepare_content('text/html; charset=UTF-8');
 -%}
 
 <!DOCTYPE html>
@@ -107,7 +106,7 @@
     <p class="echo-login-subtitle">{{ _('Sign in to manage your router') }}</p>
   </div>
 
-  <form method="post" action="{{ dispatcher.build_url('login') }}" class="echo-login-form">
+  <form method="post" class="echo-login-form">
     <div class="cbi-value">
       <label class="cbi-value-title" for="luci_username">{{ _('Username') }}</label>
       <div class="cbi-value-field">

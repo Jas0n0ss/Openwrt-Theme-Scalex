@@ -5,7 +5,7 @@
 **Echo 2.0** — 一款贴近 Apple 视觉语言的 OpenWrt / LuCI 主题。
 Liquid Glass 工具栏、网络状态光晕、Apple 风格表单与原生感移动端菜单。
 
-**当前版本：** `2.0.0`
+**当前版本：** `2.0.1`
 
 ![Echo 2.0 浅色概览](docs/preview.jpg)
 
@@ -44,9 +44,20 @@ Liquid Glass 工具栏、网络状态光晕、Apple 风格表单与原生感移�
 | OpenWrt 23.05+ / 24.x | `ucode/*.ut` | ✅ 推荐 |
 | ImmortalWrt | `ucode/*.ut` | ✅ |
 | OpenWrt 22.03 | `ucode/*.ut` | ⚠️ 基本可用，未在 CI 覆盖 |
-| LEDE 18.06 / Lean | Lua `luasrc/` | ❌ 2.0 已移除 |
+| LEDE 18.06 / Lean | Lua `luasrc/` | ⚠️ 基础兼容层（服务端导航 + 移动 Sheet），未实机覆盖 |
 
 依赖：`luci-theme-bootstrap`（提供 CBI / 表单 / 表格底座，固件一般已自带）。
+
+### 已验证环境
+
+| 环境 | 结果 |
+|------|------|
+| OpenWrt 24.10 x86_64 rootfs + `uhttpd` + `ucode`（Docker/QEMU） | ✅ IPK 安装、登录页、静态资源、ucode 模板 |
+| WebKit 27.2（Safari 引擎） | ✅ 8 个宽度、主题切换、移动 Sheet |
+| Firefox 157（Linux Playwright 容器） | ✅ 桌面/移动布局、Sheet、无溢出 |
+| 物理路由器 | ⚠️ 未覆盖 |
+
+> 容器测试使用真实 OpenWrt 24.10 userland，但不是物理路由器；`tests/real-router.sh` 可复现。
 
 ---
 
@@ -57,8 +68,8 @@ Liquid Glass 工具栏、网络状态光晕、Apple 风格表单与原生感移�
 从 [Releases](https://github.com/Jas0n0ss/openwrt-theme-echo/releases) 下载：
 
 ```sh
-opkg install luci-theme-echo_2.0.0-1_all.ipk
-opkg install luci-app-echo-config_2.0.0-1_all.ipk
+opkg install luci-theme-echo_2.0.1-1_all.ipk
+opkg install luci-app-echo-config_2.0.1-1_all.ipk
 
 uci set luci.main.mediaurlbase='/luci-static/echo'
 uci commit luci
@@ -141,6 +152,13 @@ find htdocs/luci-static/resources demo -name '*.js' -exec node --check {} \;
 python3 -m venv .venv
 .venv/bin/pip install -r tests/requirements.txt
 .venv/bin/python tests/ui-smoke.py --base-url http://127.0.0.1:9080/demo/ --channel chrome
+.venv/bin/python tests/ui-smoke.py --base-url http://127.0.0.1:9080/demo/ --engine webkit
+.venv/bin/python tests/legacy-smoke.py --base-url http://127.0.0.1:9080/tests/fixtures/legacy.html
+
+# 5. 可选：真实 OpenWrt 24.10 userland（需要 Docker + QEMU）
+./tests/real-router.sh start
+# http://127.0.0.1:18080/cgi-bin/luci/  root / root
+./tests/real-router.sh stop
 ```
 
 测试覆盖：
@@ -168,12 +186,14 @@ openwrt-theme-echo/
 │   ├── dashboard-echo.js             # Hero / Vitals / 网络面板
 │   ├── ui-echo.js                    # 第三方 app 适配
 │   └── menu-bootstrap-core.js
+├── luasrc/view/themes/echo/          # Lua / LuCI 18.06 基础兼容层
+├── htdocs/luci-static/echo/js/legacy.js
 ├── ucode/template/themes/echo/       # header / footer / sysauth
 ├── luci-app-echo-config/             # 主题配置应用
 ├── demo/                             # 无路由器预览
 ├── docs/                             # 预览图
 ├── scripts/                          # 构建、校验、发布
-├── tests/                            # Playwright 冒烟测试
+├── tests/                            # Playwright 冒烟测试 + 真实 router 沙箱
 └── DESIGN.md                         # 设计规范
 ```
 
@@ -185,7 +205,7 @@ openwrt-theme-echo/
 
 1. `node --check` 检查全部前端 JS
 2. 构建两个 `.ipk`
-3. `verify-ipk.sh` 校验资源、i18n、2.0 组件
+3. `verify-ipk.sh` 校验包格式、权限、资源、i18n、2.0 组件
 4. 上传 Actions Artifacts
 5. 自动创建 GitHub Release，附带两个 `.ipk`
 

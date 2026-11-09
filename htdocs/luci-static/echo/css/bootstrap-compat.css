@@ -27,6 +27,13 @@ html[data-theme="dark"] {
 	color-scheme: dark;
 }
 
+/* Bootstrap paints a dark band on generic <header>; Echo only wants glass on the nav. */
+#echo-header,
+#echo-header .header-toolbar {
+	background: transparent;
+	color: var(--echo-text);
+}
+
 /* CBI / forms / tables keep Bootstrap behaviour, Echo surface. */
 #maincontent .cbi-map,
 #maincontent .cbi-section {

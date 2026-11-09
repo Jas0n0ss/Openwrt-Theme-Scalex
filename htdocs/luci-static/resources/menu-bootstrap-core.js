@@ -1,4 +1,6 @@
 'use strict';
+'require baseclass';
+'require ui';
 
 /**
  * Shared menu helpers — logic aligned with OpenWrt luci-theme-bootstrap
@@ -7,10 +9,19 @@
  * Echo keeps its own DOM (#top-nav / .nav-dropdown) but uses the same URL
  * rules, active detection, ordering, and L3+ tab depth as bootstrap.
  */
-return {
+return baseclass.extend({
+	_pathIndex: function() {
+		return (L.env.requestpath[0] === 'admin') ? 1 : 0;
+	},
+
+	_prefix: function() {
+		return (L.env.requestpath[0] === 'admin') ? [ 'admin' ] : [];
+	},
+
 	isModeActive: function(child, index) {
-		return L.env.requestpath.length
-			? child.name === L.env.requestpath[0]
+		var idx = this._pathIndex();
+		return L.env.requestpath.length > idx
+			? child.name === L.env.requestpath[idx]
 			: index === 0;
 	},
 
@@ -20,12 +31,14 @@ return {
 	},
 
 	topLevelHref: function(node) {
-		return this.topLevelHasSubmenu(node) ? '#' : L.url(node.name);
+		return this.topLevelHasSubmenu(node)
+			? '#'
+			: L.url.apply(L, this._prefix().concat([ node.name ]));
 	},
 
 	l2ItemHref: function(topNode, l2Node) {
 		var l3 = ui.menu.getChildren(l2Node);
-		var parts = [topNode.name, l2Node.name];
+		var parts = this._prefix().concat([ topNode.name, l2Node.name ]);
 
 		if (l3.length)
 			return this.firstLeafUrl(parts, l2Node);
@@ -72,4 +85,4 @@ return {
 
 		return node ? { node: node, url: url } : null;
 	}
-};
+});

@@ -85,6 +85,7 @@ jobs:
             配置：**System → Echo Theme**
 
             兼容 OpenWrt 23.05+ / 24.x / ImmortalWrt（ucode 模板）。
+            LEDE 18.06 提供基础 Lua 兼容层（源码编译）。
             设计规范与变更见仓库 `DESIGN.md` / `CHANGELOG.md`。
 
             Built from commit ${{ github.sha }}.

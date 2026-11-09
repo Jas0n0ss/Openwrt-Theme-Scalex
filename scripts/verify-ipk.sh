@@ -35,6 +35,11 @@ check_ipk() {
 			grep -q "theme-openwrt" "$TMP/usr/share/ucode/luci/template/themes/echo/header.ut" || fail "header.ut missing theme-openwrt"
 			grep -q "echo-menu-btn" "$TMP/usr/share/ucode/luci/template/themes/echo/header.ut" || fail "header.ut missing mobile menu"
 			grep -q "theme-switch" "$TMP/usr/share/ucode/luci/template/themes/echo/header.ut" || fail "header.ut missing appearance switch"
+			grep -q "cbi.js" "$TMP/usr/share/ucode/luci/template/themes/echo/header.ut" || fail "header.ut missing cbi.js"
+			grep -q "index(dist" "$TMP/usr/share/ucode/luci/template/themes/echo/footer.ut" || fail "footer.ut still uses unsupported regex"
+			grep -q "baseclass.extend" "$TMP/www/luci-static/resources/menu-bootstrap-core.js" || fail "menu core is not a LuCI class"
+			[[ -f "$TMP/www/luci-static/echo/js/legacy.js" ]] || fail "missing legacy.js"
+			[[ -f "$TMP/www/luci-static/echo/css/legacy.css" ]] || fail "missing legacy.css"
 			grep -q "renderSheet" "$TMP/www/luci-static/resources/menu-echo.js" || fail "menu-echo.js missing mobile sheet"
 			grep -q "preset 'openwrt'" "$TMP/etc/config/echo" || fail "default UCI preset not openwrt"
 			[[ -f "$TMP/usr/lib/lua/luci/i18n/luci-theme-echo.zh_Hans.lmo" ]] || fail "missing luci-theme-echo zh_Hans i18n"
@@ -52,6 +57,9 @@ check_ipk() {
 
 [[ -f "$OUT/luci-theme-echo_${VERSION}-1_all.ipk" ]] || fail "theme ipk not found"
 [[ -f "$OUT/luci-app-echo-config_${VERSION}-1_all.ipk" ]] || fail "config ipk not found"
+
+python3 "$ROOT/scripts/check-ipk-format.py" "$OUT/luci-theme-echo_${VERSION}-1_all.ipk"
+python3 "$ROOT/scripts/check-ipk-format.py" "$OUT/luci-app-echo-config_${VERSION}-1_all.ipk"
 
 check_ipk "$OUT/luci-theme-echo_${VERSION}-1_all.ipk"
 check_ipk "$OUT/luci-app-echo-config_${VERSION}-1_all.ipk"

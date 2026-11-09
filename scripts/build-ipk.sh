@@ -7,7 +7,6 @@ OUT="$ROOT/dist"
 ARCH="${ARCH:-all}"
 VERSION="$(tr -d '[:space:]' < "$ROOT/ucode/template/themes/echo/version")"
 RELEASE="${RELEASE:-1}"
-WRITE_AR="$ROOT/scripts/write-ar.py"
 I18N_DIR="$OUT/i18n"
 I18N_INSTALL="usr/lib/lua/luci/i18n"
 
@@ -72,6 +71,16 @@ build_ipk() {
 			;;
 	esac
 
+	# Normalise archive permissions: files 0644, directories 0755, scripts 0755.
+	find "$data_root" -type d -exec chmod 755 {} +
+	find "$data_root" -type f -exec chmod 644 {} +
+	if [ -f "$data_root/etc/uci-defaults/30_luci-theme-echo" ]; then
+		chmod 755 "$data_root/etc/uci-defaults/30_luci-theme-echo"
+	fi
+	if [ -f "$data_root/etc/uci-defaults/50_luci-echo-config" ]; then
+		chmod 755 "$data_root/etc/uci-defaults/50_luci-echo-config"
+	fi
+
 	cat > "$control_dir/control" <<EOF
 Package: $name
 Version: $VERSION-$RELEASE
@@ -83,18 +92,19 @@ Title: $title
 Description: $title for OpenWrt LuCI
 EOF
 
-	COPYFILE_DISABLE=1 tar -C "$data_root" --exclude='._*' --exclude='.DS_Store' -czf "$control_dir/data.tar.gz" .
+	COPYFILE_DISABLE=1 tar --format=ustar -C "$data_root" --exclude='._*' --exclude='.DS_Store' -czf "$control_dir/data.tar.gz" .
 	if [[ -f "$control_dir/postinst" ]]; then
-		COPYFILE_DISABLE=1 tar -C "$control_dir" --exclude='._*' --exclude='.DS_Store' -czf "$control_dir/control.tar.gz" control postinst
+		COPYFILE_DISABLE=1 tar --format=ustar -C "$control_dir" --exclude='._*' --exclude='.DS_Store' -czf "$control_dir/control.tar.gz" control postinst
 	else
-		COPYFILE_DISABLE=1 tar -C "$control_dir" --exclude='._*' --exclude='.DS_Store' -czf "$control_dir/control.tar.gz" control
+		COPYFILE_DISABLE=1 tar --format=ustar -C "$control_dir" --exclude='._*' --exclude='.DS_Store' -czf "$control_dir/control.tar.gz" control
 	fi
 	printf '2.0\n' > "$control_dir/debian-binary"
 
-	python3 "$WRITE_AR" "$ipk" \
-		"$control_dir/debian-binary" \
-		"$control_dir/control.tar.gz" \
-		"$control_dir/data.tar.gz"
+	# OpenWrt 24.10+ expects the .ipk itself to be a gzipped tar containing
+	# debian-binary, data.tar.gz and control.tar.gz. The old ar wrapper is not
+	# accepted by current opkg.
+	COPYFILE_DISABLE=1 tar --format=ustar -C "$control_dir" --exclude='._*' --exclude='.DS_Store' \
+		-czf "$ipk" debian-binary data.tar.gz control.tar.gz
 
 	echo "Built: $ipk ($(du -h "$ipk" | cut -f1))"
 }

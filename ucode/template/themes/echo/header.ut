@@ -121,6 +121,8 @@
     }
     {% endif %}
   </style>
+  <script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
+  <script src="{{ resource }}/cbi.js?v={{ version.luciversion }}"></script>
   {% if (node?.css): %}
   <link rel="stylesheet" href="{{ resource }}/{{ node.css }}">
   {% endif %}

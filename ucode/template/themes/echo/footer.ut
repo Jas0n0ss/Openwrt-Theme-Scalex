@@ -2,20 +2,21 @@
 {%
   import { readfile } from 'fs';
 
-  const echo_version = trim(readfile('/usr/share/ucode/luci/template/themes/echo/version')) ?? '2.0.0';
+  const echo_version = trim(readfile('/usr/share/ucode/luci/template/themes/echo/version')) ?? '2.0.1';
   const echo_theme_repo = 'https://github.com/Jas0n0ss/openwrt-theme-echo';
 
   let raw_dist = version.distname ?? 'OpenWrt';
+  let dist = lc(raw_dist);
   let distro_name = raw_dist;
   let distro_url = 'https://github.com/openwrt/openwrt';
 
-  if (/immortal/i.test(raw_dist)) {
+  if (index(dist, 'immortal') >= 0) {
     distro_name = 'ImmortalWrt';
     distro_url = 'https://github.com/immortalwrt/immortalwrt';
-  } else if (/lede/i.test(raw_dist)) {
+  } else if (index(dist, 'lede') >= 0) {
     distro_name = 'LEDE';
     distro_url = 'https://github.com/coolsnowwolf/lede';
-  } else if (/openwrt/i.test(raw_dist)) {
+  } else if (index(dist, 'openwrt') >= 0) {
     distro_name = 'OpenWrt';
     distro_url = 'https://github.com/openwrt/openwrt';
   }

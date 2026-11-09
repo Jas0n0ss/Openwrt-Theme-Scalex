@@ -52,6 +52,12 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://127.0.0.1:9080/demo/")
     parser.add_argument(
+        "--engine",
+        default=os.environ.get("PLAYWRIGHT_ENGINE", "chromium"),
+        choices=["chromium", "firefox", "webkit"],
+        help="Browser engine to test (default: chromium)",
+    )
+    parser.add_argument(
         "--channel",
         default=os.environ.get("PLAYWRIGHT_CHANNEL", ""),
         help="Optional Playwright browser channel, e.g. chrome",
@@ -63,13 +69,11 @@ def main() -> int:
     ARTIFACTS.mkdir(parents=True, exist_ok=True)
 
     launch = {"headless": True}
-    if args.channel:
+    if args.engine == "chromium" and args.channel:
         launch["channel"] = args.channel
 
-    problems: list[str] = []
-
     with sync_playwright() as p:
-        browser = p.chromium.launch(**launch)
+        browser = getattr(p, args.engine).launch(**launch)
 
         # 1. Responsive geometry
         for width in WIDTHS:
@@ -164,7 +168,7 @@ def main() -> int:
 
         browser.close()
 
-    print(f"PASS — {len(WIDTHS)} widths, desktop, mobile sheet, sign-in, settings")
+    print(f"PASS [{args.engine}] — {len(WIDTHS)} widths, desktop, mobile sheet, sign-in, settings")
     print(f"Screenshots: {ARTIFACTS}")
     return 0
 

@@ -25,6 +25,11 @@ jobs:
         id: ver
         run: echo "version=$(tr -d '[:space:]' < ucode/template/themes/echo/version)" >> "$GITHUB_OUTPUT"
 
+      - name: Check frontend syntax
+        run: |
+          find htdocs/luci-static/resources demo -name '*.js' -print0 | xargs -0 -n1 node --check
+          bash -n scripts/build-ipk.sh scripts/verify-ipk.sh scripts/compile-i18n.sh
+
       - name: Build IPK packages
         run: ./scripts/build-ipk.sh
 
@@ -54,28 +59,33 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('v{0}', steps.ver.outputs.version) }}
-          name: Echo Theme ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('v{0}', steps.ver.outputs.version) }}
+          name: Echo 2.0 ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('v{0}', steps.ver.outputs.version) }}
           target_commitish: ${{ github.sha }}
           generate_release_notes: false
           make_latest: true
           overwrite_files: true
           files: release/*.ipk
           body: |
-            ## 安装
+            Echo 2.0 — Apple 风格 Liquid Glass OpenWrt 主题。
+
+            ### 安装
 
             上传到路由器后执行：
 
             ```sh
-            opkg install luci-theme-echo_*.ipk
-            opkg install luci-app-echo-config_*.ipk
+            opkg install luci-theme-echo_${{ steps.ver.outputs.version }}-1_all.ipk
+            opkg install luci-app-echo-config_${{ steps.ver.outputs.version }}-1_all.ipk
             uci set luci.main.mediaurlbase='/luci-static/echo'
             uci commit luci
             /etc/init.d/uhttpd restart
             ```
 
-            语言：**System → Language and Style → Language** → 简体中文 (zh_Hans)
-
             主题：**System → Language and Style → Design** → **Echo**
+            语言：**System → Language and Style → Language** → 简体中文 (zh_Hans)
+            配置：**System → Echo Theme**
+
+            兼容 OpenWrt 23.05+ / 24.x / ImmortalWrt（ucode 模板）。
+            设计规范与变更见仓库 `DESIGN.md` / `CHANGELOG.md`。
 
             Built from commit ${{ github.sha }}.
 

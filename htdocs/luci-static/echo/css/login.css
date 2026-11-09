@@ -1,92 +1,79 @@
-/* Echo Theme — Login page */
+/* Echo 2.0 — Sign-in */
 
 body.echo-login {
-	min-height: 100vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 24px;
-	background: var(--echo-bg);
+	min-height: 100vh;
+	min-height: 100dvh;
+	padding: 32px 20px;
 	position: relative;
-	overflow: hidden;
+	overflow-x: hidden;
 }
 
+/* Soft light field behind the card. */
 body.echo-login::before {
 	content: "";
-	position: absolute;
+	position: fixed;
 	inset: 0;
+	z-index: -1;
 	background:
-		radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0, 113, 227, 0.08), transparent),
-		radial-gradient(ellipse 60% 50% at 80% 90%, rgba(201, 169, 98, 0.06), transparent);
+		radial-gradient(ellipse 55% 48% at 28% 12%, rgba(0, 113, 227, 0.16), transparent 68%),
+		radial-gradient(ellipse 46% 42% at 80% 88%, rgba(48, 176, 199, 0.12), transparent 68%),
+		radial-gradient(ellipse 48% 40% at 58% 40%, rgba(175, 82, 222, 0.06), transparent 70%);
 	pointer-events: none;
+}
+
+html[data-theme="dark"] body.echo-login::before {
+	background:
+		radial-gradient(ellipse 55% 48% at 28% 12%, rgba(10, 132, 255, 0.26), transparent 68%),
+		radial-gradient(ellipse 46% 42% at 80% 88%, rgba(48, 176, 199, 0.14), transparent 68%),
+		radial-gradient(ellipse 48% 40% at 58% 40%, rgba(175, 82, 222, 0.1), transparent 70%);
+}
+
+@media (prefers-color-scheme: dark) {
+	html:not([data-theme="light"]) body.echo-login::before {
+		background:
+			radial-gradient(ellipse 55% 48% at 28% 12%, rgba(10, 132, 255, 0.26), transparent 68%),
+			radial-gradient(ellipse 46% 42% at 80% 88%, rgba(48, 176, 199, 0.14), transparent 68%),
+			radial-gradient(ellipse 48% 40% at 58% 40%, rgba(175, 82, 222, 0.1), transparent 70%);
+	}
+}
+
+.login-theme {
+	position: fixed;
+	top: 18px;
+	right: 18px;
+	z-index: 5;
 }
 
 .echo-login-card {
 	position: relative;
+	display: flex;
+	flex-direction: column;
 	width: 100%;
-	max-width: 400px;
+	max-width: 408px;
+	padding: 38px 38px 30px;
+	border-radius: var(--echo-radius-2xl);
 	background: var(--echo-bg-elevated);
-	border-radius: var(--echo-radius-xl);
-	box-shadow: var(--echo-shadow-lg);
-	border: 1px solid var(--echo-border);
-	padding: 28px 36px 24px;
-	animation: echo-login-in 0.5s var(--echo-ease) both;
-	display: flex;
-	flex-direction: column;
+	box-shadow:
+		0 0 0 1px var(--echo-separator),
+		0 30px 80px rgba(0, 0, 0, 0.16),
+		0 2px 8px rgba(0, 0, 0, 0.05);
+	animation: echo-login-in var(--echo-duration-slow) var(--echo-ease-out) both;
 }
 
-.echo-login-form-area {
-	display: flex;
-	flex-direction: column;
-	align-items: stretch;
-	flex: 1;
-}
-
-.echo-login-brand-center,
-.openwrt-login-brand.echo-login-brand-center {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	width: 100%;
-	margin: 0 0 8px;
-	padding: 0 0 20px;
-	border-bottom: 1px solid var(--echo-border);
-}
-
-.openwrt-login-brand .openwrt-login-logo {
-	height: 26px;
-	margin: 0 auto 10px;
-	display: block;
-}
-
-.openwrt-login-brand .router-hostname {
-	font-size: 13px;
-	font-weight: 500;
-	color: var(--echo-text-secondary);
-	margin: 0;
-}
-
-.echo-login-brand-center .echo-login-logo {
-	margin-bottom: 10px;
-}
-
-.echo-login-brand-center .echo-login-hostname {
-	margin: 0;
-}
-
-.echo-login-subtitle {
-	text-align: center;
-	font-size: var(--echo-text-sm);
-	color: var(--echo-text-secondary);
-	margin: 20px 0 16px;
+html[data-theme="dark"] .echo-login-card {
+	box-shadow:
+		0 0 0 1px var(--echo-separator),
+		0 30px 90px rgba(0, 0, 0, 0.7),
+		0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes echo-login-in {
 	from {
 		opacity: 0;
-		transform: translateY(16px) scale(0.98);
+		transform: translateY(14px) scale(0.985);
 	}
 	to {
 		opacity: 1;
@@ -94,94 +81,205 @@ body.echo-login::before {
 	}
 }
 
-.echo-login-logo {
-	width: 56px;
-	height: 56px;
-	margin: 0 auto 20px;
-	border-radius: var(--echo-radius-lg);
-	background: var(--echo-bg-sidebar);
+.echo-login-brand {
 	display: flex;
+	flex-direction: column;
 	align-items: center;
-	justify-content: center;
-	box-shadow: var(--echo-shadow-md);
+	text-align: center;
+	margin-bottom: 24px;
 }
 
-.echo-login-logo svg {
-	width: 28px;
-	height: 28px;
-	color: var(--echo-brand-gold);
+.echo-login-mark {
+	width: 58px;
+	height: 58px;
+	margin-bottom: 18px;
+	border-radius: 15px;
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.28) inset,
+		0 12px 30px rgba(0, 0, 0, 0.24);
 }
 
 .echo-login-hostname {
-	text-align: center;
-	font-size: var(--echo-text-xl);
-	font-weight: 700;
-	letter-spacing: -0.02em;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: var(--echo-size-xl);
+	font-weight: var(--echo-weight-semibold);
+	letter-spacing: -0.025em;
 	color: var(--echo-text);
-	margin: 0 0 4px;
+}
+
+.echo-login-subtitle {
+	margin-top: 5px;
+	color: var(--echo-text-secondary);
+	font-size: var(--echo-size-sm);
+}
+
+.echo-login-error {
+	margin-bottom: 18px;
+	padding: 10px 12px;
+	border: 1px solid rgba(255, 59, 48, 0.28);
+	border-radius: var(--echo-radius-md);
+	background: rgba(255, 59, 48, 0.08);
+	color: var(--echo-danger-text);
+	font-size: var(--echo-size-xs);
+	font-weight: var(--echo-weight-medium);
+	line-height: var(--echo-leading-relaxed);
+	text-align: center;
 }
 
 .echo-login-form {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
 	width: 100%;
 }
 
 .echo-login-form .cbi-value {
+	display: flex;
 	flex-direction: column;
 	align-items: stretch;
+	gap: 6px;
 	padding: 0;
-	border: none;
-	margin-bottom: 16px;
+	border: 0;
 }
 
 .echo-login-form .cbi-value-title {
-	flex: none;
-	font-size: var(--echo-text-xs);
-	font-weight: 600;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
-	color: var(--echo-text-tertiary);
-	margin-bottom: 6px;
+	font-size: var(--echo-size-xs);
+	font-weight: var(--echo-weight-medium);
+	color: var(--echo-text-secondary);
+}
+
+.echo-login-form .cbi-value-field {
+	width: 100%;
 }
 
 .echo-login-form .cbi-value-field input {
+	width: 100%;
 	max-width: none;
-	padding: 12px 14px;
-	font-size: var(--echo-text-base);
+	min-height: 44px;
+	padding: 10px 13px;
+	border-radius: var(--echo-radius-md);
+	background: var(--echo-bg-inset);
+	font-size: var(--echo-size-md);
 }
 
 .echo-login-form .cbi-page-actions {
-	padding: 8px 0 0;
-	background: none;
+	display: block;
+	margin: 6px 0 0;
+	padding: 0;
 	position: static;
+	background: none;
 }
 
 .echo-login-form .cbi-button-apply {
 	width: 100%;
-	padding: 12px;
-	font-size: var(--echo-text-base);
+	min-height: 46px;
 	border-radius: var(--echo-radius-md);
-}
-
-.echo-login-error {
-	padding: 12px 14px;
-	border-radius: var(--echo-radius-sm);
-	background: rgba(255, 59, 48, 0.1);
-	border: 1px solid rgba(255, 59, 48, 0.25);
-	color: var(--echo-danger);
-	font-size: var(--echo-text-sm);
-	margin-bottom: 16px;
-	text-align: center;
+	font-size: var(--echo-size-base);
+	font-weight: var(--echo-weight-semibold);
 }
 
 .echo-login-footer {
-	text-align: center;
-	margin-top: 24px;
-	font-size: var(--echo-text-xs);
+	margin-top: 22px;
+	padding-top: 18px;
+	border-top: 1px solid var(--echo-separator);
 	color: var(--echo-text-tertiary);
+	font-size: var(--echo-size-2xs);
+	text-align: center;
 }
 
-.echo-login-theme-toggle {
+.echo-login-footer .footer-link {
+	color: var(--echo-text-secondary);
+}
+
+.echo-login-hint {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	margin-top: 12px;
+	color: var(--echo-text-tertiary);
+	font-size: var(--echo-size-2xs);
+}
+
+.echo-login-hint .echo-symbol {
+	width: 13px;
+	height: 13px;
+}
+
+@media (max-width: 520px) {
+	body.echo-login {
+		align-items: flex-start;
+		padding: 76px 18px 28px;
+	}
+
+	.echo-login-card {
+		max-width: 100%;
+		padding: 28px 22px 24px;
+		border-radius: var(--echo-radius-xl);
+		background: transparent;
+		box-shadow: none;
+	}
+
+	html[data-theme="dark"] .echo-login-card {
+		background: transparent;
+		box-shadow: none;
+	}
+
+	.echo-login-mark {
+		width: 52px;
+		height: 52px;
+		border-radius: 14px;
+	}
+
+	.login-theme {
+		top: 14px;
+		right: 14px;
+	}
+}
+
+/* Password reveal control */
+.echo-password-wrap {
+	position: relative;
+	width: 100%;
+}
+
+.echo-password-wrap input {
+	padding-right: 48px;
+}
+
+.echo-password-toggle {
 	position: absolute;
-	top: 16px;
-	right: 16px;
+	top: 50%;
+	right: 4px;
+	display: grid;
+	place-items: center;
+	width: 38px;
+	height: 38px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--echo-radius-sm);
+	background: transparent;
+	color: var(--echo-text-tertiary);
+	cursor: pointer;
+	transform: translateY(-50%);
+	transition:
+		background-color var(--echo-duration-fast) var(--echo-ease-out),
+		color var(--echo-duration-fast) var(--echo-ease-out);
+}
+
+.echo-password-toggle:hover {
+	background: var(--echo-bg-hover);
+	color: var(--echo-text);
+}
+
+.echo-password-toggle svg {
+	width: 18px;
+	height: 18px;
+}
+
+.echo-password-toggle[aria-pressed="true"] {
+	color: var(--echo-accent-text);
 }

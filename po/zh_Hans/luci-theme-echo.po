@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: luci-theme-echo 1.5.12\n"
+"Project-Id-Version: luci-theme-echo 2.0.0\n"
 "Language: zh_Hans\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
@@ -246,4 +246,91 @@ msgid "No active DHCP clients"
 msgstr "无活跃 DHCP 客户端"
 
 msgid "more clients"
+msgstr "更多客户端"
+
+msgid "Skip to content"
+msgstr "跳到主要内容"
+
+msgid "Echo home"
+msgstr "Echo 首页"
+
+msgid "Appearance"
+msgstr "外观"
+
+msgid "Open menu"
+msgstr "打开菜单"
+
+msgid "Browse"
+msgstr "浏览"
+
+msgid "Close menu"
+msgstr "关闭菜单"
+
+msgid "5m"
+msgstr "5 分钟"
+
+msgid "15m"
+msgstr "15 分钟"
+
+msgid "Since last boot"
+msgstr "自上次启动"
+
+msgid "Active devices"
+msgstr "活跃设备"
+
+msgid "All systems online"
+msgstr "一切正常"
+
+msgid "Internet needs attention"
+msgstr "网络需要关注"
+
+msgid "Network is running"
+msgstr "网络运行中"
+
+msgid "Network status unavailable"
+msgstr "网络状态不可用"
+
+msgid "Not found"
+msgstr "未找到"
+
+msgid "Live"
+msgstr "实时"
+
+msgid "Network"
+msgstr "网络"
+
+msgid "Reading system status"
+msgstr "正在读取系统状态"
+
+msgid "Checking network…"
+msgstr "正在检查网络…"
+
+msgid "Theme source"
+msgstr "主题源码"
+
+msgid "Releases"
+msgstr "版本发布"
+
+msgid "Show password"
+msgstr "显示密码"
+
+msgid "Hide password"
+msgstr "隐藏密码"
+
+msgid "Secured by OpenWrt"
+msgstr "由 OpenWrt 保护"
+
+msgid "Network interfaces"
+msgstr "网络接口"
+
+msgid "Active DHCP clients"
+msgstr "活跃 DHCP 客户端"
+
+msgid "Load average"
+msgstr "平均负载"
+
+msgid "Used memory"
+msgstr "已用内存"
+
+msgid "More clients"
 msgstr "更多客户端"

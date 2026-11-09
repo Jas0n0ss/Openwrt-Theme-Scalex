@@ -1,100 +1,11 @@
-/* Echo Theme — OpenWrt dashboard preset */
+/* Echo 2.0 — OpenWrt preset
+ *
+ * The OpenWrt preset used to swap in a cyan accent, Segoe UI and a 2 px cyan
+ * header rule. The 2.0 visual system is deliberately neutral: one Apple blue
+ * accent, the system font stack and no decorative rules. UCI colours are still
+ * applied by header.ut through the semantic accent tokens.
+ */
 
 body.theme-openwrt {
-	--echo-font-sans: "Segoe UI", Tahoma, Arial, Helvetica, sans-serif;
-	--echo-brand-accent: #00B5E2;
-	--echo-brand-accent-hover: #0099CC;
-	--echo-brand-gold: #00B5E2;
-	--echo-primary: #00B5E2;
-	--echo-primary-hover: #0099CC;
-	--echo-primary-soft: rgba(0, 181, 226, 0.12);
-	--echo-topnav-height: 58px;
-	--echo-radius-sm: 6px;
-	--echo-radius-md: 10px;
-	--echo-radius-lg: 14px;
-}
-
-html[data-theme="light"] body.theme-openwrt {
-	--echo-bg: #e8e8e8;
-}
-
-body.theme-openwrt .openwrt-brand-inner {
-	gap: 12px;
-}
-
-body.theme-openwrt .openwrt-logo img,
-body.theme-openwrt .openwrt-logo svg {
-	height: 22px;
-}
-
-body.theme-openwrt .router-model {
-	font-size: 13px;
-	font-weight: 700;
-	color: var(--echo-brand-gold);
-	letter-spacing: 0.04em;
-}
-
-body.theme-openwrt .router-hostname {
-	font-size: 10px;
-}
-
-body.theme-openwrt .brand-tag {
-	display: none;
-}
-
-body.theme-openwrt .nav-top {
-	font-size: 13px;
-	font-weight: 400;
-}
-
-body.theme-openwrt .nav-top:hover,
-body.theme-openwrt .nav-top:focus-visible {
-	background: var(--echo-nav-active-bg);
-	color: var(--echo-nav-text-hover);
-}
-
-body.theme-openwrt .nav-section.is-active .nav-top:not(:hover):not(:focus-visible),
-body.theme-openwrt .nav-top.active:not(:hover):not(:focus-visible) {
-	background: transparent;
-	color: var(--echo-nav-text);
-	font-weight: 400;
-}
-
-body.theme-openwrt .nav-dropdown-item.active {
-	background: var(--echo-nav-active-bg);
-	color: var(--echo-nav-active-text);
-}
-
-body.theme-openwrt #echo-header {
-	border-bottom: 2px solid var(--echo-brand-accent);
-}
-
-body.theme-openwrt .content-tab.active {
-	color: var(--echo-brand-accent);
-	border-bottom-color: var(--echo-brand-accent);
-}
-
-body.theme-openwrt .cbi-button-save,
-body.theme-openwrt .cbi-button-apply,
-body.theme-openwrt .cbi-button-action {
-	background: var(--echo-brand-accent);
-	border-color: var(--echo-brand-accent);
-}
-
-body.theme-openwrt .cbi-button-save:hover,
-body.theme-openwrt .cbi-button-apply:hover {
-	background: var(--echo-brand-accent-hover);
-}
-
-body.theme-openwrt.echo-login,
-body.theme-openwrt .demo-login-page {
-	background: #1a1a1a;
-}
-
-body.theme-openwrt .echo-login-card {
-	border-top: 3px solid var(--echo-brand-accent);
-}
-
-.openwrt-login-brand {
-	text-align: center;
+	--echo-brand-accent: var(--echo-accent);
 }

@@ -22,6 +22,9 @@ check_ipk() {
 	case "$name" in
 		luci-theme-echo_*)
 			[[ -f "$TMP/www/luci-static/echo/css/openwrt.css" ]] || fail "missing openwrt.css in $ipk"
+			[[ -f "$TMP/www/luci-static/echo/css/symbols.css" ]] || fail "missing symbols.css in $ipk"
+			[[ -f "$TMP/www/luci-static/echo/img/echo-mark.svg" ]] || fail "missing echo-mark.svg in $ipk"
+			[[ -f "$TMP/www/luci-static/echo/img/symbols/router.svg" ]] || fail "missing symbol set in $ipk"
 			[[ -f "$TMP/www/luci-static/echo/img/openwrt-logo.svg" ]] || fail "missing openwrt-logo.svg in $ipk"
 			[[ -f "$TMP/www/luci-static/echo/img/favicon.svg" ]] || fail "missing favicon.svg in $ipk"
 			[[ -f "$TMP/www/luci-static/echo/css/glass.css" ]] || fail "missing glass.css in $ipk"
@@ -30,12 +33,16 @@ check_ipk() {
 			[[ -f "$TMP/www/luci-static/resources/theme-echo.js" ]] || fail "missing theme-echo.js in $ipk"
 			[[ -f "$TMP/usr/share/ucode/luci/template/themes/echo/header.ut" ]] || fail "missing header.ut in $ipk"
 			grep -q "theme-openwrt" "$TMP/usr/share/ucode/luci/template/themes/echo/header.ut" || fail "header.ut missing theme-openwrt"
+			grep -q "echo-menu-btn" "$TMP/usr/share/ucode/luci/template/themes/echo/header.ut" || fail "header.ut missing mobile menu"
+			grep -q "theme-switch" "$TMP/usr/share/ucode/luci/template/themes/echo/header.ut" || fail "header.ut missing appearance switch"
+			grep -q "renderSheet" "$TMP/www/luci-static/resources/menu-echo.js" || fail "menu-echo.js missing mobile sheet"
 			grep -q "preset 'openwrt'" "$TMP/etc/config/echo" || fail "default UCI preset not openwrt"
 			[[ -f "$TMP/usr/lib/lua/luci/i18n/luci-theme-echo.zh_Hans.lmo" ]] || fail "missing luci-theme-echo zh_Hans i18n"
 			;;
 		luci-app-echo-config_*)
 			[[ -f "$TMP/www/luci-static/resources/view/echo/config.js" ]] || fail "missing config.js in $ipk"
-			grep -q "openwrt" "$TMP/www/luci-static/resources/view/echo/config.js" || fail "config.js missing openwrt preset"
+			grep -q "accent color" "$TMP/www/luci-static/resources/view/echo/config.js" || fail "config.js missing 2.0 accent copy"
+		grep -q "dashboard" "$TMP/www/luci-static/resources/view/echo/config.js" || fail "config.js missing dashboard option"
 			[[ -f "$TMP/usr/lib/lua/luci/i18n/luci-app-echo-config.zh_Hans.lmo" ]] || fail "missing luci-app-echo-config zh_Hans i18n"
 			;;
 	esac

@@ -40,6 +40,7 @@ build_ipk() {
 			cp "$ROOT/ucode/template/themes/echo/"*.ut "$data_root/usr/share/ucode/luci/template/themes/echo/"
 			cp "$ROOT/ucode/template/themes/echo/version" "$data_root/usr/share/ucode/luci/template/themes/echo/"
 			cp "$ROOT/root/etc/uci-defaults/30_luci-theme-echo" "$data_root/etc/uci-defaults/"
+			chmod 755 "$data_root/etc/uci-defaults/30_luci-theme-echo"
 			cp "$ROOT/root/etc/config/echo" "$data_root/etc/config/"
 			mkdir -p "$data_root/$I18N_INSTALL"
 			cp "$I18N_DIR/luci-theme-echo.zh_Hans.lmo" "$data_root/$I18N_INSTALL/"
@@ -61,6 +62,7 @@ build_ipk() {
 				"$data_root/usr/share/rpcd/acl.d/"
 			cp "$ROOT/luci-app-echo-config/root/etc/uci-defaults/50_luci-echo-config" \
 				"$data_root/etc/uci-defaults/"
+			chmod 755 "$data_root/etc/uci-defaults/50_luci-echo-config"
 			mkdir -p "$data_root/$I18N_INSTALL"
 			cp "$I18N_DIR/luci-app-echo-config.zh_Hans.lmo" "$data_root/$I18N_INSTALL/"
 			;;
@@ -81,11 +83,11 @@ Title: $title
 Description: $title for OpenWrt LuCI
 EOF
 
-	tar -C "$data_root" -czf "$control_dir/data.tar.gz" .
+	COPYFILE_DISABLE=1 tar -C "$data_root" --exclude='._*' --exclude='.DS_Store' -czf "$control_dir/data.tar.gz" .
 	if [[ -f "$control_dir/postinst" ]]; then
-		tar -C "$control_dir" -czf "$control_dir/control.tar.gz" control postinst
+		COPYFILE_DISABLE=1 tar -C "$control_dir" --exclude='._*' --exclude='.DS_Store' -czf "$control_dir/control.tar.gz" control postinst
 	else
-		tar -C "$control_dir" -czf "$control_dir/control.tar.gz" control
+		COPYFILE_DISABLE=1 tar -C "$control_dir" --exclude='._*' --exclude='.DS_Store' -czf "$control_dir/control.tar.gz" control
 	fi
 	printf '2.0\n' > "$control_dir/debian-binary"
 
@@ -100,7 +102,7 @@ EOF
 mkdir -p "$OUT"
 chmod +x "$ROOT/scripts/compile-i18n.sh"
 "$ROOT/scripts/compile-i18n.sh" "$I18N_DIR"
-build_ipk "luci-theme-echo" "Echo LuCI Theme" "libc, luci-theme-bootstrap"
+build_ipk "luci-theme-echo" "Echo 2.0 - Apple-inspired LuCI theme" "libc, luci-theme-bootstrap"
 build_ipk "luci-app-echo-config" "Echo Theme Configuration" "luci-theme-echo, luci-base"
 
 echo ""

@@ -9,44 +9,26 @@ return view.extend({
 		var m, s, o;
 
 		m = new form.Map('echo', _('Echo Theme Configuration'),
-			_('Customize colors, layout, and appearance of the Echo LuCI theme.'));
+			_('Customize the accent color, typography and dashboard of the Echo LuCI theme.'));
 
 		s = m.section(form.NamedSection, 'global', 'global', _('Global Settings'));
 
-		o = s.option(form.ListValue, 'preset', _('Theme Preset'));
-		o.value('openwrt', _('OpenWrt Dashboard'));
-		o.value('echo', _('Echo Default'));
-		o.default = 'openwrt';
-
-		o = s.option(form.Value, 'router_model', _('Router Model'),
-			_('Displayed in sidebar, e.g. OpenWrt'));
-		o.placeholder = 'OpenWrt';
-		o.depends('preset', 'openwrt');
-
-		o = s.option(form.Value, 'brand_tag', _('Brand Label'),
-			_('Text shown below hostname in the sidebar.'));
-		o.placeholder = 'OpenWrt Router';
-
 		o = s.option(form.Value, 'primary', _('Primary Color (Light)'),
 			_('Main accent color for light mode. Example: #0071e3'));
-		o.placeholder = '#00B5E2';
+		o.placeholder = '#0071E3';
 
 		o = s.option(form.Value, 'dark_primary', _('Primary Color (Dark)'),
 			_('Main accent color for dark mode. Example: #0a84ff'));
 		o.placeholder = '#0a84ff';
 
-		o = s.option(form.Value, 'gold', _('Accent Highlight'),
-			_('Secondary highlight color for sidebar model label.'));
-		o.placeholder = '#00B5E2';
-
 		o = s.option(form.ListValue, 'font_size', _('Base Font Size'));
-		o.value('13', '13px');
 		o.value('14', '14px');
 		o.value('15', '15px');
-		o.value('16', '16px');
+		o.value('16', '16px (default)');
+		o.value('17', '17px');
 
 		o = s.option(form.Flag, 'dashboard', _('Enable Dashboard Cards'),
-			_('Show CPU, memory, uptime, and traffic cards on the Status Overview page.'));
+			_('Show the network hero, vitals and status panels on the Overview page.'));
 		o.default = '1';
 		o.rmempty = false;
 

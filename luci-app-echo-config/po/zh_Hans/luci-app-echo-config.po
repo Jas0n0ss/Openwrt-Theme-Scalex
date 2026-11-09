@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: luci-app-echo-config 1.5.0\n"
+"Project-Id-Version: luci-app-echo-config 2.0.0\n"
 "Language: zh_Hans\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "Echo Theme Configuration"
 msgstr "Echo 主题配置"
 
-msgid "Customize colors, layout, and appearance of the Echo LuCI theme."
-msgstr "自定义 Echo LuCI 主题的颜色、布局与外观。"
+msgid "Customize the accent color, typography and dashboard of the Echo LuCI theme."
+msgstr "自定义 Echo LuCI 主题的强调色、字体与仪表盘。"
 
 msgid "Global Settings"
 msgstr "全局设置"
@@ -16,8 +16,8 @@ msgstr "全局设置"
 msgid "Theme Preset"
 msgstr "主题预设"
 
-msgid "OpenWrt Dashboard"
-msgstr "OpenWrt 仪表盘"
+msgid "OpenWrt (recommended)"
+msgstr "OpenWrt（推荐）"
 
 msgid "Echo Default"
 msgstr "Echo 默认"
@@ -25,8 +25,8 @@ msgstr "Echo 默认"
 msgid "Router Model"
 msgstr "路由器型号"
 
-msgid "Displayed in sidebar, e.g. OpenWrt"
-msgstr "显示在侧栏的型号，例如 OpenWrt"
+msgid "Displayed in the header, e.g. Echo Router"
+msgstr "显示在顶部栏的名称，例如 Echo Router"
 
 msgid "Accent Highlight"
 msgstr "强调色"
@@ -37,8 +37,8 @@ msgstr "侧栏型号标签的次要强调色。"
 msgid "Brand Label"
 msgstr "品牌标签"
 
-msgid "Text shown below hostname in the sidebar."
-msgstr "显示在侧栏主机名下方的文字。"
+msgid "Optional label shown next to the hostname."
+msgstr "显示在主机名旁边的可选标签。"
 
 msgid "Primary Color (Light)"
 msgstr "主色（浅色模式）"
@@ -64,8 +64,8 @@ msgstr "在页面顶部显示 WAN/LAN/WiFi/客户端 状态胶囊。"
 msgid "Enable Dashboard Cards"
 msgstr "启用仪表盘卡片"
 
-msgid "Show CPU, memory, uptime, and traffic cards on the Status Overview page."
-msgstr "在状态概览页显示 CPU、内存、运行时间与流量卡片。"
+msgid "Show the network hero, vitals and status panels on the Overview page."
+msgstr "在概览页显示网络状态、核心指标与状态面板。"
 
 msgid "Background"
 msgstr "背景"

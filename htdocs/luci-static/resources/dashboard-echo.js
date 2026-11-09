@@ -81,8 +81,100 @@ return baseclass.extend({
 		if (!main || main.querySelector('#echo-overview')) return;
 
 		this.container = this.buildOverview();
-		main.insertBefore(this.container, main.firstChild);
+
+		/* Never bury password / recovery warnings above the hero. */
+		var anchor = main.firstChild;
+		for (var i = 0; i < main.children.length; i++) {
+			if (main.children[i].classList.contains('alert-message'))
+				anchor = main.children[i].nextSibling;
+		}
+		main.insertBefore(this.container, anchor);
 		document.body.classList.add('echo-has-overview');
+	},
+
+	buildHero: function() {
+		var wan = this.heroPill('globe', _('WAN'), _('Checking…'));
+		var wifi = this.heroPill('wifi', _('Wi-Fi'), '—');
+		var clients = this.heroPill('devices', _('Clients'), '—');
+
+		this._heroWan = wan;
+		this._heroWifi = wifi;
+		this._heroClients = clients;
+
+		this._heroTitle = E('h2', {
+			'class': 'echo-hero-title',
+			'id': 'echo-hero-title',
+			'aria-live': 'polite'
+		}, [ _('Checking network…') ]);
+
+		this._heroSub = E('p', {
+			'class': 'echo-hero-sub',
+			'id': 'echo-hero-sub'
+		}, [ _('Reading system status') ]);
+
+		return E('section', {
+			'class': 'echo-hero',
+			'aria-labelledby': 'echo-hero-title'
+		}, [
+			E('div', { 'class': 'echo-orb', 'aria-hidden': 'true' }, [
+				E('div', { 'class': 'echo-orb-core' }, [
+					E('span', { 'class': 'echo-symbol echo-symbol-router' })
+				])
+			]),
+			E('div', { 'class': 'echo-hero-copy' }, [
+				E('p', { 'class': 'echo-eyebrow' }, [ _('Network') ]),
+				this._heroTitle,
+				this._heroSub,
+				E('div', { 'class': 'echo-hero-pills' }, [ wan.el, wifi.el, clients.el ])
+			])
+		]);
+	},
+
+	heroPill: function(icon, label, value) {
+		var valueEl = E('strong', {}, [ value ]);
+		var el = E('span', { 'class': 'echo-pill' }, [
+			E('span', { 'class': 'echo-symbol echo-symbol-' + icon, 'aria-hidden': 'true' }),
+			E('span', {}, [ label ]),
+			valueEl
+		]);
+
+		return { el: el, value: valueEl };
+	},
+
+	buildStats: function() {
+		return E('div', { 'class': 'echo-stats' }, [
+			this.statCard('cpu', _('CPU'), 'cpu', _('Load average'), false),
+			this.statCard('memory', _('Memory'), 'memory', _('Used memory'), true),
+			this.statCard('uptime', _('Uptime'), 'clock', _('Since last boot'), false, true),
+			this.statCard('clients', _('Clients'), 'devices', _('Active devices'), false, true)
+		]);
+	},
+
+	statCard: function(id, label, icon, note, meter, textValue) {
+		var children = [
+			E('div', { 'class': 'echo-stat-head' }, [
+				E('span', { 'class': 'echo-stat-icon' }, [
+					E('span', { 'class': 'echo-symbol echo-symbol-' + icon, 'aria-hidden': 'true' })
+				]),
+				E('span', {}, [ label ])
+			]),
+			E('strong', {
+				'class': 'echo-stat-value' + (textValue ? ' is-text' : ''),
+				'id': 'echo-stat-' + id + '-value'
+			}, [ '—' ]),
+			E('span', {
+				'class': 'echo-stat-note',
+				'id': 'echo-stat-' + id + '-note'
+			}, [ note ])
+		];
+
+		if (meter) {
+			children.push(E('div', { 'class': 'echo-meter', 'aria-hidden': 'true' }, [
+				E('span', { 'class': 'echo-meter-fill', 'id': 'echo-stat-' + id + '-bar' })
+			]));
+		}
+
+		return E('article', { 'class': 'echo-stat' }, children);
 	},
 
 	buildNetworkMap: function() {
@@ -98,8 +190,14 @@ return baseclass.extend({
 			E('div', { 'class': 'echo-map-module-inner' }, [ this._wifiEl ])
 		]);
 
-		this._mapPanel = E('div', { 'class': 'cbi-section echo-panel echo-network-map echo-map-full' }, [
-			E('div', { 'class': 'cbi-section-head' }, [ _('Network Map') ]),
+		this._mapPanel = E('section', { 'class': 'cbi-section echo-panel echo-network-map echo-map-full' }, [
+			E('div', { 'class': 'echo-panel-head' }, [
+				E('div', { 'class': 'echo-panel-title' }, [
+					E('span', { 'class': 'echo-symbol echo-symbol-port', 'aria-hidden': 'true' }),
+					E('span', {}, [ _('Network') ])
+				]),
+				E('span', { 'class': 'echo-live' }, [ _('Live') ])
+			]),
 			E('div', { 'class': 'echo-map-body' }, [
 				this._portsModule,
 				this._mapDivider,
@@ -111,49 +209,26 @@ return baseclass.extend({
 	},
 
 	buildOverview: function() {
-		this._sysBody = E('tbody', {});
 		this._ifaceBody = E('tbody', {});
-		this._trafficBody = E('tbody', {});
 		this._leasesBody = E('tbody', {});
 
 		return E('div', { id: 'echo-overview', 'class': 'echo-overview' }, [
+			this.buildHero(),
+			this.buildStats(),
 			this.buildNetworkMap(),
-			E('div', { 'class': 'echo-overview-divider', 'aria-hidden': 'true' }),
-			E('div', { 'class': 'echo-overview-grid' }, [
-				this.panel(_('System Resources'), this.table([
-					E('thead', {}, [ E('tr', {}, [
-						E('th', {}, [ _('Item') ]),
-						E('th', {}, [ _('Value') ]),
-						E('th', { 'class': 'echo-col-narrow' }, [ _('Status') ])
-					]) ]),
-					this._sysBody
-				])),
-				this.panel(_('Network Interfaces'), this.table([
-					E('thead', {}, [ E('tr', {}, [
-						E('th', {}, [ _('Interface') ]),
-						E('th', {}, [ _('Protocol') ]),
-						E('th', {}, [ _('Address') ]),
-						E('th', { 'class': 'echo-col-narrow' }, [ _('Status') ])
-					]) ]),
-					this._ifaceBody
-				])),
-				this.panel(_('Traffic Summary'), this.table([
-					E('thead', {}, [ E('tr', {}, [
-						E('th', {}, [ _('Interface') ]),
-						E('th', {}, [ _('Download') ]),
-						E('th', {}, [ _('Upload') ]),
-						E('th', {}, [ _('Total') ])
-					]) ]),
-					this._trafficBody
-				])),
-				this.panel(_('Active Clients'), this.table([
-					E('thead', {}, [ E('tr', {}, [
-						E('th', {}, [ _('Hostname') ]),
-						E('th', {}, [ _('IP Address') ]),
-						E('th', {}, [ _('MAC') ])
-					]) ]),
-					this._leasesBody
-				]))
+			E('div', { 'class': 'echo-grid' }, [
+				this.panel(_('Interfaces'), this.table(_('Network interfaces'), [
+					{ label: _('Interface') },
+					{ label: _('Address') },
+					{ label: _('Download') },
+					{ label: _('Upload') },
+					{ label: _('Status'), cls: 'echo-col-narrow' }
+				], this._ifaceBody), 'globe'),
+				this.panel(_('Active Clients'), this.table(_('Active DHCP clients'), [
+					{ label: _('Hostname') },
+					{ label: _('IP Address') },
+					{ label: _('MAC') }
+				], this._leasesBody), 'devices')
 			]),
 			E('p', { 'class': 'echo-overview-note' }, [
 				_('Primary status at a glance. Detailed metrics are shown in the sections below.')
@@ -161,21 +236,65 @@ return baseclass.extend({
 		]);
 	},
 
-	panel: function(title, tableEl) {
-		return E('div', { 'class': 'cbi-section echo-panel' }, [
-			E('div', { 'class': 'cbi-section-head' }, [ title ]),
+	panel: function(title, tableEl, icon) {
+		var titleChildren = [];
+		if (icon)
+			titleChildren.push(E('span', { 'class': 'echo-symbol echo-symbol-' + icon, 'aria-hidden': 'true' }));
+		titleChildren.push(E('span', {}, [ title ]));
+
+		return E('section', { 'class': 'cbi-section echo-panel' }, [
+			E('div', { 'class': 'echo-panel-head' }, [
+				E('div', { 'class': 'echo-panel-title' }, titleChildren)
+			]),
 			tableEl
 		]);
 	},
 
-	table: function(children) {
-		return E('table', { 'class': 'echo-data-table' }, children);
+	table: function(caption, headers, body) {
+		var cells = headers.map(function(h) {
+			return E('th', {
+				'scope': 'col',
+				'class': h.cls || null
+			}, [ h.label ]);
+		});
+
+		return E('table', { 'class': 'echo-data-table' }, [
+			E('caption', { 'class': 'echo-sr-only' }, [ caption ]),
+			E('thead', {}, [ E('tr', {}, cells) ]),
+			body
+		]);
 	},
 
 	statusBadge: function(ok, label) {
 		return E('span', { 'class': 'label ' + (ok ? 'success' : 'important') }, [
 			label || (ok ? _('Online') : _('Offline'))
 		]);
+	},
+
+	setText: function(id, value) {
+		var el = document.getElementById(id);
+		if (el) el.textContent = value;
+	},
+
+	setBar: function(id, pct, level) {
+		var el = document.getElementById(id);
+		if (!el) return;
+		pct = Math.max(0, Math.min(100, pct));
+		el.style.width = pct + '%';
+		el.classList.remove('is-warning', 'is-danger');
+		if (level) el.classList.add(level);
+	},
+
+	setHeroTitle: function(value) {
+		if (this._heroTitle && this._heroTitle.textContent !== value)
+			this._heroTitle.textContent = value;
+	},
+
+	setPill: function(pill, value, state) {
+		if (!pill) return;
+		pill.value.textContent = value;
+		pill.el.classList.remove('is-good', 'is-bad');
+		if (state) pill.el.classList.add(state);
 	},
 
 	formatBytes: function(n) {
@@ -271,25 +390,6 @@ return baseclass.extend({
 		return role;
 	},
 
-	loadLabel: function(v) {
-		v = parseFloat(v);
-		if (v >= 1.5) return [_('High'), false];
-		if (v >= 0.8) return [_('Moderate'), true];
-		return [_('Normal'), true];
-	},
-
-	setRow: function(tbody, id, cells) {
-		var row = document.getElementById('echo-row-' + id);
-		if (!row) {
-			row = E('tr', { id: 'echo-row-' + id });
-			tbody.appendChild(row);
-		}
-		row.innerHTML = '';
-		cells.forEach(function(c) {
-			row.appendChild(E('td', {}, [ c ]));
-		});
-	},
-
 	poll: function() {
 		if (!this.enabled) return;
 		var self = this;
@@ -305,7 +405,6 @@ return baseclass.extend({
 
 	fetchSystem: function() {
 		var self = this;
-		if (!this._sysBody) return Promise.resolve();
 
 		return Promise.all([
 			rpc.declare({ object: 'system', method: 'info' })(),
@@ -317,13 +416,9 @@ return baseclass.extend({
 			var l1 = load[0] / 65536;
 			var l5 = load[1] / 65536;
 			var l15 = load[2] / 65536;
-			var ls = self.loadLabel(l1);
 
-			self.setRow(self._sysBody, 'cpu', [
-				_('CPU Load (1 / 5 / 15 min)'),
-				l1.toFixed(2) + ' / ' + l5.toFixed(2) + ' / ' + l15.toFixed(2),
-				self.statusBadge(ls[1], ls[0])
-			]);
+			self.setText('echo-stat-cpu-value', l1.toFixed(2));
+			self.setText('echo-stat-cpu-note', _('5m') + ' ' + l5.toFixed(2) + ' · ' + _('15m') + ' ' + l15.toFixed(2));
 
 			var mem = info.memory || {};
 			var total = mem.total || 0;
@@ -333,26 +428,23 @@ return baseclass.extend({
 			var used = Math.max(0, total - free - buffered - cached);
 			var pct = total ? Math.round((used / total) * 100) : 0;
 
-			self.setRow(self._sysBody, 'mem', [
-				_('Memory'),
-				self.formatBytes(used) + ' / ' + self.formatBytes(total) + ' (' + pct + '%)',
-				self.statusBadge(pct < 90, pct >= 90 ? _('High') : _('Normal'))
-			]);
+			self.setText('echo-stat-memory-value', pct + '%');
+			self.setText('echo-stat-memory-note', self.formatBytes(used) + ' / ' + self.formatBytes(total));
+			self.setBar('echo-stat-memory-bar', pct, pct >= 90 ? 'is-danger' : (pct >= 75 ? 'is-warning' : ''));
 
-			self.setRow(self._sysBody, 'uptime', [
-				_('Uptime'),
-				self.formatUptime(info.uptime),
-				self.statusBadge(true, _('Running'))
-			]);
+			self.setText('echo-stat-uptime-value', self.formatUptime(info.uptime));
+			self.setText('echo-stat-uptime-note', _('Since last boot'));
 
-			if (board.model || board.system) {
-				self.setRow(self._sysBody, 'board', [
-					_('Device'),
-					[ board.model || board.system || '—', board.release ? (' · ' + board.release.description) : '' ].join(''),
-					self.statusBadge(true, _('OK'))
-				]);
+			if (self._heroSub) {
+				var model = board.model || board.system || 'OpenWrt';
+				var release = board.release && board.release.description ? board.release.description : '';
+				self._heroSub.textContent = model + (release ? ' · ' + release : '');
 			}
-		}).catch(function() {});
+		}).catch(function() {
+			self.setText('echo-stat-cpu-value', '—');
+			self.setText('echo-stat-memory-value', '—');
+			self.setText('echo-stat-uptime-value', '—');
+		});
 	},
 
 	fetchNetwork: function() {
@@ -365,14 +457,15 @@ return baseclass.extend({
 			expect: { interface: [] }
 		})().then(function(ifaces) {
 			self._ifaceBody.innerHTML = '';
-			self._trafficBody.innerHTML = '';
 
 			var shown = 0;
+			var sawWan = false;
+			var wanUp = false;
+
 			for (var i = 0; i < ifaces.length; i++) {
 				var iface = ifaces[i];
 				var name = iface.interface || ('if' + i);
 				var up = iface.up === true;
-				var proto = iface.proto || '—';
 				var addr = '—';
 
 				if (iface['ipv4-address'] && iface['ipv4-address'][0])
@@ -382,31 +475,45 @@ return baseclass.extend({
 
 				if (name.charAt(0) === '@') continue;
 
-				self._ifaceBody.appendChild(E('tr', {}, [
-					E('td', {}, [ E('strong', {}, [ name ]) ]),
-					E('td', {}, [ proto ]),
-					E('td', { 'class': 'echo-mono' }, [ addr ]),
-					E('td', {}, [ self.statusBadge(up) ])
-				]));
+				if (/wan/i.test(name)) {
+					sawWan = true;
+					if (up) wanUp = true;
+				}
 
 				var stats = iface.stats || {};
 				var rx = stats.rx_bytes || 0;
 				var tx = stats.tx_bytes || 0;
-				self._trafficBody.appendChild(E('tr', {}, [
-					E('td', {}, [ name ]),
-					E('td', { 'class': 'echo-mono' }, [ self.formatBytes(rx) ]),
-					E('td', { 'class': 'echo-mono' }, [ self.formatBytes(tx) ]),
-					E('td', { 'class': 'echo-mono' }, [ self.formatBytes(rx + tx) ])
+
+				self._ifaceBody.appendChild(E('tr', {}, [
+					E('td', { 'data-label': _('Interface') }, [ E('strong', {}, [ name ]) ]),
+					E('td', { 'data-label': _('Address'), 'class': 'echo-mono' }, [ addr ]),
+					E('td', { 'data-label': _('Download'), 'class': 'echo-mono' }, [ self.formatBytes(rx) ]),
+					E('td', { 'data-label': _('Upload'), 'class': 'echo-mono' }, [ self.formatBytes(tx) ]),
+					E('td', { 'data-label': _('Status'), 'class': 'echo-col-narrow' }, [ self.statusBadge(up) ])
 				]));
 				shown++;
 			}
 
 			if (shown === 0) {
 				self._ifaceBody.appendChild(E('tr', {}, [
-					E('td', { colspan: '4', 'class': 'echo-empty' }, [ '—' ])
+					E('td', { colspan: '5', 'class': 'echo-empty' }, [ '—' ])
 				]));
 			}
-		}).catch(function() {});
+
+			if (sawWan)
+				self.setHeroTitle(wanUp ? _('All systems online') : _('Internet needs attention'));
+			else
+				self.setHeroTitle(_('Network is running'));
+
+			if (self._heroWan) {
+				if (!sawWan)
+					self.setPill(self._heroWan, _('Not found'), '');
+				else
+					self.setPill(self._heroWan, wanUp ? _('Online') : _('Offline'), wanUp ? 'is-good' : 'is-bad');
+			}
+		}).catch(function() {
+			self.setHeroTitle(_('Network status unavailable'));
+		});
 	},
 
 	fetchLeases: function() {
@@ -421,6 +528,10 @@ return baseclass.extend({
 			var leases = data['dhcp-leases'] || data.leases || [];
 			self._leasesBody.innerHTML = '';
 
+			self.setText('echo-stat-clients-value', leases.length);
+			self.setText('echo-stat-clients-note', _('Active devices'));
+			self.setPill(self._heroClients, leases.length, leases.length > 0 ? 'is-good' : '');
+
 			if (leases.length === 0) {
 				self._leasesBody.appendChild(E('tr', {}, [
 					E('td', { colspan: '3', 'class': 'echo-empty' }, [ _('No active DHCP clients') ])
@@ -428,18 +539,18 @@ return baseclass.extend({
 				return leases;
 			}
 
-			leases.slice(0, 8).forEach(function(l) {
+			leases.slice(0, 6).forEach(function(l) {
 				self._leasesBody.appendChild(E('tr', {}, [
-					E('td', {}, [ l.hostname || '—' ]),
-					E('td', { 'class': 'echo-mono' }, [ l.ipaddr || '—' ]),
-					E('td', { 'class': 'echo-mono echo-dim' }, [ l.macaddr || '—' ])
+					E('td', { 'data-label': _('Hostname') }, [ l.hostname || '—' ]),
+					E('td', { 'data-label': _('IP Address'), 'class': 'echo-mono' }, [ l.ipaddr || '—' ]),
+					E('td', { 'data-label': _('MAC'), 'class': 'echo-mono echo-dim' }, [ l.macaddr || '—' ])
 				]));
 			});
 
-			if (leases.length > 8) {
+			if (leases.length > 6) {
 				self._leasesBody.appendChild(E('tr', {}, [
 					E('td', { colspan: '3', 'class': 'echo-more' }, [
-						'+ ' + (leases.length - 8) + ' ' + _('more clients')
+						'+ ' + (leases.length - 6) + ' ' + _('more clients')
 					])
 				]));
 			}
@@ -449,6 +560,7 @@ return baseclass.extend({
 			self._leasesBody.appendChild(E('tr', {}, [
 				E('td', { colspan: '3', 'class': 'echo-empty' }, [ '—' ])
 			]));
+			self.setText('echo-stat-clients-value', '—');
 			return [];
 		});
 	},
@@ -464,6 +576,11 @@ return baseclass.extend({
 			self.renderPorts(res[0]);
 			self.renderWifiRadios(res[1]);
 			self.updateNetworkMapLayout(res[0].length, res[1].length);
+
+			var radios = res[1] || [];
+			var active = radios.filter(function(r) { return r.up; }).length;
+			self.setPill(self._heroWifi, radios.length ? (active + '/' + radios.length) : '—',
+				radios.length && active === radios.length ? 'is-good' : (radios.length ? '' : ''));
 		}).catch(function() {
 			self.renderPorts([]);
 			self.renderWifiRadios([]);

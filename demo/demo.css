@@ -1,85 +1,148 @@
-/* Demo-specific overrides */
-
-.demo-banner {
-  position: sticky;
-  top: 0;
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px 16px;
-  padding: 10px 20px;
-  background: linear-gradient(90deg, #152238, #0c1524);
-  color: #fff;
-  font-size: 13px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.demo-banner span {
-  opacity: 0.6;
-}
-
-.demo-banner-actions {
-  margin-left: auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.demo-btn {
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.demo-btn:hover,
-.demo-btn.active {
-  background: rgba(0,113,227,0.5);
-  border-color: rgba(0,113,227,0.6);
-}
-
-.demo-settings-wrap {
-  max-width: 720px;
-  margin: 40px auto;
-  padding: 0 24px 48px;
-}
-
-.demo-settings-wrap h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-body.has-content-tabs #content-tabs {
-  display: flex;
-}
-
-/* L2 lives in .nav-dropdown under each .nav-section.has-dropdown */
+/* Echo 2.0 — static demo chrome (not shipped in the LuCI package) */
 
 #view-settings[hidden],
 #view-login[hidden],
 #view-app[hidden] {
-  display: none !important;
+	display: none !important;
 }
 
-#view-login:not([hidden]) {
-  display: block;
-  background: var(--echo-bg);
-  min-height: calc(100vh - 52px);
+.demo-settings-wrap {
+	width: 100%;
+	max-width: 760px;
+	margin: 0 auto;
+	padding: 42px 24px 120px;
 }
 
-#view-login .demo-login-page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 52px);
-  padding: 24px;
-  background: var(--echo-bg);
-  position: relative;
+.echo-page-title {
+	font-size: var(--echo-size-3xl);
+	font-weight: var(--echo-weight-bold);
+	line-height: 1.08;
+	letter-spacing: -0.028em;
+}
+
+.demo-toolbar {
+	position: fixed;
+	left: 50%;
+	bottom: 18px;
+	z-index: 1900;
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	max-width: calc(100vw - 24px);
+	padding: 5px;
+	border: 1px solid var(--echo-glass-border);
+	border-radius: var(--echo-radius-pill);
+	background: var(--echo-glass-bg-strong);
+	-webkit-backdrop-filter: blur(28px) saturate(190%);
+	backdrop-filter: blur(28px) saturate(190%);
+	box-shadow: var(--echo-shadow-lg), 0 1px 0 var(--echo-glass-highlight) inset;
+	transform: translateX(-50%);
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.demo-toolbar::-webkit-scrollbar {
+	display: none;
+}
+
+.demo-toolbar-label {
+	padding: 0 10px;
+	color: var(--echo-text-tertiary);
+	font-size: 10px;
+	font-weight: var(--echo-weight-semibold);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.demo-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 32px;
+	padding: 0 12px;
+	border: 0;
+	border-radius: var(--echo-radius-pill);
+	background: transparent;
+	color: var(--echo-text-secondary);
+	font-size: var(--echo-size-xs);
+	font-weight: var(--echo-weight-medium);
+	text-decoration: none;
+	white-space: nowrap;
+	cursor: pointer;
+	transition:
+		background-color var(--echo-duration-fast) var(--echo-ease-out),
+		color var(--echo-duration-fast) var(--echo-ease-out);
+}
+
+.demo-btn:hover,
+.demo-btn.active {
+	background: var(--echo-bg-elevated);
+	color: var(--echo-text);
+	box-shadow: 0 0 0 1px var(--echo-separator);
+}
+
+.demo-toolbar-divider {
+	width: 1px;
+	height: 18px;
+	margin: 0 4px;
+	background: var(--echo-separator-strong);
+}
+
+.demo-clean {
+	color: var(--echo-accent-text);
+}
+
+body.demo-clean-view .demo-toolbar {
+	display: none;
+}
+
+body.demo-clean-view {
+	padding-bottom: 0;
+}
+
+/* The sign-in preview borrows the real sign-in body classes. */
+body.echo-login #view-login {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+body.echo-login .echo-login-card {
+	margin: auto;
+}
+
+body.echo-login .demo-toolbar {
+	position: fixed;
+}
+
+body.echo-login {
+	padding-bottom: 90px;
+}
+
+body.echo-login.demo-clean-view {
+	padding-bottom: 24px;
+}
+
+@media (max-width: 640px) {
+	.demo-settings-wrap {
+		padding: 28px 16px 110px;
+	}
+
+	.echo-page-title {
+		font-size: var(--echo-size-2xl);
+	}
+
+	.demo-toolbar-label {
+		display: none;
+	}
+
+	.demo-toolbar {
+		bottom: 10px;
+	}
+
+	body.echo-login {
+		padding-bottom: 80px;
+	}
 }

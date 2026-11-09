@@ -1,205 +1,677 @@
-/* Echo Theme — LuCI CBI components */
+/* Echo 2.0 — LuCI components: cards, lists, forms, tables, feedback */
 
-.alert-message,
-.cbi-section-error {
-	padding: 14px 16px;
-	border-radius: var(--echo-radius-md);
-	margin-bottom: 16px;
-	font-size: var(--echo-text-sm);
-	border: 1px solid transparent;
-}
-
-.alert-message.warning,
-.cbi-section-error {
-	background: rgba(255, 149, 0, 0.12);
-	border-color: rgba(255, 149, 0, 0.25);
-	color: var(--echo-warning);
-}
-
-.alert-message.notice {
-	background: var(--echo-primary-soft);
-	border-color: rgba(0, 113, 227, 0.2);
-	color: var(--echo-primary);
-}
-
-.alert-message.error {
-	background: rgba(255, 59, 48, 0.1);
-	border-color: rgba(255, 59, 48, 0.25);
-	color: var(--echo-danger);
-}
+/* ── Cards and sections ─────────────────────────────────────────────── */
 
 .cbi-map {
-	margin-bottom: 24px;
-}
-
-.cbi-map-descr,
-.cbi-section-descr {
-	color: var(--echo-text-secondary);
-	font-size: var(--echo-text-sm);
-	margin-bottom: 16px;
-	line-height: 1.6;
+	margin-bottom: var(--echo-space-6);
 }
 
 .cbi-section,
-.cbi-section-node {
+.echo-card {
+	margin-bottom: var(--echo-space-5);
 	background: var(--echo-bg-elevated);
-	border-radius: var(--echo-radius-lg);
+	border-radius: var(--echo-card-radius);
 	box-shadow: var(--echo-shadow-card);
-	margin-bottom: 20px;
-	overflow: hidden;
+}
+
+.cbi-section {
+	position: relative;
+}
+
+.cbi-section-node {
+	background: transparent;
+	border-radius: inherit;
+}
+
+.cbi-section .cbi-section {
+	margin: var(--echo-space-3) 0;
+	background: var(--echo-bg-inset);
+	box-shadow: none;
 }
 
 .cbi-section-head,
 .cbi-section-table-title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--echo-space-3);
 	padding: 16px 20px;
-	font-size: var(--echo-text-base);
-	font-weight: 600;
+	border-bottom: 1px solid var(--echo-separator);
 	color: var(--echo-text);
-	border-bottom: 1px solid var(--echo-border);
-	background: transparent;
+	font-size: var(--echo-size-base);
+	font-weight: var(--echo-weight-semibold);
+	letter-spacing: -0.012em;
+}
+
+.cbi-section-head:last-child {
+	border-bottom: 0;
+}
+
+.cbi-section-node-tabbed > .cbi-section:first-child {
+	margin-top: 0;
 }
 
 .cbi-section-node-tabbed > .cbi-section:nth-child(2) {
-	border-radius: 0 0 var(--echo-radius-lg) var(--echo-radius-lg);
+	border-radius: 0 0 var(--echo-card-radius) var(--echo-card-radius);
 }
 
+.cbi-map-descr,
+.cbi-section-descr,
+.cbi-value-description {
+	color: var(--echo-text-secondary);
+	font-size: var(--echo-size-sm);
+	line-height: var(--echo-leading-relaxed);
+}
+
+.cbi-map-descr,
+.cbi-section-descr {
+	margin-bottom: var(--echo-space-4);
+}
+
+.cbi-value-description {
+	margin-top: 6px;
+}
+
+/* LuCI emits h2/h3 section headings in addition to .cbi-section-head. */
+.cbi-map > h2,
+#maincontent > h2 {
+	margin: 0 0 6px;
+	font-size: var(--echo-size-lg);
+	font-weight: var(--echo-weight-semibold);
+	letter-spacing: -0.022em;
+}
+
+.cbi-section > h3,
+.cbi-section > legend,
+.cbi-section-node > h3 {
+	margin: 0;
+	padding: 15px 20px 11px;
+	border-bottom: 1px solid var(--echo-separator);
+	font-size: var(--echo-size-sm);
+	font-weight: var(--echo-weight-semibold);
+	letter-spacing: -0.008em;
+}
+
+.cbi-section > h3 + .cbi-section-node,
+.cbi-section > legend + .cbi-section-node {
+	margin-top: 0;
+}
+
+/* ── Inset grouped rows ─────────────────────────────────────────────── */
+
 .cbi-value {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
 	align-items: center;
-	padding: 12px 20px;
-	border-bottom: 1px solid var(--echo-border);
-	gap: 8px 16px;
+	gap: 6px var(--echo-space-5);
+	padding: 13px 20px;
+	border-bottom: 1px solid var(--echo-separator);
 }
 
 .cbi-value:last-child {
-	border-bottom: none;
+	border-bottom: 0;
 }
 
 .cbi-value-title {
-	flex: 0 0 220px;
-	font-size: var(--echo-text-sm);
-	font-weight: 500;
+	font-size: var(--echo-size-sm);
+	font-weight: var(--echo-weight-medium);
 	color: var(--echo-text);
+	line-height: var(--echo-leading-snug);
 }
 
 .cbi-value-field {
-	flex: 1;
-	min-width: 200px;
+	min-width: 0;
+	font-size: var(--echo-size-sm);
+	color: var(--echo-text-secondary);
 }
+
+.cbi-value-field > * + * {
+	margin-top: 6px;
+}
+
+.cbi-value-description {
+	grid-column: 2;
+	margin-left: 0;
+	margin-top: 2px;
+	font-size: var(--echo-size-xs);
+	color: var(--echo-text-tertiary);
+}
+
+.cbi-value > .cbi-value-description {
+	grid-column: 2;
+}
+
+/* ── Inputs ─────────────────────────────────────────────────────────── */
 
 .cbi-value-field input[type="text"],
 .cbi-value-field input[type="password"],
 .cbi-value-field input[type="number"],
+.cbi-value-field input[type="email"],
+.cbi-value-field input[type="url"],
+.cbi-value-field input[type="search"],
+.cbi-value-field input[type="date"],
+.cbi-value-field input[type="time"],
 .cbi-value-field select,
 .cbi-value-field textarea,
 .cbi-input-text,
+.cbi-input-password,
 .cbi-input-select,
-.cbi-input-password {
+.cbi-input-file,
+input[type="text"].cbi-input-text,
+input[type="password"].cbi-input-password,
+select.cbi-input-select {
 	width: 100%;
-	max-width: 420px;
-	padding: 9px 12px;
-	border: 1px solid var(--echo-border-strong);
+	max-width: 460px;
+	min-height: 38px;
+	padding: 8px 11px;
+	border: 1px solid var(--echo-separator-strong);
 	border-radius: var(--echo-radius-sm);
-	background: var(--echo-bg);
+	background: var(--echo-bg-inset);
 	color: var(--echo-text);
-	transition: border-color var(--echo-duration) var(--echo-ease),
-		box-shadow var(--echo-duration) var(--echo-ease);
+	font-size: var(--echo-size-sm);
+	line-height: 1.4;
+	transition:
+		border-color var(--echo-duration-fast) var(--echo-ease-out),
+		box-shadow var(--echo-duration-fast) var(--echo-ease-out),
+		background-color var(--echo-duration-fast) var(--echo-ease-out);
+	appearance: none;
+}
+
+.cbi-value-field select,
+select.cbi-input-select {
+	padding-right: 34px;
+	background-image:
+		linear-gradient(45deg, transparent 50%, var(--echo-text-tertiary) 50%),
+		linear-gradient(135deg, var(--echo-text-tertiary) 50%, transparent 50%);
+	background-position:
+		calc(100% - 17px) calc(50% + 1px),
+		calc(100% - 12px) calc(50% + 1px);
+	background-size: 5px 5px, 5px 5px;
+	background-repeat: no-repeat;
+}
+
+.cbi-value-field textarea {
+	min-height: 92px;
+	resize: vertical;
+}
+
+.cbi-value-field input::placeholder,
+.cbi-value-field textarea::placeholder {
+	color: var(--echo-text-tertiary);
+}
+
+.cbi-value-field input:hover,
+.cbi-value-field select:hover,
+.cbi-value-field textarea:hover {
+	border-color: var(--echo-text-tertiary);
 }
 
 .cbi-value-field input:focus,
 .cbi-value-field select:focus,
-.cbi-value-field textarea:focus {
+.cbi-value-field textarea:focus,
+.cbi-input-text:focus,
+.cbi-input-password:focus,
+.cbi-input-select:focus {
 	outline: none;
-	border-color: var(--echo-primary);
-	box-shadow: 0 0 0 3px var(--echo-primary-soft);
+	border-color: var(--echo-accent);
+	background: var(--echo-bg-elevated);
+	box-shadow: 0 0 0 3px var(--echo-focus-ring);
 }
 
-.cbi-value-description {
-	flex: 1 1 100%;
-	margin-left: 236px;
-	font-size: var(--echo-text-xs);
-	color: var(--echo-text-tertiary);
+.cbi-value-field input:disabled,
+.cbi-value-field select:disabled,
+.cbi-value-field textarea:disabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+	background: var(--echo-bg);
 }
 
-.cbi-page-actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-	padding: 16px 0;
-	position: sticky;
-	bottom: 0;
-	background: linear-gradient(to top, var(--echo-bg) 70%, transparent);
+.cbi-value-field input[type="radio"] {
+	width: 17px;
+	height: 17px;
+	min-height: 0;
+	margin: 0;
+	accent-color: var(--echo-accent);
+	cursor: pointer;
 }
+
+/* Apple-style switch for LuCI flag fields. */
+.cbi-value-field input[type="checkbox"] {
+	position: relative;
+	width: 42px;
+	height: 26px;
+	min-height: 0;
+	margin: 0;
+	padding: 0;
+	appearance: none;
+	-webkit-appearance: none;
+	border: 0;
+	border-radius: var(--echo-radius-pill);
+	background: var(--echo-fill-strong);
+	cursor: pointer;
+	transition: background-color var(--echo-duration-base) var(--echo-ease-out);
+}
+
+.cbi-value-field input[type="checkbox"]::after {
+	content: "";
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #ffffff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.24), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
+	transition: transform var(--echo-duration-base) var(--echo-ease-spring);
+}
+
+.cbi-value-field input[type="checkbox"]:checked {
+	background: var(--echo-success);
+}
+
+.cbi-value-field input[type="checkbox"]:checked::after {
+	transform: translateX(16px);
+}
+
+.cbi-value-field input[type="checkbox"]:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px var(--echo-focus-ring);
+}
+
+.cbi-value-field input[type="checkbox"]:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+.cbi-value-field input[type="color"] {
+	width: 52px;
+	height: 34px;
+	min-height: 34px;
+	padding: 3px;
+	border: 1px solid var(--echo-separator-strong);
+	border-radius: var(--echo-radius-sm);
+	background: var(--echo-bg-inset);
+	cursor: pointer;
+}
+
+.cbi-value-field input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+.cbi-value-field input[type="color"]::-webkit-color-swatch {
+	border: 0;
+	border-radius: 5px;
+}
+
+.cbi-value-field input[type="color"]::-moz-color-swatch {
+	border: 0;
+	border-radius: 5px;
+}
+
+.cbi-value-field label {
+	font-size: var(--echo-size-sm);
+	color: var(--echo-text-secondary);
+}
+
+.cbi-value-field .cbi-checkbox,
+.cbi-value-field .cbi-radio {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 32px;
+}
+
+.cbi-input-invalid,
+.cbi-value-field input.cbi-input-invalid {
+	border-color: var(--echo-danger);
+	box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.16);
+}
+
+.cbi-value-error,
+.cbi-section-error {
+	color: var(--echo-danger-text);
+	font-size: var(--echo-size-xs);
+	font-weight: var(--echo-weight-medium);
+	margin-top: 6px;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────── */
 
 .cbi-button,
-.btn,
-button.cbi-button {
+.btn {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	gap: 6px;
-	padding: 9px 18px;
-	border-radius: var(--echo-radius-sm);
-	font-size: var(--echo-text-sm);
-	font-weight: 500;
+	min-height: var(--echo-control-height);
+	padding: 7px 15px;
 	border: 1px solid transparent;
+	border-radius: var(--echo-radius-sm);
+	background: var(--echo-fill);
+	color: var(--echo-text);
+	font-size: var(--echo-size-sm);
+	font-weight: var(--echo-weight-semibold);
+	line-height: 1.2;
+	text-decoration: none;
 	cursor: pointer;
-	transition: all var(--echo-duration) var(--echo-ease);
+	user-select: none;
+	transition:
+		background-color var(--echo-duration-fast) var(--echo-ease-out),
+		border-color var(--echo-duration-fast) var(--echo-ease-out),
+		color var(--echo-duration-fast) var(--echo-ease-out),
+		transform var(--echo-duration-instant) var(--echo-ease-out);
+}
+
+.cbi-button:hover,
+.btn:hover {
+	background: var(--echo-fill-strong);
+	color: var(--echo-text);
+	text-decoration: none;
+}
+
+.cbi-button:active,
+.btn:active {
+	transform: scale(0.975);
+}
+
+.cbi-button:focus-visible,
+.btn:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px var(--echo-focus-ring);
+}
+
+.cbi-button:disabled,
+.btn:disabled,
+.cbi-button[disabled] {
+	opacity: 0.45;
+	cursor: not-allowed;
+	transform: none;
 }
 
 .cbi-button-save,
 .cbi-button-apply,
 .cbi-button-action,
-.cbi-button-positive {
-	background: var(--echo-primary);
+.cbi-button-positive,
+.btn-primary {
+	background: var(--echo-accent);
+	border-color: var(--echo-accent);
 	color: #ffffff;
-	border-color: var(--echo-primary);
 }
 
 .cbi-button-save:hover,
 .cbi-button-apply:hover,
 .cbi-button-action:hover,
-.cbi-button-positive:hover {
-	background: var(--echo-primary-hover);
-	border-color: var(--echo-primary-hover);
+.cbi-button-positive:hover,
+.btn-primary:hover {
+	background: var(--echo-accent-hover);
+	border-color: var(--echo-accent-hover);
+	color: #ffffff;
+}
+
+.cbi-page-actions .cbi-button-save,
+.cbi-page-actions .cbi-button-apply,
+.cbi-page-actions .cbi-button-action,
+.cbi-page-actions button.cbi-button-save,
+.cbi-page-actions button.cbi-button-apply {
+	background: var(--echo-accent);
+	border-color: var(--echo-accent);
+	color: #ffffff;
+}
+
+.cbi-page-actions .cbi-button-save:hover,
+.cbi-page-actions .cbi-button-apply:hover {
+	background: var(--echo-accent-hover);
+	border-color: var(--echo-accent-hover);
+	color: #ffffff;
 }
 
 .cbi-button-reset,
-.cbi-button-neutral {
+.cbi-button-neutral,
+.cbi-button-secondary,
+.btn-default {
 	background: var(--echo-bg-elevated);
+	border-color: var(--echo-separator-strong);
 	color: var(--echo-text);
-	border-color: var(--echo-border-strong);
 }
 
 .cbi-button-reset:hover,
-.cbi-button-neutral:hover {
-	background: var(--echo-bg);
+.cbi-button-neutral:hover,
+.cbi-button-secondary:hover,
+.btn-default:hover {
+	background: var(--echo-bg-inset);
+	color: var(--echo-text);
 }
 
 .cbi-button-remove,
 .cbi-button-negative,
-.cbi-button-del {
+.cbi-button-del,
+.cbi-button-danger {
 	background: transparent;
-	color: var(--echo-danger);
-	border-color: rgba(255, 59, 48, 0.35);
+	border-color: rgba(255, 59, 48, 0.34);
+	color: var(--echo-danger-text);
 }
 
 .cbi-button-remove:hover,
 .cbi-button-negative:hover,
-.cbi-button-del:hover {
-	background: rgba(255, 59, 48, 0.1);
+.cbi-button-del:hover,
+.cbi-button-danger:hover {
+	background: rgba(255, 59, 48, 0.09);
+	color: var(--echo-danger-text);
 }
+
+.cbi-button-link {
+	background: transparent;
+	border-color: transparent;
+	color: var(--echo-accent-text);
+}
+
+.cbi-button-link:hover {
+	background: var(--echo-accent-soft);
+	color: var(--echo-accent-text);
+}
+
+.cbi-page-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	margin-top: var(--echo-space-5);
+	padding: 14px 0 0;
+	position: sticky;
+	bottom: 0;
+	z-index: 2;
+	background: linear-gradient(to top, var(--echo-bg) 58%, rgba(0, 0, 0, 0));
+}
+
+html[data-theme="dark"] .cbi-page-actions {
+	background: linear-gradient(to top, var(--echo-bg) 58%, rgba(0, 0, 0, 0));
+}
+
+/* ── Alerts and feedback ────────────────────────────────────────────── */
+
+.alert-message,
+.cbi-section-error {
+	display: block;
+	margin-bottom: var(--echo-space-4);
+	padding: 13px 15px;
+	border: 1px solid var(--echo-separator);
+	border-radius: var(--echo-radius-md);
+	background: var(--echo-bg-elevated);
+	color: var(--echo-text);
+	font-size: var(--echo-size-sm);
+	line-height: var(--echo-leading-relaxed);
+}
+
+.alert-message strong {
+	display: block;
+	margin-bottom: 2px;
+	font-weight: var(--echo-weight-semibold);
+}
+
+.alert-message.warning {
+	border-color: rgba(255, 149, 0, 0.34);
+	background: rgba(255, 149, 0, 0.1);
+}
+
+.alert-message.warning strong {
+	color: var(--echo-warning-text);
+}
+
+.alert-message.notice {
+	border-color: rgba(0, 113, 227, 0.28);
+	background: var(--echo-accent-soft);
+}
+
+.alert-message.notice strong {
+	color: var(--echo-accent-text);
+}
+
+.alert-message.error,
+.cbi-section-error {
+	border-color: rgba(255, 59, 48, 0.32);
+	background: rgba(255, 59, 48, 0.08);
+}
+
+.alert-message.error strong,
+.cbi-section-error {
+	color: var(--echo-danger-text);
+}
+
+.alert-message a {
+	color: var(--echo-link);
+	font-weight: var(--echo-weight-semibold);
+}
+
+/* ── Tables ─────────────────────────────────────────────────────────── */
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: var(--echo-size-sm);
+}
+
+table thead th {
+	padding: 9px 16px;
+	text-align: left;
+	font-size: var(--echo-size-2xs);
+	font-weight: var(--echo-weight-semibold);
+	letter-spacing: 0.055em;
+	text-transform: uppercase;
+	color: var(--echo-text-tertiary);
+	background: transparent;
+	border-bottom: 1px solid var(--echo-separator);
+	white-space: nowrap;
+}
+
+table tbody td {
+	padding: 12px 16px;
+	border-bottom: 1px solid var(--echo-separator);
+	color: var(--echo-text);
+	vertical-align: middle;
+}
+
+table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+@media (hover: hover) {
+	table tbody tr:hover td {
+		background: var(--echo-bg-hover);
+	}
+}
+
+table tbody td strong {
+	font-weight: var(--echo-weight-semibold);
+}
+
+table .cbi-section-table-cell {
+	border-bottom: 0;
+}
+
+.cbi-section-table {
+	background: transparent;
+}
+
+.cbi-section-table tbody tr {
+	border-bottom: 1px solid var(--echo-separator);
+}
+
+.cbi-section-table tbody tr:last-child {
+	border-bottom: 0;
+}
+
+/* ── Badges ─────────────────────────────────────────────────────────── */
+
+.label,
+.cbi-tooltip {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 3px 8px;
+	border-radius: var(--echo-radius-pill);
+	background: var(--echo-fill);
+	color: var(--echo-text-secondary);
+	font-size: var(--echo-size-2xs);
+	font-weight: var(--echo-weight-semibold);
+	line-height: 1.35;
+	white-space: nowrap;
+}
+
+.label::before {
+	content: "";
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: currentColor;
+	flex-shrink: 0;
+}
+
+.label.success {
+	background: rgba(52, 199, 89, 0.13);
+	color: var(--echo-success-text);
+}
+
+.label.warning {
+	background: rgba(255, 149, 0, 0.13);
+	color: var(--echo-warning-text);
+}
+
+.label.important,
+.label.danger {
+	background: rgba(255, 59, 48, 0.1);
+	color: var(--echo-danger-text);
+}
+
+.label.notice {
+	background: var(--echo-accent-soft);
+	color: var(--echo-accent-text);
+}
+
+.ifacebadge,
+.zonebadge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 9px;
+	border: 1px solid var(--echo-separator);
+	border-radius: var(--echo-radius-pill);
+	background: var(--echo-bg-inset);
+	font-size: var(--echo-size-2xs);
+	font-weight: var(--echo-weight-medium);
+}
+
+/* ── Tabs inside content ────────────────────────────────────────────── */
 
 .cbi-tabmenu {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 4px;
-	padding: 12px 16px;
+	gap: 2px;
 	margin: 0;
+	padding: 4px;
 	list-style: none;
-	background: var(--echo-bg);
-	border-bottom: 1px solid var(--echo-border);
+	background: var(--echo-fill);
+	border-bottom: 0;
+	border-radius: var(--echo-radius-md);
 }
 
 .cbi-tabmenu li {
@@ -208,116 +680,176 @@ button.cbi-button {
 
 .cbi-tabmenu li a {
 	display: block;
-	padding: 8px 16px;
-	border-radius: 999px;
-	font-size: var(--echo-text-xs);
-	font-weight: 500;
+	padding: 6px 12px;
+	border-radius: var(--echo-radius-sm);
 	color: var(--echo-text-secondary);
-	transition: all var(--echo-duration) var(--echo-ease);
+	font-size: var(--echo-size-xs);
+	font-weight: var(--echo-weight-medium);
+	text-decoration: none;
 }
 
 .cbi-tabmenu li.cbi-tab a,
 .cbi-tabmenu li.cbi-tab-disabled a {
-	color: var(--echo-primary);
-	background: var(--echo-primary-soft);
+	background: var(--echo-bg-elevated);
+	color: var(--echo-text);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .cbi-tabcontainer {
 	padding: 0;
 }
 
-table {
-	width: 100%;
-	border-collapse: collapse;
-	font-size: var(--echo-text-sm);
+/* ── Progress, meters, misc ─────────────────────────────────────────── */
+
+.cbi-progressbar,
+.progress {
+	position: relative;
+	height: 7px;
+	overflow: hidden;
+	border: 0;
+	border-radius: var(--echo-radius-pill);
+	background: var(--echo-fill);
 }
 
-table thead th {
-	padding: 12px 16px;
-	text-align: left;
-	font-weight: 600;
-	font-size: var(--echo-text-xs);
-	text-transform: uppercase;
-	letter-spacing: 0.04em;
-	color: var(--echo-text-secondary);
-	background: var(--echo-bg);
-	border-bottom: 1px solid var(--echo-border);
+.cbi-progressbar > div,
+.progress-bar {
+	height: 100%;
+	border-radius: inherit;
+	background: var(--echo-accent);
+	transition: width var(--echo-duration-slow) var(--echo-ease-out);
 }
 
-table tbody td {
-	padding: 12px 16px;
-	border-bottom: 1px solid var(--echo-border);
+.cbi-dynlist {
+	border: 1px solid var(--echo-separator);
+	border-radius: var(--echo-radius-md);
+	overflow: hidden;
+}
+
+.cbi-dynlist .item {
+	padding: 9px 12px;
+	border-bottom: 1px solid var(--echo-separator);
+	font-size: var(--echo-size-sm);
+}
+
+.cbi-dynlist .item:last-child {
+	border-bottom: 0;
+}
+
+.cbi-dropdown {
+	min-height: 38px;
+	border: 1px solid var(--echo-separator-strong);
+	border-radius: var(--echo-radius-sm);
+	background: var(--echo-bg-inset);
 	color: var(--echo-text);
 }
 
-table tbody tr:hover td {
-	background: var(--echo-primary-soft);
-}
-
-.cbi-progressbar {
-	height: 8px;
-	border-radius: 999px;
-	background: var(--echo-bg);
-	overflow: hidden;
-	border: 1px solid var(--echo-border);
-}
-
-.cbi-progressbar > div {
-	height: 100%;
-	background: linear-gradient(90deg, var(--echo-primary), var(--echo-brand-navy));
-	border-radius: 999px;
-	transition: width 0.4s var(--echo-ease);
-}
-
-.label,
-.cbi-tooltip {
-	display: inline-flex;
-	align-items: center;
-	padding: 3px 8px;
-	border-radius: 999px;
-	font-size: var(--echo-text-xs);
-	font-weight: 600;
-}
-
-.label.success { background: rgba(52, 199, 89, 0.15); color: var(--echo-success); }
-.label.warning { background: rgba(255, 149, 0, 0.15); color: var(--echo-warning); }
-.label.important,
-.label.danger { background: rgba(255, 59, 48, 0.12); color: var(--echo-danger); }
-
-.modal {
-	border-radius: var(--echo-radius-lg);
-	box-shadow: var(--echo-shadow-lg);
-	border: 1px solid var(--echo-border);
-	overflow: hidden;
-}
-
-.modal.cbi-modal {
+.cbi-dropdown > ul {
+	border-radius: var(--echo-radius-md);
 	background: var(--echo-bg-elevated);
+	box-shadow: var(--echo-shadow-popover);
 }
 
-.ifacebadge,
-.zonebadge {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	padding: 4px 10px;
-	border-radius: 999px;
-	font-size: var(--echo-text-xs);
-	background: var(--echo-bg);
-	border: 1px solid var(--echo-border);
+.cbi-tooltip {
+	position: relative;
+	cursor: help;
 }
 
-@media (max-width: 768px) {
+/* ── Modal ──────────────────────────────────────────────────────────── */
+
+.modal.cbi-modal,
+.modal.echo-modal {
+	z-index: 5000;
+	border: 1px solid var(--echo-separator);
+	border-radius: var(--echo-radius-xl);
+	background: var(--echo-bg-elevated);
+	box-shadow: var(--echo-shadow-xl);
+	overflow: hidden;
+}
+
+.modal.cbi-modal .modal-header,
+.modal.echo-modal .modal-header {
+	padding: 16px 20px;
+	border-bottom: 1px solid var(--echo-separator);
+	font-weight: var(--echo-weight-semibold);
+}
+
+.modal.cbi-modal .modal-footer,
+.modal.echo-modal .modal-footer {
+	padding: 14px 20px;
+	border-top: 1px solid var(--echo-separator);
+}
+
+/* ── Code ───────────────────────────────────────────────────────────── */
+
+#maincontent pre,
+#maincontent code,
+pre {
+	font-family: var(--echo-font-mono);
+	font-size: var(--echo-size-xs);
+}
+
+#maincontent pre,
+pre {
+	padding: 14px 16px;
+	border: 1px solid var(--echo-separator);
+	border-radius: var(--echo-radius-md);
+	background: var(--echo-bg-inset);
+	color: var(--echo-text-secondary);
+	overflow-x: auto;
+}
+
+code {
+	padding: 1px 5px;
+	border-radius: 5px;
+	background: var(--echo-fill);
+	color: var(--echo-text);
+}
+
+/* ── Responsive forms ───────────────────────────────────────────────── */
+
+@media (max-width: 760px) {
 	.cbi-value {
-		flex-direction: column;
-		align-items: stretch;
+		grid-template-columns: 1fr;
+		gap: 6px;
+		padding: 12px 16px;
 	}
 
-	.cbi-value-title {
-		flex: none;
+	.cbi-value-field input[type="text"],
+	.cbi-value-field input[type="password"],
+	.cbi-value-field input[type="number"],
+	.cbi-value-field select,
+	.cbi-value-field textarea,
+	.cbi-input-text,
+	.cbi-input-password,
+	.cbi-input-select {
+		max-width: none;
 	}
 
-	.cbi-value-description {
-		margin-left: 0;
+	.cbi-value-description,
+	.cbi-value > .cbi-value-description {
+		grid-column: 1;
+	}
+
+	.cbi-section-head {
+		padding: 14px 16px;
+	}
+
+	.cbi-page-actions {
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+
+	.cbi-button,
+	.btn {
+		min-height: var(--echo-touch-height);
+	}
+
+	.cbi-value-field input[type="text"],
+	.cbi-value-field input[type="password"],
+	.cbi-value-field input[type="number"],
+	.cbi-value-field select,
+	.cbi-input-text,
+	.cbi-input-password,
+	.cbi-input-select {
+		min-height: var(--echo-touch-height);
 	}
 }

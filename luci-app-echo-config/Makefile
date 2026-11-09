@@ -11,8 +11,4 @@ LUCI_PKGARCH:=all
 
 include $(TOPDIR)/feeds/luci/luci.mk
 
-define Package/luci-app-echo-config/conffiles
-/etc/config/echo
-endef
-
 # call BuildPackage - OpenWrt buildroot signature

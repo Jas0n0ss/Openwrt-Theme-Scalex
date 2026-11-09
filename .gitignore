@@ -8,3 +8,8 @@ node_modules/
 dist/
 *.rootfs.tar.gz
 release/
+
+# Local test output
+.venv/
+tests/artifacts/
+__pycache__/

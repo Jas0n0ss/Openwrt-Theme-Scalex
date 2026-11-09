@@ -5,7 +5,7 @@
 
 include $(TOPDIR)/rules.mk
 
-LUCI_TITLE:=Echo - Apple x OpenWrt inspired premium LuCI theme
+LUCI_TITLE:=Echo 2.0 - Apple-inspired Liquid Glass theme for LuCI
 LUCI_DEPENDS:=+luci-theme-bootstrap
 PKG_VERSION:=$(shell cat $(CURDIR)/ucode/template/themes/echo/version 2>/dev/null | tr -d '[:space:]' || echo 1.0.0)
 PKG_RELEASE:=1

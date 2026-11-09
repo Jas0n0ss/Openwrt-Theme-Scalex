@@ -1,6 +1,7 @@
 @import "variables.css";
 @import "bootstrap-compat.css";
 @import "base.css";
+@import "symbols.css";
 @import "glass.css";
 @import "layout.css";
 @import "components.css";

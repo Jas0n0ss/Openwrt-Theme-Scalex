@@ -1,29 +1,41 @@
-{# luci-theme-echo — Main page footer #}
+{# luci-theme-echo 2.0 — Footer #}
 {%
-  const echo_theme_repo = 'https://github.com/Jas0n0ss/openwrt-theme-echo/';
+  import { readfile } from 'fs';
+
+  const echo_version = trim(readfile('/usr/share/ucode/luci/template/themes/echo/version')) ?? '2.0.0';
+  const echo_theme_repo = 'https://github.com/Jas0n0ss/openwrt-theme-echo';
 
   let raw_dist = version.distname ?? 'OpenWrt';
   let distro_name = raw_dist;
-  let distro_url = 'https://github.com/openwrt/openwrt/tree/master';
+  let distro_url = 'https://github.com/openwrt/openwrt';
 
   if (/immortal/i.test(raw_dist)) {
     distro_name = 'ImmortalWrt';
-    distro_url = 'https://github.com/immortalwrt/immortalwrt/tree/master';
+    distro_url = 'https://github.com/immortalwrt/immortalwrt';
   } else if (/lede/i.test(raw_dist)) {
     distro_name = 'LEDE';
     distro_url = 'https://github.com/coolsnowwolf/lede';
   } else if (/openwrt/i.test(raw_dist)) {
     distro_name = 'OpenWrt';
-    distro_url = 'https://github.com/openwrt/openwrt/tree/master';
+    distro_url = 'https://github.com/openwrt/openwrt';
   }
 %}
 {% if (!blank_page): %}
-    </main>
+      </main>
     </div><!-- #echo-content-wrap -->
 
     <footer id="echo-footer">
       <div class="footer-inner">
-        <a class="footer-link" href="{{ distro_url }}" target="_blank" rel="noopener noreferrer">{{ distro_name }}</a> <a class="footer-link" href="{{ echo_theme_repo }}" target="_blank" rel="noopener noreferrer">{{ _('Theme') }}</a>
+        <div class="footer-group">
+          <span>Echo {{ echo_version }}</span>
+          <span class="footer-dot" aria-hidden="true"></span>
+          <a class="footer-link" href="{{ distro_url }}" target="_blank" rel="noopener noreferrer">{{ distro_name }}</a>
+        </div>
+        <div class="footer-group">
+          <a class="footer-link" href="{{ echo_theme_repo }}" target="_blank" rel="noopener noreferrer">{{ _('Theme source') }}</a>
+          <span class="footer-dot" aria-hidden="true"></span>
+          <a class="footer-link" href="{{ echo_theme_repo }}/releases" target="_blank" rel="noopener noreferrer">{{ _('Releases') }}</a>
+        </div>
       </div>
     </footer>
   </div>

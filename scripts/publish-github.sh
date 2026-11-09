@@ -15,7 +15,7 @@ REPO="${1:-openwrt-theme-echo}"
 
 if ! gh repo view "${OWNER}/${REPO}" >/dev/null 2>&1; then
 	echo "Creating ${OWNER}/${REPO} ..."
-	gh repo create "$REPO" --public --description "Apple-inspired OpenWrt LuCI theme with top nav, VPN/Software grouping, and Network Map dashboard"
+	gh repo create "$REPO" --public --description "Echo 2.0 - Apple-inspired Liquid Glass theme for OpenWrt LuCI"
 fi
 
 if git remote get-url origin >/dev/null 2>&1; then

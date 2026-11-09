@@ -82,6 +82,9 @@ return baseclass.extend({
 
 		root.querySelectorAll('table:not([data-echo-enhanced])').forEach(function(table) {
 			if (table.closest('.echo-table-wrap')) return;
+			/* Echo's own dashboard tables already live in a card and reflow on mobile. */
+			if (table.classList.contains('echo-data-table') || table.closest('.echo-panel')) return;
+
 			var wrap = E('div', { 'class': 'echo-table-wrap' });
 			table.parentNode.insertBefore(wrap, table);
 			wrap.appendChild(table);

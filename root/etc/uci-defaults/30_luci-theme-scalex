@@ -1,0 +1,9 @@
+#!/bin/sh
+
+uci batch <<EOF
+	set luci.themes.ScaleX=/luci-static/scalex
+	set luci.main.mediaurlbase=/luci-static/scalex
+	commit luci
+EOF
+
+exit 0

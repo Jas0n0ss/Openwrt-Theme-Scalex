@@ -1,4 +1,4 @@
-/* Echo 2.0 — static demo chrome (not shipped in the LuCI package) */
+/* ScaleX 2.1 — static demo chrome (not shipped in the LuCI package) */
 
 #view-settings[hidden],
 #view-login[hidden],
@@ -13,9 +13,9 @@
 	padding: 42px 24px 120px;
 }
 
-.echo-page-title {
-	font-size: var(--echo-size-3xl);
-	font-weight: var(--echo-weight-bold);
+.scalex-page-title {
+	font-size: var(--scalex-size-3xl);
+	font-weight: var(--scalex-weight-bold);
 	line-height: 1.08;
 	letter-spacing: -0.028em;
 }
@@ -30,12 +30,12 @@
 	gap: 3px;
 	max-width: calc(100vw - 24px);
 	padding: 5px;
-	border: 1px solid var(--echo-glass-border);
-	border-radius: var(--echo-radius-pill);
-	background: var(--echo-glass-bg-strong);
+	border: 1px solid var(--scalex-glass-border);
+	border-radius: var(--scalex-radius-pill);
+	background: var(--scalex-glass-bg-strong);
 	-webkit-backdrop-filter: blur(28px) saturate(190%);
 	backdrop-filter: blur(28px) saturate(190%);
-	box-shadow: var(--echo-shadow-lg), 0 1px 0 var(--echo-glass-highlight) inset;
+	box-shadow: var(--scalex-shadow-lg), 0 1px 0 var(--scalex-glass-highlight) inset;
 	transform: translateX(-50%);
 	overflow-x: auto;
 	scrollbar-width: none;
@@ -47,9 +47,9 @@
 
 .demo-toolbar-label {
 	padding: 0 10px;
-	color: var(--echo-text-tertiary);
+	color: var(--scalex-text-tertiary);
 	font-size: 10px;
-	font-weight: var(--echo-weight-semibold);
+	font-weight: var(--scalex-weight-semibold);
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	white-space: nowrap;
@@ -62,35 +62,35 @@
 	height: 32px;
 	padding: 0 12px;
 	border: 0;
-	border-radius: var(--echo-radius-pill);
+	border-radius: var(--scalex-radius-pill);
 	background: transparent;
-	color: var(--echo-text-secondary);
-	font-size: var(--echo-size-xs);
-	font-weight: var(--echo-weight-medium);
+	color: var(--scalex-text-secondary);
+	font-size: var(--scalex-size-xs);
+	font-weight: var(--scalex-weight-medium);
 	text-decoration: none;
 	white-space: nowrap;
 	cursor: pointer;
 	transition:
-		background-color var(--echo-duration-fast) var(--echo-ease-out),
-		color var(--echo-duration-fast) var(--echo-ease-out);
+		background-color var(--scalex-duration-fast) var(--scalex-ease-out),
+		color var(--scalex-duration-fast) var(--scalex-ease-out);
 }
 
 .demo-btn:hover,
 .demo-btn.active {
-	background: var(--echo-bg-elevated);
-	color: var(--echo-text);
-	box-shadow: 0 0 0 1px var(--echo-separator);
+	background: var(--scalex-bg-elevated);
+	color: var(--scalex-text);
+	box-shadow: 0 0 0 1px var(--scalex-separator);
 }
 
 .demo-toolbar-divider {
 	width: 1px;
 	height: 18px;
 	margin: 0 4px;
-	background: var(--echo-separator-strong);
+	background: var(--scalex-separator-strong);
 }
 
 .demo-clean {
-	color: var(--echo-accent-text);
+	color: var(--scalex-accent-text);
 }
 
 body.demo-clean-view .demo-toolbar {
@@ -102,26 +102,26 @@ body.demo-clean-view {
 }
 
 /* The sign-in preview borrows the real sign-in body classes. */
-body.echo-login #view-login {
+body.scalex-login #view-login {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	width: 100%;
 }
 
-body.echo-login .echo-login-card {
+body.scalex-login .scalex-login-card {
 	margin: auto;
 }
 
-body.echo-login .demo-toolbar {
+body.scalex-login .demo-toolbar {
 	position: fixed;
 }
 
-body.echo-login {
+body.scalex-login {
 	padding-bottom: 90px;
 }
 
-body.echo-login.demo-clean-view {
+body.scalex-login.demo-clean-view {
 	padding-bottom: 24px;
 }
 
@@ -130,8 +130,8 @@ body.echo-login.demo-clean-view {
 		padding: 28px 16px 110px;
 	}
 
-	.echo-page-title {
-		font-size: var(--echo-size-2xl);
+	.scalex-page-title {
+		font-size: var(--scalex-size-2xl);
 	}
 
 	.demo-toolbar-label {
@@ -142,7 +142,7 @@ body.echo-login.demo-clean-view {
 		bottom: 10px;
 	}
 
-	body.echo-login {
+	body.scalex-login {
 		padding-bottom: 80px;
 	}
 }

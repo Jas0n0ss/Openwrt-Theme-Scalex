@@ -9,7 +9,7 @@ case "$ARCH" in
 arm64|aarch64) PLATFORM="linux/arm64" ;;
 *)             PLATFORM="linux/amd64" ;;
 esac
-BASE="${ECHO_DEMO_URL:-http://host.docker.internal:9080/demo/}"
+BASE="${SCALEX_DEMO_URL:-http://host.docker.internal:9080/demo/}"
 
 docker run --rm --platform "$PLATFORM" \
 	-v "$ROOT:/repo" \

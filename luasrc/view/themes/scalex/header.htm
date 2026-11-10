@@ -1,0 +1,211 @@
+<%#
+  luci-theme-scalex 2.1 — legacy (Lua / LuCI 18.06) header.
+  Server-rendered navigation: no ui.menu, no modern LuCI modules.
+-%>
+<%
+	local sys  = require "luci.sys"
+	local util = require "luci.util"
+	local http = require "luci.http"
+	local disp = require "luci.dispatcher"
+
+	local boardinfo = util.ubus("system", "board") or {}
+	local hostname  = striptags(boardinfo.hostname or "OpenWrt")
+
+	local request  = disp.context.path
+	local request2 = disp.context.request
+	local tree     = disp.node()
+	local node     = disp.context.dispatched
+	local categories = disp.node_childs(tree)
+
+	local category = request[1]
+	local cattree  = category and disp.node(category)
+
+	local uci = require("luci.model.uci").cursor()
+	local scalex_version = "2.1.0"
+	local primary = uci:get("scalex", "global", "primary") or "#0071E3"
+	local dark_primary = uci:get("scalex", "global", "dark_primary") or "#0A84FF"
+	local font_size = uci:get("scalex", "global", "font_size") or "16"
+
+	http.prepare_content("text/html")
+
+	local function nodeurl(prefix, name, query)
+		local u = url(prefix, name)
+		if query then u = u .. http.build_querystring(query) end
+		return pcdata(u)
+	end
+
+	local function title_of(n)
+		return pcdata(striptags(translate(n.title or "")))
+	end
+
+	local function icon_letter(n)
+		local t = striptags(translate(n.title or "?"))
+		return pcdata(string.upper(string.sub(t, 1, 1)))
+	end
+
+	local function render_submenu(prefix, nnode)
+		local childs = disp.node_childs(nnode)
+		if #childs == 0 then return end
+
+		write('<div class="nav-dropdown" hidden aria-hidden="true">')
+		for i, r in ipairs(childs) do
+			local child = nnode.nodes[r]
+			local active = (request[1] == prefix and request[2] == r)
+			write('<a class="nav-dropdown-item%s" href="%s">%s</a>' % {
+				active and " active" or "",
+				nodeurl(prefix, r, child.query),
+				title_of(child)
+			})
+		end
+		write('</div>')
+	end
+
+	local function render_topmenu()
+		write('<nav id="top-nav" class="scalex-top-nav" aria-label="Main navigation">')
+		for i, r in ipairs(categories) do
+			local nnode = tree.nodes[r]
+			local childs = disp.node_childs(nnode)
+			local active = (request[1] == r)
+			local href = (#childs > 0) and "#" or url(r)
+
+			write('<div class="nav-section%s%s">' % {
+				active and " is-active" or "",
+				(#childs > 0) and " has-dropdown" or ""
+			})
+			write('<a class="nav-top%s%s" href="%s"%s>' % {
+				active and " active" or "",
+				(#childs > 0) and " nav-top-trigger" or "",
+				pcdata(href),
+				(#childs > 0) and ' aria-haspopup="true" aria-expanded="false"' or ''
+			})
+			write('<span class="nav-icon nav-icon-letter" aria-hidden="true">%s</span>' % { icon_letter(nnode) })
+			write('<span class="nav-label">%s</span>' % { title_of(nnode) })
+			if #childs > 0 then
+				write('<span class="nav-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M6 9l6 6 6-6"/></svg></span>')
+			end
+			write('</a>')
+			render_submenu(r, nnode)
+			write('</div>')
+		end
+		write('<div class="nav-section nav-logout"><a class="nav-top nav-logout-link" href="%s" title="Logout"><span class="nav-icon nav-icon-letter" aria-hidden="true">L</span><span class="nav-label">Logout</span></a></div>' % { pcdata(url("logout")) })
+		write('</nav>')
+	end
+
+	local function render_tabs()
+		if not category then return end
+		local l2 = request[2]
+		local l2node = cattree and l2 and cattree.nodes[l2]
+		if not l2node then return end
+		local childs = disp.node_childs(l2node)
+		if #childs == 0 then return end
+
+		write('<div class="content-tabs-container"><nav id="content-tabs" class="tabs active" aria-label="Section tabs">')
+		for i, r in ipairs(childs) do
+			local child = l2node.nodes[r]
+			local active = (request[3] == r)
+			write('<a class="content-tab%s" href="%s">%s</a>' % {
+				active and " active" or "",
+				nodeurl(category .. "/" .. l2, r, child.query),
+				title_of(child)
+			})
+		end
+		write('</nav></div>')
+	end
+-%>
+<!DOCTYPE html>
+<html lang="<%=luci.i18n.context.lang%>" data-theme="auto">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta name="theme-color" content="#f5f5f7" id="meta-theme-color">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<title><%=striptags(hostname .. ((node and node.title) and (" - " .. translate(node.title)) or ""))%> - LuCI</title>
+	<link rel="icon" href="<%=media%>/img/favicon.svg" type="image/svg+xml">
+	<script>
+	(function () {
+		var mode = 'auto';
+		try { mode = localStorage.getItem('scalex-theme') || 'auto'; } catch (e) {}
+		if (['auto', 'light', 'dark'].indexOf(mode) < 0) mode = 'auto';
+		var dark = mode === 'dark' || (mode === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+		document.documentElement.setAttribute('data-theme', mode);
+		document.documentElement.setAttribute('data-darkmode', dark ? 'true' : 'false');
+	})();
+	</script>
+	<link rel="stylesheet" href="/luci-static/bootstrap/cascade.css">
+	<link rel="stylesheet" href="<%=media%>/css/scalex.css">
+	<link rel="stylesheet" href="<%=media%>/css/legacy.css">
+	<style>
+		html { font-size: <%=font_size%>px; }
+		:root {
+			--scalex-accent: <%=primary%>;
+			--scalex-accent-hover: <%=primary%>;
+		}
+		html[data-theme="dark"] {
+			--scalex-accent: <%=dark_primary%>;
+			--scalex-accent-hover: <%=dark_primary%>;
+		}
+	</style>
+	<script src="<%=resource%>/cbi.js"></script>
+	<script src="<%=resource%>/xhr.js"></script>
+</head>
+<body class="theme-openwrt scalex-legacy has-content-tabs">
+
+<a class="scalex-skip-link" href="#maincontent">Skip to content</a>
+
+<div id="scalex-app">
+	<div id="scalex-main">
+		<header id="scalex-nav-bar">
+			<div class="nav-bar-container">
+				<div class="nav-bar-row">
+					<a class="header-brand" href="<%=url('admin/status/overview')%>" aria-label="ScaleX home">
+						<img class="scalex-mark" src="<%=media%>/img/scalex-mark.svg" alt="" width="28" height="28">
+						<span class="brand-name">ScaleX</span>
+						<span class="brand-divider" aria-hidden="true"></span>
+						<span class="brand-host"><%=hostname%></span>
+					</a>
+
+					<div class="top-nav-shell">
+						<div class="top-nav-wrap">
+							<% render_topmenu() %>
+						</div>
+					</div>
+
+					<div class="header-actions">
+						<div class="theme-switch" role="group" aria-label="Appearance">
+							<button type="button" data-theme-mode="auto" aria-pressed="true" aria-label="Theme: Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg></button>
+							<button type="button" data-theme-mode="light" aria-pressed="false" aria-label="Theme: Light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></button>
+							<button type="button" data-theme-mode="dark" aria-pressed="false" aria-label="Theme: Dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.4A8.4 8.4 0 0 1 9.6 4a8.5 8.5 0 1 0 10.4 10.4Z"/></svg></button>
+						</div>
+						<button type="button" class="icon-btn" id="scalex-menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="scalex-sheet">
+							<span class="scalex-symbol scalex-symbol-menu" aria-hidden="true"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<header id="scalex-header">
+			<div class="header-toolbar">
+				<div class="header-titles">
+					<div class="header-breadcrumb"><% if category and cattree then %><%=title_of(cattree)%><% end %></div>
+					<h1 id="header-title"><% if node then %><%=title_of(node)%><% end %></h1>
+				</div>
+			</div>
+		</header>
+
+		<div id="scalex-content-wrap">
+			<% render_tabs() %>
+
+<% if not blank_page then %>
+			<main id="maincontent" tabindex="-1">
+			<% if luci.sys.process.info("uid") == 0 and luci.sys.user.getuser("root") and not luci.sys.user.getpasswd("root") then %>
+				<div class="alert-message warning">
+					<strong>No password set!</strong>
+					There is no password set on this router. Please configure a root password to protect the web interface.
+					<% if disp.lookup("admin/system/admin") then %>
+					<a href="<%=url("admin/system/admin")%>">Go to password configuration...</a>
+					<% end %>
+				</div>
+			<% end %>
+				<noscript><div class="alert-message warning"><strong>JavaScript required!</strong> You must enable JavaScript in your browser or LuCI will not work properly.</div></noscript>
+<% end %>

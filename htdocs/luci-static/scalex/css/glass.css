@@ -1,0 +1,135 @@
+/* ScaleX 2.1 — Liquid Glass on the functional layer only.
+ *
+ * Glass belongs to bars, menus and sheets that float above content. Cards and
+ * forms stay opaque so text keeps its contrast. The material is composed from:
+ *   - a translucent fill
+ *   - a blur + saturation of the backdrop
+ *   - a bright inner rim, a dark lower rim, and a soft cast shadow
+ *   - a specular sweep across the top edge
+ * That is a CSS interpretation of Apple's lensing material, not a shader.
+ */
+
+#scalex-nav-bar {
+	position: sticky;
+	top: 0;
+	z-index: var(--scalex-z-nav);
+	background: var(--scalex-glass-bg);
+	-webkit-backdrop-filter: blur(var(--scalex-glass-blur)) saturate(var(--scalex-glass-saturate));
+	backdrop-filter: blur(var(--scalex-glass-blur)) saturate(var(--scalex-glass-saturate));
+	border-bottom: 1px solid var(--scalex-separator);
+	box-shadow:
+		0 1px 0 var(--scalex-glass-highlight) inset,
+		0 8px 28px rgba(0, 0, 0, 0.055);
+	isolation: isolate;
+}
+
+#scalex-nav-bar::before {
+	content: "";
+	position: absolute;
+	inset: 0 0 auto;
+	height: 52%;
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+	pointer-events: none;
+	z-index: -1;
+}
+
+html[data-theme="dark"] #scalex-nav-bar::before {
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0));
+}
+
+@media (prefers-color-scheme: dark) {
+	html:not([data-theme="light"]) #scalex-nav-bar::before {
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0));
+	}
+}
+
+/* Menus, popovers and the mobile sheet share one material recipe. */
+.nav-dropdown,
+.top-nav-more-menu,
+.scalex-sheet {
+	background: var(--scalex-glass-bg-strong);
+	-webkit-backdrop-filter: blur(30px) saturate(190%);
+	backdrop-filter: blur(30px) saturate(190%);
+	border: 1px solid var(--scalex-glass-border);
+	box-shadow: var(--scalex-shadow-popover),
+		0 1px 0 var(--scalex-glass-highlight) inset;
+}
+
+/* Dropdowns get a slightly stronger rim because they sit over content. */
+.nav-dropdown,
+.top-nav-more-menu {
+	overflow: hidden;
+}
+
+.scalex-scrim {
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--scalex-z-sheet) - 1);
+	background: var(--scalex-scrim);
+	-webkit-backdrop-filter: blur(2px);
+	backdrop-filter: blur(2px);
+	opacity: 0;
+	transition: opacity var(--scalex-duration-base) var(--scalex-ease-out);
+}
+
+.scalex-scrim.is-visible {
+	opacity: 1;
+}
+
+.scalex-sheet {
+	position: fixed;
+	left: 50%;
+	bottom: 0;
+	z-index: var(--scalex-z-sheet);
+	width: min(560px, calc(100vw - 20px));
+	max-height: min(86vh, 780px);
+	transform: translate(-50%, 103%);
+	transition: transform var(--scalex-duration-slow) var(--scalex-ease-spring);
+	border-bottom: 0;
+	border-radius: var(--scalex-radius-sheet) var(--scalex-radius-sheet) 0 0;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.scalex-sheet.is-open {
+	transform: translate(-50%, 0);
+}
+
+/* Browsers without backdrop-filter get an opaque, still-legible material. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+	#scalex-nav-bar,
+	.nav-dropdown,
+	.top-nav-more-menu,
+	.scalex-sheet {
+		background: var(--scalex-bg-elevated);
+	}
+
+	.scalex-scrim {
+		background: rgba(0, 0, 0, 0.48);
+	}
+}
+
+@media (prefers-reduced-transparency: reduce) {
+	#scalex-nav-bar,
+	.nav-dropdown,
+	.top-nav-more-menu,
+	.scalex-sheet {
+		background: var(--scalex-bg-elevated);
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
+
+	#scalex-nav-bar::before {
+		display: none;
+	}
+}
+
+@media (prefers-contrast: more) {
+	#scalex-nav-bar,
+	.nav-dropdown,
+	.top-nav-more-menu,
+	.scalex-sheet {
+		border-color: var(--scalex-separator-strong);
+	}
+}

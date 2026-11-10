@@ -6,7 +6,7 @@
  * Shared menu helpers — logic aligned with OpenWrt luci-theme-bootstrap
  * htdocs/luci-static/resources/menu-bootstrap.js
  *
- * Echo keeps its own DOM (#top-nav / .nav-dropdown) but uses the same URL
+ * ScaleX keeps its own DOM (#top-nav / .nav-dropdown) but uses the same URL
  * rules, active detection, ordering, and L3+ tab depth as bootstrap.
  */
 return baseclass.extend({

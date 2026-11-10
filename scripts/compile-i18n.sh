@@ -23,5 +23,5 @@ compile_po() {
 	echo "Compiled: $(basename "$lmo")"
 }
 
-compile_po "$ROOT/po/zh_Hans/luci-theme-echo.po" "luci-theme-echo" "zh_Hans"
-compile_po "$ROOT/luci-app-echo-config/po/zh_Hans/luci-app-echo-config.po" "luci-app-echo-config" "zh_Hans"
+compile_po "$ROOT/po/zh_Hans/luci-theme-scalex.po" "luci-theme-scalex" "zh_Hans"
+compile_po "$ROOT/luci-app-scalex-config/po/zh_Hans/luci-app-scalex-config.po" "luci-app-scalex-config" "zh_Hans"

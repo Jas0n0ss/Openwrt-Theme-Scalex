@@ -1,0 +1,192 @@
+/* ScaleX 2.1 — Third-party LuCI app compatibility */
+
+.scalex-table-wrap {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	margin-bottom: var(--scalex-space-4);
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-radius-md);
+	background: var(--scalex-bg-elevated);
+}
+
+.scalex-table-wrap table {
+	margin: 0;
+}
+
+.scalex-sr-title {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+.scalex-control-group input,
+.scalex-control-group select,
+.scalex-control-group textarea {
+	max-width: 100%;
+}
+
+/* Legacy Bootstrap layout leftovers from older apps. */
+#maincontent > .container,
+#maincontent > .container-fluid,
+.main > .container,
+.container-fluid {
+	max-width: 100%;
+	padding: 0;
+}
+
+.main .row {
+	display: block;
+	margin: 0;
+}
+
+.main [class*="col-"] {
+	width: 100%;
+	padding: 0;
+	float: none;
+}
+
+/* App tables and widget boxes. */
+.cbi-section-table,
+.table.table-striped {
+	overflow: hidden;
+	border-radius: var(--scalex-radius-md);
+}
+
+.ifacebox,
+.scalex-widget-box {
+	margin-bottom: var(--scalex-space-3);
+	overflow: hidden;
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-radius-md);
+	background: var(--scalex-bg-elevated);
+	box-shadow: var(--scalex-shadow-sm);
+}
+
+.ifacebox-head {
+	font-size: var(--scalex-size-sm);
+	font-weight: var(--scalex-weight-semibold);
+}
+
+.cbi-tabmenu.scalex-enhanced {
+	border-radius: var(--scalex-radius-md) var(--scalex-radius-md) 0 0;
+}
+
+/* DataTables used by statistics / storage apps. */
+.dataTables_wrapper {
+	font-size: var(--scalex-size-sm);
+}
+
+.dataTables_wrapper .dataTables_filter input {
+	min-height: 34px;
+	padding: 6px 10px;
+	border: 1px solid var(--scalex-separator-strong);
+	border-radius: var(--scalex-radius-sm);
+	background: var(--scalex-bg-inset);
+	color: var(--scalex-text);
+}
+
+/* App-injected panels — deliberately not .scalex-panel (that is a dashboard class). */
+.panel,
+.well {
+	margin-bottom: var(--scalex-space-3);
+	padding: 14px 16px;
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-radius-md);
+	background: var(--scalex-bg-elevated);
+}
+
+.panel-heading,
+.panel-title {
+	margin-bottom: 8px;
+	font-weight: var(--scalex-weight-semibold);
+}
+
+.nav-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2px;
+	margin-bottom: var(--scalex-space-4);
+	padding: 0;
+	border-bottom: 1px solid var(--scalex-separator);
+	list-style: none;
+}
+
+.nav-tabs > li > a {
+	display: block;
+	padding: 8px 13px;
+	border-radius: var(--scalex-radius-sm) var(--scalex-radius-sm) 0 0;
+	color: var(--scalex-text-secondary);
+	text-decoration: none;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li > a:hover {
+	background: var(--scalex-bg-elevated);
+	color: var(--scalex-accent-text);
+}
+
+.pagination {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	padding: 0;
+	list-style: none;
+}
+
+.pagination > li > a,
+.pagination > li > span {
+	display: block;
+	padding: 6px 10px;
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-radius-sm);
+}
+
+/* App iframes and documents. */
+.scalex-iframe,
+#maincontent iframe {
+	max-width: 100%;
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-radius-md);
+	background: var(--scalex-bg-elevated);
+}
+
+.scalex-cbi-map {
+	width: 100%;
+}
+
+/* Legacy modals must sit above the sticky navigation. */
+.modal.cbi-modal,
+.modal.scalex-modal {
+	z-index: 5000;
+}
+
+.nav-top.readonly,
+.nav-item.readonly {
+	opacity: 0.45;
+	pointer-events: none;
+}
+
+/* Third-party grids occasionally use their own scroll containers. */
+#maincontent .table-responsive {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+	.scalex-table-wrap {
+		margin-inline: -2px;
+		border-radius: var(--scalex-radius-sm);
+	}
+
+	.panel,
+	.well {
+		padding: 12px 14px;
+	}
+}

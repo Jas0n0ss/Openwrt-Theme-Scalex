@@ -1,4 +1,4 @@
-# Echo UI tests
+# ScaleX UI tests
 
 ## Demo smoke tests
 

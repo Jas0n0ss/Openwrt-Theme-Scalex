@@ -1,0 +1,101 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: luci-app-scalex-config 2.1.0\n"
+"Language: zh_Hans\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "ScaleX Theme Configuration"
+msgstr "ScaleX 主题配置"
+
+msgid "Customize the accent color, typography and dashboard of the ScaleX LuCI theme."
+msgstr "自定义 ScaleX LuCI 主题的强调色、字体与仪表盘。"
+
+msgid "Global Settings"
+msgstr "全局设置"
+
+msgid "Theme Preset"
+msgstr "主题预设"
+
+msgid "OpenWrt (recommended)"
+msgstr "OpenWrt（推荐）"
+
+msgid "ScaleX Default"
+msgstr "ScaleX 默认"
+
+msgid "Router Model"
+msgstr "路由器型号"
+
+msgid "Displayed in the header, e.g. ScaleX Router"
+msgstr "显示在顶部栏的名称，例如 ScaleX Router"
+
+msgid "Accent Highlight"
+msgstr "强调色"
+
+msgid "Secondary highlight color for sidebar model label."
+msgstr "侧栏型号标签的次要强调色。"
+
+msgid "Brand Label"
+msgstr "品牌标签"
+
+msgid "Optional label shown next to the hostname."
+msgstr "显示在主机名旁边的可选标签。"
+
+msgid "Primary Color (Light)"
+msgstr "主色（浅色模式）"
+
+msgid "Main accent color for light mode. Example: #0071e3"
+msgstr "浅色模式主强调色。例如：#0071e3"
+
+msgid "Primary Color (Dark)"
+msgstr "主色（深色模式）"
+
+msgid "Main accent color for dark mode. Example: #0a84ff"
+msgstr "深色模式主强调色。例如：#0a84ff"
+
+msgid "Base Font Size"
+msgstr "基础字号"
+
+msgid "Enable Status Bar"
+msgstr "启用状态栏"
+
+msgid "Show WAN/LAN/WiFi/Clients pills at the top of every page."
+msgstr "在页面顶部显示 WAN/LAN/WiFi/客户端 状态胶囊。"
+
+msgid "Enable Dashboard Cards"
+msgstr "启用仪表盘卡片"
+
+msgid "Show the network hero, vitals and status panels on the Overview page."
+msgstr "在概览页显示网络状态、核心指标与状态面板。"
+
+msgid "Background"
+msgstr "背景"
+
+msgid "Background Mode"
+msgstr "背景模式"
+
+msgid "Default gradient"
+msgstr "默认渐变"
+
+msgid "Custom image"
+msgstr "自定义图片"
+
+msgid "None"
+msgstr "无"
+
+msgid "Custom Background"
+msgstr "自定义背景"
+
+msgid "Place an image at /www/luci-static/scalex/background/bg.jpg (or .png/.webp) on the router, then select Custom image."
+msgstr "将图片放到路由器的 /www/luci-static/scalex/background/bg.jpg（或 .png/.webp），然后选择「自定义图片」。"
+
+msgid "Upload Background Image"
+msgstr "上传背景图片"
+
+msgid "Supported: JPG, PNG, WebP."
+msgstr "支持：JPG、PNG、WebP。"
+
+msgid "ScaleX theme settings saved. Refresh the page to apply."
+msgstr "ScaleX 主题设置已保存，请刷新页面以生效。"
+
+msgid "ScaleX Theme"
+msgstr "ScaleX 主题"

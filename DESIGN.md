@@ -1,9 +1,9 @@
-# Echo 2.0 — 设计规范
+# ScaleX 2.1 — 设计规范
 
 > 一款为 OpenWrt / LuCI 打造的 Apple 风格主题。
 > 设计命题：**路由器后台也可以安静、清楚、值得信任。**
 
-![Echo 2.0 浅色预览](docs/preview.jpg)
+![ScaleX 2.1 浅色预览](docs/preview.jpg)
 
 ---
 
@@ -115,7 +115,7 @@ system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ [Echo 标记] Echo │ 主机名    状态 系统 服务 网络 统计 退出   ◐ ☀ ☾ │  ← 玻璃工具栏
+│ [ScaleX 标记] ScaleX │ 主机名    状态 系统 服务 网络 统计 退出   ◐ ☀ ☾ │  ← 玻璃工具栏
 ├──────────────────────────────────────────────────────────────┤
 │ 状态                                                          │
 │ 概览                                                          │
@@ -143,7 +143,7 @@ system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
 
 ```
 ┌──────────────────────────────┐
-│ [◉] Echo          ◐ ☀ ☾  ☰  │  ← 玻璃栏
+│ [◉] ScaleX          ◐ ☀ ☾  ☰  │  ← 玻璃栏
 │ 状态                          │
 │ 概览                          │
 │ [概览][防火墙][路由][日志]     │  ← 横向可滚动分段
@@ -210,7 +210,7 @@ system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
 ### 4.6 登录页
 
 - 中央 408px 卡片，柔和光场背景。
-- 58px Echo 标记、主机名、单行说明。
+- 58px ScaleX 标记、主机名、单行说明。
 - 字段标签在上；密码可显示/隐藏。
 - 顶部右侧保留外观三段控件。
 - 移动端卡片去边框去阴影，变成整页表单。
@@ -263,7 +263,7 @@ system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
 ## 8. 技术实现
 
 ```
-htdocs/luci-static/echo/css/
+htdocs/luci-static/scalex/css/
 ├── variables.css       # 三层 token
 ├── base.css            # reset、排版、焦点、背景
 ├── symbols.css         # 单色图标 mask
@@ -280,10 +280,10 @@ htdocs/luci-static/echo/css/
 
 JS：
 
-- `menu-echo.js`：桌面导航、下拉键盘交互、移动 Sheet、页面标题。
-- `theme-echo.js`：外观三态、meta theme-color、系统主题跟随。
-- `dashboard-echo.js`：RPC 数据、Hero/Vitals/网络面板、空状态。
-- `ui-echo.js`：第三方 app 表格/表单/弹窗增强。
+- `menu-scalex.js`：桌面导航、下拉键盘交互、移动 Sheet、页面标题。
+- `theme-scalex.js`：外观三态、meta theme-color、系统主题跟随。
+- `dashboard-scalex.js`：RPC 数据、Hero/Vitals/网络面板、空状态。
+- `ui-scalex.js`：第三方 app 表格/表单/弹窗增强。
 - `js/legacy.js`：18.06 服务端导航 / 下拉 / 移动 Sheet / 主题切换（ES5，无模块加载器）。
 
 字体、颜色、圆角、间距全部走 token；组件不写死十六进制值。

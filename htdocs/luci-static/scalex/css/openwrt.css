@@ -1,0 +1,11 @@
+/* ScaleX 2.1 — OpenWrt preset
+ *
+ * The OpenWrt preset used to swap in a cyan accent, Segoe UI and a 2 px cyan
+ * header rule. The 2.0 visual system is deliberately neutral: one Apple blue
+ * accent, the system font stack and no decorative rules. UCI colours are still
+ * applied by header.ut through the semantic accent tokens.
+ */
+
+body.theme-openwrt {
+	--scalex-brand-accent: var(--scalex-accent);
+}

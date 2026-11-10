@@ -1,0 +1,95 @@
+/* ScaleX 2.1 — LuCI Bootstrap compatibility bridge
+ *
+ * luci-theme-bootstrap still supplies cascade.css for CBI widgets and for
+ * third-party apps. This layer maps its variables onto ScaleX tokens and hides
+ * the Bootstrap chrome that ScaleX replaces.
+ */
+
+/* Bootstrap's old bars must never flash. */
+#modemenu,
+#topmenu,
+.scalex-bootstrap-hooks {
+	display: none !important;
+	visibility: hidden !important;
+	height: 0 !important;
+	overflow: hidden !important;
+	pointer-events: none !important;
+}
+
+#scalex-nav-bar .nav-section:not(.open) > .nav-dropdown,
+#scalex-nav-bar .nav-section:not(.open) > .nav-dropdown * {
+	pointer-events: none;
+}
+
+/* Keep Bootstrap's dark-mode attribute in sync with the ScaleX theme. */
+:root[data-darkmode="true"],
+html[data-theme="dark"] {
+	color-scheme: dark;
+}
+
+/* Bootstrap paints a dark band on generic <header>; ScaleX only wants glass on the nav. */
+#scalex-header,
+#scalex-header .header-toolbar {
+	background: transparent;
+	color: var(--scalex-text);
+}
+
+/* CBI / forms / tables keep Bootstrap behaviour, ScaleX surface. */
+#maincontent .cbi-map,
+#maincontent .cbi-section {
+	border-radius: var(--scalex-card-radius);
+}
+
+#maincontent .cbi-button,
+#maincontent .btn {
+	border-radius: var(--scalex-radius-sm);
+}
+
+#maincontent .table,
+#maincontent table.cbi-section-table {
+	background: var(--scalex-bg-elevated);
+}
+
+#maincontent .alert-message {
+	border-radius: var(--scalex-radius-md);
+}
+
+/* Bootstrap dropdowns inside app content. */
+#maincontent .dropdown-menu {
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-radius-md);
+	background: var(--scalex-bg-elevated);
+	box-shadow: var(--scalex-shadow-popover);
+}
+
+/* Tab markup injected by third-party apps is normalised by ui-scalex.js. */
+#content-tabs.tabs,
+#content-tabs .tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: transparent;
+	border: 0;
+}
+
+#content-tabs .tabs > li,
+#content-tabs > li {
+	list-style: none;
+}
+
+#content-tabs .tabs > li > a,
+#content-tabs a.content-tab {
+	display: block;
+	text-decoration: none;
+}
+
+/* Bootstrap's generic form controls should not override ScaleX's compact rows. */
+#maincontent .cbi-value-field input[type="text"],
+#maincontent .cbi-value-field input[type="password"],
+#maincontent .cbi-value-field select,
+#maincontent .cbi-value-field textarea {
+	box-shadow: none;
+}

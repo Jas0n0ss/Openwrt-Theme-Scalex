@@ -1,17 +1,17 @@
-# luci-theme-echo
+# luci-theme-scalex
 
-[![Build IPK](https://github.com/Jas0n0ss/openwrt-theme-echo/actions/workflows/build.yml/badge.svg)](https://github.com/Jas0n0ss/openwrt-theme-echo/actions/workflows/build.yml)
+[![Build IPK](https://github.com/Jas0n0ss/openwrt-theme-scalex/actions/workflows/build.yml/badge.svg)](https://github.com/Jas0n0ss/openwrt-theme-scalex/actions/workflows/build.yml)
 
-**Echo 2.0** — 一款贴近 Apple 视觉语言的 OpenWrt / LuCI 主题。
+**ScaleX 2.1** — 一款贴近 Apple 视觉语言的 OpenWrt / LuCI 主题。
 Liquid Glass 工具栏、网络状态光晕、Apple 风格表单与原生感移动端菜单。
 
-**当前版本：** `2.0.1`
+**当前版本：** `2.1.0`
 
-![Echo 2.0 浅色概览](docs/preview.jpg)
+![ScaleX 2.1 浅色概览](docs/preview.jpg)
 
 ---
 
-## 为什么是 Echo 2.0
+## 为什么是 ScaleX 2.1
 
 | 设计目标 | 实现 |
 |----------|------|
@@ -20,20 +20,20 @@ Liquid Glass 工具栏、网络状态光晕、Apple 风格表单与原生感移�
 | **只在功能层使用玻璃** | 顶部导航、下拉、移动端 Sheet 使用 Liquid Glass；卡片和表单保持不透明，优先保证可读性 |
 | **真正可用的移动端** | ≤980px 切换为「浏览」Sheet，分组展开、焦点陷阱、Escape 关闭、触控目标 ≥44px |
 | **完整深色模式** | Auto / Light / Dark 三态；深色不是反色，使用独立表面与文字层级 |
-| **不牺牲 LuCI 功能** | 保留 Bootstrap CBI / 表格 / 表单底座，第三方插件通过 `ui-echo.js` 自动适配 |
+| **不牺牲 LuCI 功能** | 保留 Bootstrap CBI / 表格 / 表单底座，第三方插件通过 `ui-scalex.js` 自动适配 |
 | **可访问** | 跳过导航、可见焦点、键盘下拉、`prefers-reduced-motion`、`prefers-reduced-transparency`、表格移动端重排 |
 
 **深色模式**
 
-![Echo 2.0 深色概览](docs/preview-dark.jpg)
+![ScaleX 2.1 深色概览](docs/preview-dark.jpg)
 
 **登录页**
 
-![Echo 2.0 登录页](docs/login.jpg)
+![ScaleX 2.1 登录页](docs/login.jpg)
 
 **移动端**
 
-<img src="docs/preview-mobile.jpg" alt="Echo 2.0 移动端" width="320">
+<img src="docs/preview-mobile.jpg" alt="ScaleX 2.1 移动端" width="320">
 
 ---
 
@@ -65,32 +65,32 @@ Liquid Glass 工具栏、网络状态光晕、Apple 风格表单与原生感移�
 
 ### 方式 A：预编译 `.ipk`（推荐）
 
-从 [Releases](https://github.com/Jas0n0ss/openwrt-theme-echo/releases) 下载：
+从 [Releases](https://github.com/Jas0n0ss/openwrt-theme-scalex/releases) 下载：
 
 ```sh
-opkg install luci-theme-echo_2.0.1-1_all.ipk
-opkg install luci-app-echo-config_2.0.1-1_all.ipk
+opkg install luci-theme-scalex_2.1.0-1_all.ipk
+opkg install luci-app-scalex-config_2.1.0-1_all.ipk
 
-uci set luci.main.mediaurlbase='/luci-static/echo'
+uci set luci.main.mediaurlbase='/luci-static/scalex'
 uci commit luci
 /etc/init.d/uhttpd restart
 ```
 
-然后在 **System → System → Language and Style → Design** 选择 **Echo**。
+然后在 **System → System → Language and Style → Design** 选择 **ScaleX**。
 
 ### 方式 B：编译进固件
 
 ```sh
 cd openwrt/package
-git clone https://github.com/Jas0n0ss/openwrt-theme-echo.git luci-theme-echo
-cp -r luci-theme-echo/luci-app-echo-config .
+git clone https://github.com/Jas0n0ss/openwrt-theme-scalex.git luci-theme-scalex
+cp -r luci-theme-scalex/luci-app-scalex-config .
 
 make menuconfig
-# LuCI → Themes → luci-theme-echo
-# LuCI → Applications → luci-app-echo-config
+# LuCI → Themes → luci-theme-scalex
+# LuCI → Applications → luci-app-scalex-config
 
-make package/luci-theme-echo/compile V=s
-make package/luci-app-echo-config/compile V=s
+make package/luci-theme-scalex/compile V=s
+make package/luci-app-scalex-config/compile V=s
 ```
 
 ### 中文界面
@@ -107,18 +107,18 @@ uci commit luci
 
 ## 主题配置
 
-**System → Echo Theme**，或使用 UCI：
+**System → ScaleX Theme**，或使用 UCI：
 
 ```sh
-uci set echo.global.primary='#0071E3'
-uci set echo.global.dark_primary='#0A84FF'
-uci set echo.global.font_size='16'
-uci set echo.global.background_mode='gradient'   # gradient | none | custom
-uci set echo.global.dashboard='1'
-uci commit echo
+uci set scalex.global.primary='#0071E3'
+uci set scalex.global.dark_primary='#0A84FF'
+uci set scalex.global.font_size='16'
+uci set scalex.global.background_mode='gradient'   # gradient | none | custom
+uci set scalex.global.dashboard='1'
+uci commit scalex
 ```
 
-自定义背景：把图片放到 `/www/luci-static/echo/background/bg.jpg`（也支持 `.png` / `.webp`），然后选择 `custom`。主题会自动叠加可读性遮罩。
+自定义背景：把图片放到 `/www/luci-static/scalex/background/bg.jpg`（也支持 `.png` / `.webp`），然后选择 `custom`。主题会自动叠加可读性遮罩。
 
 ---
 
@@ -146,7 +146,7 @@ uci commit echo
 ./scripts/verify-ipk.sh
 
 # 3. JS 语法检查
-find htdocs/luci-static/resources demo -name '*.js' -exec node --check {} \;
+find htdocs/luci-static/resources htdocs/luci-static/scalex/js demo -name '*.js' -exec node --check {} \;
 
 # 4. 可选：浏览器 UI 冒烟测试
 python3 -m venv .venv
@@ -173,23 +173,23 @@ python3 -m venv .venv
 ## 项目结构
 
 ```
-openwrt-theme-echo/
+openwrt-theme-scalex/
 ├── .github/workflows/build.yml       # CI：构建 + 校验 + Release
-├── htdocs/luci-static/echo/
+├── htdocs/luci-static/scalex/
 │   ├── css/                          # 设计 token、壳层、组件、仪表盘
 │   ├── icons/menu/                   # LuCI 菜单图标
-│   ├── img/                          # Echo 标记、favicon、符号集
+│   ├── img/                          # ScaleX 标记、favicon、符号集
 │   └── ...
 ├── htdocs/luci-static/resources/
-│   ├── menu-echo.js                  # 导航 / 下拉 / 移动 Sheet
-│   ├── theme-echo.js                 # Auto / Light / Dark
-│   ├── dashboard-echo.js             # Hero / Vitals / 网络面板
-│   ├── ui-echo.js                    # 第三方 app 适配
+│   ├── menu-scalex.js                  # 导航 / 下拉 / 移动 Sheet
+│   ├── theme-scalex.js                 # Auto / Light / Dark
+│   ├── dashboard-scalex.js             # Hero / Vitals / 网络面板
+│   ├── ui-scalex.js                    # 第三方 app 适配
 │   └── menu-bootstrap-core.js
-├── luasrc/view/themes/echo/          # Lua / LuCI 18.06 基础兼容层
-├── htdocs/luci-static/echo/js/legacy.js
-├── ucode/template/themes/echo/       # header / footer / sysauth
-├── luci-app-echo-config/             # 主题配置应用
+├── luasrc/view/themes/scalex/          # Lua / LuCI 18.06 基础兼容层
+├── htdocs/luci-static/scalex/js/legacy.js
+├── ucode/template/themes/scalex/       # header / footer / sysauth
+├── luci-app-scalex-config/             # 主题配置应用
 ├── demo/                             # 无路由器预览
 ├── docs/                             # 预览图
 ├── scripts/                          # 构建、校验、发布
@@ -225,4 +225,4 @@ openwrt-theme-echo/
 
 [Apache License 2.0](LICENSE)
 
-OpenWrt 是 OpenWrt 项目的注册商标。Echo 是独立主题项目，与 Apple Inc. 无关联。
+OpenWrt 是 OpenWrt 项目的注册商标。ScaleX 是独立主题项目，与 Apple Inc. 无关联。

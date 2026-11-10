@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#f5f5f7" id="meta-theme-color">
-  <link rel="icon" href="../htdocs/luci-static/echo/img/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="../htdocs/luci-static/echo/img/favicon.svg">
-  <title>Echo 2.0 — OpenWrt theme preview</title>
+  <link rel="icon" href="../htdocs/luci-static/scalex/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../htdocs/luci-static/scalex/img/favicon.svg">
+  <title>ScaleX 2.1 — OpenWrt theme preview</title>
   <script>
   (function () {
     var mode = 'auto';
-    try { mode = localStorage.getItem('echo-theme') || 'auto'; } catch (e) {}
+    try { mode = localStorage.getItem('scalex-theme') || 'auto'; } catch (e) {}
     if (['auto', 'light', 'dark'].indexOf(mode) < 0) mode = 'auto';
     document.documentElement.dataset.theme = mode;
     var dark = mode === 'dark' || (mode === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
@@ -19,30 +19,30 @@
     if (meta) meta.setAttribute('content', dark ? '#000000' : '#f5f5f7');
   })();
   </script>
-  <link rel="stylesheet" href="../htdocs/luci-static/echo/css/echo.css">
+  <link rel="stylesheet" href="../htdocs/luci-static/scalex/css/scalex.css">
   <link rel="stylesheet" href="demo.css">
 </head>
-<body class="theme-openwrt echo-has-overview has-content-tabs">
+<body class="theme-openwrt scalex-has-overview has-content-tabs">
 
 <div id="view-app">
-<div id="echo-app">
-  <div id="echo-main">
-    <header id="echo-nav-bar">
+<div id="scalex-app">
+  <div id="scalex-main">
+    <header id="scalex-nav-bar">
       <div class="nav-bar-container">
         <div class="nav-bar-row">
-          <a class="header-brand" href="#" aria-label="Echo 首页">
-            <img class="echo-mark" src="../htdocs/luci-static/echo/img/echo-mark.svg" alt="" width="28" height="28">
-            <span class="brand-name">Echo</span>
+          <a class="header-brand" href="#" aria-label="ScaleX 首页">
+            <img class="scalex-mark" src="../htdocs/luci-static/scalex/img/scalex-mark.svg" alt="" width="28" height="28">
+            <span class="brand-name">ScaleX</span>
             <span class="brand-divider" aria-hidden="true"></span>
-            <span class="brand-host">Echo-Router</span>
+            <span class="brand-host">ScaleX-Router</span>
           </a>
 
           <div class="top-nav-shell">
             <div class="top-nav-wrap">
-              <nav id="top-nav" class="echo-top-nav" aria-label="主导航">
+              <nav id="top-nav" class="scalex-top-nav" aria-label="主导航">
                 <div class="nav-section is-active has-dropdown">
                   <a class="nav-top nav-top-trigger active" href="#" aria-haspopup="true" aria-expanded="false" aria-controls="demo-menu-status">
-                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/echo/icons/menu/status.svg');mask-image:url('../htdocs/luci-static/echo/icons/menu/status.svg');" aria-hidden="true"></span>
+                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/scalex/icons/menu/status.svg');mask-image:url('../htdocs/luci-static/scalex/icons/menu/status.svg');" aria-hidden="true"></span>
                     <span class="nav-label">状态</span>
                     <span class="nav-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M6 9l6 6 6-6"/></svg></span>
                   </a>
@@ -56,7 +56,7 @@
 
                 <div class="nav-section has-dropdown">
                   <a class="nav-top nav-top-trigger" href="#" aria-haspopup="true" aria-expanded="false" aria-controls="demo-menu-system">
-                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/echo/icons/menu/system.svg');mask-image:url('../htdocs/luci-static/echo/icons/menu/system.svg');" aria-hidden="true"></span>
+                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/scalex/icons/menu/system.svg');mask-image:url('../htdocs/luci-static/scalex/icons/menu/system.svg');" aria-hidden="true"></span>
                     <span class="nav-label">系统</span>
                     <span class="nav-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M6 9l6 6 6-6"/></svg></span>
                   </a>
@@ -69,7 +69,7 @@
 
                 <div class="nav-section has-dropdown">
                   <a class="nav-top nav-top-trigger" href="#" aria-haspopup="true" aria-expanded="false" aria-controls="demo-menu-services">
-                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/echo/icons/menu/services.svg');mask-image:url('../htdocs/luci-static/echo/icons/menu/services.svg');" aria-hidden="true"></span>
+                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/scalex/icons/menu/services.svg');mask-image:url('../htdocs/luci-static/scalex/icons/menu/services.svg');" aria-hidden="true"></span>
                     <span class="nav-label">服务</span>
                     <span class="nav-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M6 9l6 6 6-6"/></svg></span>
                   </a>
@@ -80,7 +80,7 @@
 
                 <div class="nav-section has-dropdown">
                   <a class="nav-top nav-top-trigger" href="#" aria-haspopup="true" aria-expanded="false" aria-controls="demo-menu-network">
-                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/echo/icons/menu/network.svg');mask-image:url('../htdocs/luci-static/echo/icons/menu/network.svg');" aria-hidden="true"></span>
+                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/scalex/icons/menu/network.svg');mask-image:url('../htdocs/luci-static/scalex/icons/menu/network.svg');" aria-hidden="true"></span>
                     <span class="nav-label">网络</span>
                     <span class="nav-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M6 9l6 6 6-6"/></svg></span>
                   </a>
@@ -93,7 +93,7 @@
 
                 <div class="nav-section has-dropdown">
                   <a class="nav-top nav-top-trigger" href="#" aria-haspopup="true" aria-expanded="false" aria-controls="demo-menu-stats">
-                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/echo/icons/menu/statistics.svg');mask-image:url('../htdocs/luci-static/echo/icons/menu/statistics.svg');" aria-hidden="true"></span>
+                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/scalex/icons/menu/statistics.svg');mask-image:url('../htdocs/luci-static/scalex/icons/menu/statistics.svg');" aria-hidden="true"></span>
                     <span class="nav-label">统计</span>
                     <span class="nav-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M6 9l6 6 6-6"/></svg></span>
                   </a>
@@ -104,7 +104,7 @@
 
                 <div class="nav-section nav-logout">
                   <a class="nav-top nav-logout-link" href="#" title="退出">
-                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/echo/icons/menu/logout.svg');mask-image:url('../htdocs/luci-static/echo/icons/menu/logout.svg');" aria-hidden="true"></span>
+                    <span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('../htdocs/luci-static/scalex/icons/menu/logout.svg');mask-image:url('../htdocs/luci-static/scalex/icons/menu/logout.svg');" aria-hidden="true"></span>
                     <span class="nav-label">退出</span>
                   </a>
                 </div>
@@ -125,15 +125,15 @@
               </button>
             </div>
 
-            <button type="button" class="icon-btn" id="echo-menu-btn" aria-label="打开菜单" aria-expanded="false" aria-controls="echo-sheet">
-              <span class="echo-symbol echo-symbol-menu" aria-hidden="true"></span>
+            <button type="button" class="icon-btn" id="scalex-menu-btn" aria-label="打开菜单" aria-expanded="false" aria-controls="scalex-sheet">
+              <span class="scalex-symbol scalex-symbol-menu" aria-hidden="true"></span>
             </button>
           </div>
         </div>
       </div>
     </header>
 
-    <header id="echo-header">
+    <header id="scalex-header">
       <div class="header-toolbar">
         <div class="header-titles">
           <div class="header-breadcrumb">状态</div>
@@ -142,7 +142,7 @@
       </div>
     </header>
 
-    <div id="echo-content-wrap">
+    <div id="scalex-content-wrap">
       <div class="content-tabs-container">
         <nav id="content-tabs" class="tabs active" aria-label="分区标签">
           <a class="content-tab active" href="#">概览</a>
@@ -153,165 +153,165 @@
       </div>
 
       <main id="maincontent" tabindex="-1">
-        <div id="echo-overview" class="echo-overview">
-          <section class="echo-hero" aria-labelledby="echo-hero-title">
-            <div class="echo-orb" aria-hidden="true">
-              <div class="echo-orb-core">
-                <span class="echo-symbol echo-symbol-router"></span>
+        <div id="scalex-overview" class="scalex-overview">
+          <section class="scalex-hero" aria-labelledby="scalex-hero-title">
+            <div class="scalex-orb" aria-hidden="true">
+              <div class="scalex-orb-core">
+                <span class="scalex-symbol scalex-symbol-router"></span>
               </div>
             </div>
-            <div class="echo-hero-copy">
-              <p class="echo-eyebrow">网络</p>
-              <h2 class="echo-hero-title" id="echo-hero-title" aria-live="polite">一切正常</h2>
-              <p class="echo-hero-sub" id="echo-hero-sub">Echo Router · OpenWrt 24.10</p>
-              <div class="echo-hero-pills">
-                <span class="echo-pill is-good" id="echo-hero-wan">
-                  <span class="echo-symbol echo-symbol-globe" aria-hidden="true"></span>
+            <div class="scalex-hero-copy">
+              <p class="scalex-eyebrow">网络</p>
+              <h2 class="scalex-hero-title" id="scalex-hero-title" aria-live="polite">一切正常</h2>
+              <p class="scalex-hero-sub" id="scalex-hero-sub">ScaleX Router · OpenWrt 24.10</p>
+              <div class="scalex-hero-pills">
+                <span class="scalex-pill is-good" id="scalex-hero-wan">
+                  <span class="scalex-symbol scalex-symbol-globe" aria-hidden="true"></span>
                   <span>WAN</span><strong>在线</strong>
                 </span>
-                <span class="echo-pill is-good" id="echo-hero-wifi">
-                  <span class="echo-symbol echo-symbol-wifi" aria-hidden="true"></span>
+                <span class="scalex-pill is-good" id="scalex-hero-wifi">
+                  <span class="scalex-symbol scalex-symbol-wifi" aria-hidden="true"></span>
                   <span>Wi-Fi</span><strong>3/3</strong>
                 </span>
-                <span class="echo-pill is-good" id="echo-hero-clients">
-                  <span class="echo-symbol echo-symbol-devices" aria-hidden="true"></span>
+                <span class="scalex-pill is-good" id="scalex-hero-clients">
+                  <span class="scalex-symbol scalex-symbol-devices" aria-hidden="true"></span>
                   <span>客户端</span><strong>3</strong>
                 </span>
               </div>
             </div>
           </section>
 
-          <div class="echo-stats">
-            <article class="echo-stat">
-              <div class="echo-stat-head">
-                <span class="echo-stat-icon"><span class="echo-symbol echo-symbol-cpu" aria-hidden="true"></span></span>
+          <div class="scalex-stats">
+            <article class="scalex-stat">
+              <div class="scalex-stat-head">
+                <span class="scalex-stat-icon"><span class="scalex-symbol scalex-symbol-cpu" aria-hidden="true"></span></span>
                 <span>CPU</span>
               </div>
-              <strong class="echo-stat-value" id="demo-cpu">0.42</strong>
-              <span class="echo-stat-note" id="demo-cpu-note">5m 0.38 · 15m 0.35</span>
+              <strong class="scalex-stat-value" id="demo-cpu">0.42</strong>
+              <span class="scalex-stat-note" id="demo-cpu-note">5m 0.38 · 15m 0.35</span>
             </article>
 
-            <article class="echo-stat">
-              <div class="echo-stat-head">
-                <span class="echo-stat-icon"><span class="echo-symbol echo-symbol-memory" aria-hidden="true"></span></span>
+            <article class="scalex-stat">
+              <div class="scalex-stat-head">
+                <span class="scalex-stat-icon"><span class="scalex-symbol scalex-symbol-memory" aria-hidden="true"></span></span>
                 <span>内存</span>
               </div>
-              <strong class="echo-stat-value" id="demo-mem">58%</strong>
-              <span class="echo-stat-note" id="demo-mem-note">148 MB / 256 MB</span>
-              <div class="echo-meter" aria-hidden="true"><span class="echo-meter-fill" id="demo-mem-bar" style="width:58%"></span></div>
+              <strong class="scalex-stat-value" id="demo-mem">58%</strong>
+              <span class="scalex-stat-note" id="demo-mem-note">148 MB / 256 MB</span>
+              <div class="scalex-meter" aria-hidden="true"><span class="scalex-meter-fill" id="demo-mem-bar" style="width:58%"></span></div>
             </article>
 
-            <article class="echo-stat">
-              <div class="echo-stat-head">
-                <span class="echo-stat-icon"><span class="echo-symbol echo-symbol-clock" aria-hidden="true"></span></span>
+            <article class="scalex-stat">
+              <div class="scalex-stat-head">
+                <span class="scalex-stat-icon"><span class="scalex-symbol scalex-symbol-clock" aria-hidden="true"></span></span>
                 <span>运行时间</span>
               </div>
-              <strong class="echo-stat-value is-text">3d 14h</strong>
-              <span class="echo-stat-note">自上次启动</span>
+              <strong class="scalex-stat-value is-text">3d 14h</strong>
+              <span class="scalex-stat-note">自上次启动</span>
             </article>
 
-            <article class="echo-stat">
-              <div class="echo-stat-head">
-                <span class="echo-stat-icon"><span class="echo-symbol echo-symbol-devices" aria-hidden="true"></span></span>
+            <article class="scalex-stat">
+              <div class="scalex-stat-head">
+                <span class="scalex-stat-icon"><span class="scalex-symbol scalex-symbol-devices" aria-hidden="true"></span></span>
                 <span>客户端</span>
               </div>
-              <strong class="echo-stat-value is-text" id="demo-clients">3</strong>
-              <span class="echo-stat-note">活跃设备</span>
+              <strong class="scalex-stat-value is-text" id="demo-clients">3</strong>
+              <span class="scalex-stat-note">活跃设备</span>
             </article>
           </div>
 
-          <section class="cbi-section echo-panel echo-network-map">
-            <div class="echo-panel-head">
-              <div class="echo-panel-title">
-                <span class="echo-symbol echo-symbol-port" aria-hidden="true"></span>
+          <section class="cbi-section scalex-panel scalex-network-map">
+            <div class="scalex-panel-head">
+              <div class="scalex-panel-title">
+                <span class="scalex-symbol scalex-symbol-port" aria-hidden="true"></span>
                 <span>网络</span>
               </div>
-              <span class="echo-live">实时</span>
+              <span class="scalex-live">实时</span>
             </div>
-            <div class="echo-map-body">
-              <div class="echo-map-module">
-                <div class="echo-map-module-head">网口状态</div>
-                <div class="echo-map-ports">
-                  <div class="echo-port echo-port-up"><div class="echo-port-head"><span class="echo-port-name">WAN</span><span class="echo-port-role">广域网</span></div><span class="echo-port-speed">2.5G</span><span class="label success">已连接</span></div>
-                  <div class="echo-port echo-port-up"><div class="echo-port-head"><span class="echo-port-name">LAN1</span><span class="echo-port-role">局域网</span></div><span class="echo-port-speed">1G</span><span class="label success">已连接</span></div>
-                  <div class="echo-port echo-port-up"><div class="echo-port-head"><span class="echo-port-name">LAN2</span><span class="echo-port-role">局域网</span></div><span class="echo-port-speed">1G</span><span class="label success">已连接</span></div>
-                  <div class="echo-port echo-port-down"><div class="echo-port-head"><span class="echo-port-name">LAN3</span><span class="echo-port-role">局域网</span></div><span class="echo-port-speed">1G</span><span class="label important">断开</span></div>
-                  <div class="echo-port echo-port-up"><div class="echo-port-head"><span class="echo-port-name">10G</span><span class="echo-port-role">局域网</span></div><span class="echo-port-speed">10G</span><span class="label success">已连接</span></div>
+            <div class="scalex-map-body">
+              <div class="scalex-map-module">
+                <div class="scalex-map-module-head">网口状态</div>
+                <div class="scalex-map-ports">
+                  <div class="scalex-port scalex-port-up"><div class="scalex-port-head"><span class="scalex-port-name">WAN</span><span class="scalex-port-role">广域网</span></div><span class="scalex-port-speed">2.5G</span><span class="label success">已连接</span></div>
+                  <div class="scalex-port scalex-port-up"><div class="scalex-port-head"><span class="scalex-port-name">LAN1</span><span class="scalex-port-role">局域网</span></div><span class="scalex-port-speed">1G</span><span class="label success">已连接</span></div>
+                  <div class="scalex-port scalex-port-up"><div class="scalex-port-head"><span class="scalex-port-name">LAN2</span><span class="scalex-port-role">局域网</span></div><span class="scalex-port-speed">1G</span><span class="label success">已连接</span></div>
+                  <div class="scalex-port scalex-port-down"><div class="scalex-port-head"><span class="scalex-port-name">LAN3</span><span class="scalex-port-role">局域网</span></div><span class="scalex-port-speed">1G</span><span class="label important">断开</span></div>
+                  <div class="scalex-port scalex-port-up"><div class="scalex-port-head"><span class="scalex-port-name">10G</span><span class="scalex-port-role">局域网</span></div><span class="scalex-port-speed">10G</span><span class="label success">已连接</span></div>
                 </div>
               </div>
-              <div class="echo-map-module">
-                <div class="echo-map-module-head">无线射频</div>
-                <div class="echo-map-wifi">
-                  <div class="echo-wifi-card echo-wifi-up"><div class="echo-wifi-head"><span class="echo-wifi-badge">Wi-Fi 4</span><strong>2.4 GHz</strong></div><span class="echo-wifi-ssid">Echo</span><span class="echo-wifi-meta">1 接入点</span><span class="label success">活跃</span></div>
-                  <div class="echo-wifi-card echo-wifi-up"><div class="echo-wifi-head"><span class="echo-wifi-badge">Wi-Fi 6</span><strong>5 GHz</strong></div><span class="echo-wifi-ssid">Echo-5G</span><span class="echo-wifi-meta">1 接入点</span><span class="label success">活跃</span></div>
-                  <div class="echo-wifi-card echo-wifi-up"><div class="echo-wifi-head"><span class="echo-wifi-badge">Wi-Fi 7</span><strong>6 GHz</strong></div><span class="echo-wifi-ssid">Echo-6G</span><span class="echo-wifi-meta">1 接入点</span><span class="label success">活跃</span></div>
+              <div class="scalex-map-module">
+                <div class="scalex-map-module-head">无线射频</div>
+                <div class="scalex-map-wifi">
+                  <div class="scalex-wifi-card scalex-wifi-up"><div class="scalex-wifi-head"><span class="scalex-wifi-badge">Wi-Fi 4</span><strong>2.4 GHz</strong></div><span class="scalex-wifi-ssid">ScaleX</span><span class="scalex-wifi-meta">1 接入点</span><span class="label success">活跃</span></div>
+                  <div class="scalex-wifi-card scalex-wifi-up"><div class="scalex-wifi-head"><span class="scalex-wifi-badge">Wi-Fi 6</span><strong>5 GHz</strong></div><span class="scalex-wifi-ssid">ScaleX-5G</span><span class="scalex-wifi-meta">1 接入点</span><span class="label success">活跃</span></div>
+                  <div class="scalex-wifi-card scalex-wifi-up"><div class="scalex-wifi-head"><span class="scalex-wifi-badge">Wi-Fi 7</span><strong>6 GHz</strong></div><span class="scalex-wifi-ssid">ScaleX-6G</span><span class="scalex-wifi-meta">1 接入点</span><span class="label success">活跃</span></div>
                 </div>
               </div>
             </div>
           </section>
 
-          <div class="echo-grid">
-            <section class="cbi-section echo-panel">
-              <div class="echo-panel-head">
-                <div class="echo-panel-title"><span class="echo-symbol echo-symbol-globe" aria-hidden="true"></span><span>接口</span></div>
+          <div class="scalex-grid">
+            <section class="cbi-section scalex-panel">
+              <div class="scalex-panel-head">
+                <div class="scalex-panel-title"><span class="scalex-symbol scalex-symbol-globe" aria-hidden="true"></span><span>接口</span></div>
               </div>
-              <table class="echo-data-table">
-                <caption class="echo-sr-only">网络接口</caption>
+              <table class="scalex-data-table">
+                <caption class="scalex-sr-only">网络接口</caption>
                 <thead>
-                  <tr><th scope="col">接口</th><th scope="col">地址</th><th scope="col">下载</th><th scope="col">上传</th><th scope="col" class="echo-col-narrow">状态</th></tr>
+                  <tr><th scope="col">接口</th><th scope="col">地址</th><th scope="col">下载</th><th scope="col">上传</th><th scope="col" class="scalex-col-narrow">状态</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td data-label="接口"><strong>wan</strong></td><td data-label="地址" class="echo-mono">203.0.113.42</td><td data-label="下载" class="echo-mono">18.2 GB</td><td data-label="上传" class="echo-mono">6.4 GB</td><td data-label="状态" class="echo-col-narrow"><span class="label success">在线</span></td></tr>
-                  <tr><td data-label="接口"><strong>lan</strong></td><td data-label="地址" class="echo-mono">192.168.1.1/24</td><td data-label="下载" class="echo-mono">42.1 GB</td><td data-label="上传" class="echo-mono">38.5 GB</td><td data-label="状态" class="echo-col-narrow"><span class="label success">在线</span></td></tr>
-                  <tr><td data-label="接口"><strong>wlan0</strong></td><td data-label="地址" class="echo-mono">192.168.1.1/24</td><td data-label="下载" class="echo-mono">7.8 GB</td><td data-label="上传" class="echo-mono">1.9 GB</td><td data-label="状态" class="echo-col-narrow"><span class="label success">在线</span></td></tr>
+                  <tr><td data-label="接口"><strong>wan</strong></td><td data-label="地址" class="scalex-mono">203.0.113.42</td><td data-label="下载" class="scalex-mono">18.2 GB</td><td data-label="上传" class="scalex-mono">6.4 GB</td><td data-label="状态" class="scalex-col-narrow"><span class="label success">在线</span></td></tr>
+                  <tr><td data-label="接口"><strong>lan</strong></td><td data-label="地址" class="scalex-mono">192.168.1.1/24</td><td data-label="下载" class="scalex-mono">42.1 GB</td><td data-label="上传" class="scalex-mono">38.5 GB</td><td data-label="状态" class="scalex-col-narrow"><span class="label success">在线</span></td></tr>
+                  <tr><td data-label="接口"><strong>wlan0</strong></td><td data-label="地址" class="scalex-mono">192.168.1.1/24</td><td data-label="下载" class="scalex-mono">7.8 GB</td><td data-label="上传" class="scalex-mono">1.9 GB</td><td data-label="状态" class="scalex-col-narrow"><span class="label success">在线</span></td></tr>
                 </tbody>
               </table>
             </section>
 
-            <section class="cbi-section echo-panel">
-              <div class="echo-panel-head">
-                <div class="echo-panel-title"><span class="echo-symbol echo-symbol-devices" aria-hidden="true"></span><span>活跃客户端</span></div>
+            <section class="cbi-section scalex-panel">
+              <div class="scalex-panel-head">
+                <div class="scalex-panel-title"><span class="scalex-symbol scalex-symbol-devices" aria-hidden="true"></span><span>活跃客户端</span></div>
               </div>
-              <table class="echo-data-table">
-                <caption class="echo-sr-only">活跃 DHCP 客户端</caption>
+              <table class="scalex-data-table">
+                <caption class="scalex-sr-only">活跃 DHCP 客户端</caption>
                 <thead><tr><th scope="col">主机名</th><th scope="col">IP</th><th scope="col">MAC</th></tr></thead>
                 <tbody>
-                  <tr><td data-label="主机名">iPhone</td><td data-label="IP" class="echo-mono">192.168.1.101</td><td data-label="MAC" class="echo-mono echo-dim">AA:BB:CC:DD:EE:01</td></tr>
-                  <tr><td data-label="主机名">MacBook</td><td data-label="IP" class="echo-mono">192.168.1.102</td><td data-label="MAC" class="echo-mono echo-dim">AA:BB:CC:DD:EE:02</td></tr>
-                  <tr><td data-label="主机名">NAS</td><td data-label="IP" class="echo-mono">192.168.1.50</td><td data-label="MAC" class="echo-mono echo-dim">AA:BB:CC:DD:EE:03</td></tr>
+                  <tr><td data-label="主机名">iPhone</td><td data-label="IP" class="scalex-mono">192.168.1.101</td><td data-label="MAC" class="scalex-mono scalex-dim">AA:BB:CC:DD:EE:01</td></tr>
+                  <tr><td data-label="主机名">MacBook</td><td data-label="IP" class="scalex-mono">192.168.1.102</td><td data-label="MAC" class="scalex-mono scalex-dim">AA:BB:CC:DD:EE:02</td></tr>
+                  <tr><td data-label="主机名">NAS</td><td data-label="IP" class="scalex-mono">192.168.1.50</td><td data-label="MAC" class="scalex-mono scalex-dim">AA:BB:CC:DD:EE:03</td></tr>
                 </tbody>
               </table>
             </section>
           </div>
 
-          <p class="echo-overview-note">核心状态一览。下方为 LuCI 原生详细指标（Demo 模拟）。</p>
+          <p class="scalex-overview-note">核心状态一览。下方为 LuCI 原生详细指标（Demo 模拟）。</p>
         </div>
 
         <section class="cbi-section">
           <div class="cbi-section-head">LuCI 原生概览</div>
-          <table class="echo-data-table">
-            <caption class="echo-sr-only">LuCI 原生接口表</caption>
+          <table class="scalex-data-table">
+            <caption class="scalex-sr-only">LuCI 原生接口表</caption>
             <thead><tr><th scope="col">接口</th><th scope="col">协议</th><th scope="col">地址</th><th scope="col">状态</th></tr></thead>
             <tbody>
-              <tr><td data-label="接口">wan</td><td data-label="协议">PPPoE</td><td data-label="地址" class="echo-mono">203.0.113.42</td><td data-label="状态"><span class="label success">在线</span></td></tr>
-              <tr><td data-label="接口">lan</td><td data-label="协议">static</td><td data-label="地址" class="echo-mono">192.168.1.1/24</td><td data-label="状态"><span class="label success">在线</span></td></tr>
+              <tr><td data-label="接口">wan</td><td data-label="协议">PPPoE</td><td data-label="地址" class="scalex-mono">203.0.113.42</td><td data-label="状态"><span class="label success">在线</span></td></tr>
+              <tr><td data-label="接口">lan</td><td data-label="协议">static</td><td data-label="地址" class="scalex-mono">192.168.1.1/24</td><td data-label="状态"><span class="label success">在线</span></td></tr>
             </tbody>
           </table>
         </section>
       </main>
     </div>
 
-    <footer id="echo-footer">
+    <footer id="scalex-footer">
       <div class="footer-inner">
         <div class="footer-group">
-          <span>Echo 2.0.1</span>
+          <span>ScaleX 2.1.0</span>
           <span class="footer-dot" aria-hidden="true"></span>
           <a class="footer-link" href="https://openwrt.org" target="_blank" rel="noopener noreferrer">OpenWrt</a>
         </div>
         <div class="footer-group">
-          <a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-echo" target="_blank" rel="noopener noreferrer">主题源码</a>
+          <a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-scalex" target="_blank" rel="noopener noreferrer">主题源码</a>
           <span class="footer-dot" aria-hidden="true"></span>
-          <a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-echo/releases" target="_blank" rel="noopener noreferrer">版本发布</a>
+          <a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-scalex/releases" target="_blank" rel="noopener noreferrer">版本发布</a>
         </div>
       </div>
     </footer>
@@ -324,7 +324,7 @@
     <header class="header-toolbar" style="padding-left:0;padding-right:0">
       <div class="header-titles">
         <div class="header-breadcrumb">系统</div>
-        <h1 class="echo-page-title">Echo 主题</h1>
+        <h1 class="scalex-page-title">ScaleX 主题</h1>
       </div>
     </header>
     <p class="cbi-map-descr">自定义外观、强调色和仪表盘。更改会立即应用到预览。</p>
@@ -333,7 +333,7 @@
       <div class="cbi-section-head">外观</div>
       <div class="cbi-value">
         <label class="cbi-value-title" for="cfg-model">路由器名称</label>
-        <div class="cbi-value-field"><input type="text" id="cfg-model" value="Echo-Router"></div>
+        <div class="cbi-value-field"><input type="text" id="cfg-model" value="ScaleX-Router"></div>
       </div>
       <div class="cbi-value">
         <label class="cbi-value-title" for="cfg-primary">强调色</label>
@@ -357,7 +357,7 @@
             <option value="custom">自定义图片</option>
           </select>
         </div>
-        <div class="cbi-value-description">自定义图片请放置于 /www/luci-static/echo/background/bg.jpg。</div>
+        <div class="cbi-value-description">自定义图片请放置于 /www/luci-static/scalex/background/bg.jpg。</div>
       </div>
       <div class="cbi-page-actions">
         <button class="cbi-button cbi-button-apply" id="cfg-apply" type="button">保存并应用</button>
@@ -381,14 +381,14 @@
       </button>
     </div>
   </div>
-  <main class="echo-login-card">
-    <div class="echo-login-brand">
-      <img class="echo-login-mark" src="../htdocs/luci-static/echo/img/echo-mark.svg" alt="" width="58" height="58">
-      <h1 class="echo-login-hostname">Echo-Router</h1>
-      <p class="echo-login-subtitle">登录以管理您的路由器</p>
+  <main class="scalex-login-card">
+    <div class="scalex-login-brand">
+      <img class="scalex-login-mark" src="../htdocs/luci-static/scalex/img/scalex-mark.svg" alt="" width="58" height="58">
+      <h1 class="scalex-login-hostname">ScaleX-Router</h1>
+      <p class="scalex-login-subtitle">登录以管理您的路由器</p>
     </div>
 
-    <form class="echo-login-form" onsubmit="return false">
+    <form class="scalex-login-form" onsubmit="return false">
       <div class="cbi-value">
         <label class="cbi-value-title" for="demo-user">用户名</label>
         <div class="cbi-value-field"><input class="cbi-input-text" type="text" id="demo-user" value="root" autocomplete="username"></div>
@@ -396,9 +396,9 @@
       <div class="cbi-value">
         <label class="cbi-value-title" for="demo-pass">密码</label>
         <div class="cbi-value-field">
-          <div class="echo-password-wrap">
+          <div class="scalex-password-wrap">
             <input class="cbi-input-password" type="password" id="demo-pass" autocomplete="current-password">
-            <button type="button" class="echo-password-toggle" id="demo-password-toggle" aria-label="显示密码" aria-pressed="false">
+            <button type="button" class="scalex-password-toggle" id="demo-password-toggle" aria-label="显示密码" aria-pressed="false">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3.1"/></svg>
             </button>
           </div>
@@ -409,15 +409,15 @@
       </div>
     </form>
 
-    <div class="echo-login-footer">
-      <div class="echo-login-hint">
-        <span class="echo-symbol echo-symbol-shield" aria-hidden="true"></span>
+    <div class="scalex-login-footer">
+      <div class="scalex-login-hint">
+        <span class="scalex-symbol scalex-symbol-shield" aria-hidden="true"></span>
         <span>由 OpenWrt 保护</span>
       </div>
       <div style="margin-top:8px">
         <a class="footer-link" href="https://openwrt.org" target="_blank" rel="noopener noreferrer">OpenWrt</a>
         <span class="footer-dot" aria-hidden="true" style="display:inline-block;margin:0 6px;vertical-align:middle"></span>
-        <a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-echo" target="_blank" rel="noopener noreferrer">Echo 2.0.1</a>
+        <a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-scalex" target="_blank" rel="noopener noreferrer">ScaleX 2.1.0</a>
       </div>
     </div>
   </main>

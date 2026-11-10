@@ -1,4 +1,4 @@
 #!/bin/sh
 [ -n "${IPKG_INSTROOT}" ] || {
-	(. /etc/uci-defaults/30_luci-theme-echo) && rm -f /etc/uci-defaults/30_luci-theme-echo
+	(. /etc/uci-defaults/30_luci-theme-scalex) && rm -f /etc/uci-defaults/30_luci-theme-scalex
 }

@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.1.0 — 2026-11-10
+
+Theme renamed to **ScaleX**.
+
+### Changed
+
+- Package names: `luci-theme-scalex` / `luci-app-scalex-config`.
+- Asset path: `/luci-static/scalex`; UCI config `/etc/config/scalex`.
+- CSS tokens/classes: `--scalex-*`, `.scalex-*`, `#scalex-*`.
+- JS modules: `menu-scalex.js`, `theme-scalex.js`, `dashboard-scalex.js`, `ui-scalex.js`.
+- Appearance key: `scalex-theme`; theme name registered as `ScaleX`.
+- Repository moved to `Jas0n0ss/openwrt-theme-scalex`.
+- Version starts at 2.1.0 for the renamed package.
+
+### Migration
+
+- Remove the previous theme/config packages before installing ScaleX.
+- Existing UCI settings are not migrated automatically; reapply accent, font and background options.
+
 ## 2.0.1 — 2026-11-09
 
 Real OpenWrt 24.10 install and runtime fixes, plus Safari/WebKit and Firefox coverage.
@@ -13,7 +32,7 @@ Real OpenWrt 24.10 install and runtime fixes, plus Safari/WebKit and Firefox cov
 - **Header**: include LuCI's translations endpoint and `cbi.js` (`String.prototype.format`); without them `L.require()` failed and the navigation never rendered.
 - **Menu core**: `menu-bootstrap-core.js` returned a plain object; LuCI 24.10 requires a `baseclass` constructor. It is now a proper class.
 - **Dashboard injection**: place the hero after security alerts, not before them.
-- **UI enhancer**: do not double-wrap Echo's own dashboard tables.
+- **UI enhancer**: do not double-wrap ScaleX's own dashboard tables.
 - **UCI defaults**: restore executable bit; first-install theme registration now runs.
 
 ### Added
@@ -29,7 +48,7 @@ Real OpenWrt 24.10 install and runtime fixes, plus Safari/WebKit and Firefox cov
 
 ## 2.0.0 — 2026-11-09
 
-Echo 2.0 是一次完整的视觉与交互重做。
+ScaleX 2.0 是一次完整的视觉与交互重做。
 
 ### Added
 
@@ -39,7 +58,7 @@ Echo 2.0 是一次完整的视觉与交互重做。
 - 320–1920px 响应式布局；移动端表格重排为键值列表。
 - 键盘可用的下拉菜单与 Sheet 焦点陷阱。
 - `prefers-reduced-motion`、`prefers-reduced-transparency`、`prefers-contrast` 支持。
-- 自绘 Echo 标记、favicon 与 15 个单色符号。
+- 自绘 ScaleX 标记、favicon 与 15 个单色符号。
 - 登录页密码显示/隐藏、主题切换。
 - Playwright UI 冒烟测试与截图产物。
 - 深色模式截图与完整设计规范。

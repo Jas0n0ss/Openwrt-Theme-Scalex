@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Echo 2.0 browser smoke test.
+"""ScaleX 2.1 browser smoke test.
 
 Run against the static demo:
     python tests/ui-smoke.py --base-url http://127.0.0.1:9080/demo/ --channel chrome
@@ -35,7 +35,7 @@ def new_page(browser, width: int, height: int, theme: str = "light"):
     )
     page = context.new_page()
     page.add_init_script(
-        "localStorage.setItem('echo-theme', %s)" % json.dumps(theme)
+        "localStorage.setItem('scalex-theme', %s)" % json.dumps(theme)
     )
     errors: list[str] = []
     page.on("pageerror", lambda exc: errors.append(str(exc)))
@@ -78,7 +78,7 @@ def main() -> int:
         # 1. Responsive geometry
         for width in WIDTHS:
             context, page, errors = new_page(browser, width, 900)
-            page.goto(clean, wait_until="networkidle")
+            page.goto(clean, wait_until="load")
             page.wait_for_timeout(200)
             dims = page.evaluate(
                 "() => ({sw: document.documentElement.scrollWidth,"
@@ -93,7 +93,7 @@ def main() -> int:
 
         # 2. Desktop interactions
         context, page, errors = new_page(browser, 1440, 1000)
-        page.goto(base, wait_until="networkidle")
+        page.goto(base, wait_until="load")
         page.click(".nav-section.has-dropdown > .nav-top")
         page.wait_for_timeout(280)
         check(
@@ -112,7 +112,7 @@ def main() -> int:
         page.click('[data-theme-mode="light"]')
         page.wait_for_timeout(120)
         check(page.evaluate("document.documentElement.dataset.theme") == "light", "light mode not applied")
-        page.goto(clean, wait_until="networkidle")
+        page.goto(clean, wait_until="load")
         page.wait_for_timeout(300)
         page.screenshot(path=str(ARTIFACTS / "desktop-light.png"), full_page=True)
         page.click('[data-theme-mode="dark"]')
@@ -123,27 +123,27 @@ def main() -> int:
 
         # 3. Mobile sheet
         context, page, errors = new_page(browser, 390, 844)
-        page.goto(base, wait_until="networkidle")
-        check(page.is_visible("#echo-menu-btn"), "mobile menu button is hidden")
+        page.goto(base, wait_until="load")
+        check(page.is_visible("#scalex-menu-btn"), "mobile menu button is hidden")
         check(not page.is_visible("#top-nav"), "desktop nav should be hidden on mobile")
-        page.click("#echo-menu-btn")
+        page.click("#scalex-menu-btn")
         page.wait_for_timeout(450)
-        check("is-open" in (page.locator("#echo-sheet").get_attribute("class") or ""), "sheet did not open")
+        check("is-open" in (page.locator("#scalex-sheet").get_attribute("class") or ""), "sheet did not open")
         check(
-            page.evaluate("document.activeElement && document.activeElement.id") == "echo-sheet-close",
+            page.evaluate("document.activeElement && document.activeElement.id") == "scalex-sheet-close",
             "focus did not move into the sheet",
         )
         page.screenshot(path=str(ARTIFACTS / "mobile-sheet.png"), full_page=False)
         page.keyboard.press("Escape")
         page.wait_for_timeout(500)
-        check(page.locator("#echo-sheet").get_attribute("hidden") is not None, "sheet did not close on Escape")
+        check(page.locator("#scalex-sheet").get_attribute("hidden") is not None, "sheet did not close on Escape")
         page.screenshot(path=str(ARTIFACTS / "mobile-light.png"), full_page=True)
         check(not errors, f"mobile page errors: {errors[:3]}")
         context.close()
 
         # 4. Sign-in accent and settings
         context, page, errors = new_page(browser, 1440, 1000)
-        page.goto(base, wait_until="networkidle")
+        page.goto(base, wait_until="load")
         page.click('[data-view="login"]')
         page.wait_for_timeout(250)
         button_bg = page.eval_on_selector(

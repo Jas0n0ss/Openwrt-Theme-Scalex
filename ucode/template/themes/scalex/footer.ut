@@ -1,0 +1,55 @@
+{# luci-theme-scalex 2.1 — Footer #}
+{%
+  import { readfile } from 'fs';
+
+  const scalex_version = trim(readfile('/usr/share/ucode/luci/template/themes/scalex/version')) ?? '2.1.0';
+  const scalex_theme_repo = 'https://github.com/Jas0n0ss/openwrt-theme-scalex';
+
+  let raw_dist = version.distname ?? 'OpenWrt';
+  let dist = lc(raw_dist);
+  let distro_name = raw_dist;
+  let distro_url = 'https://github.com/openwrt/openwrt';
+
+  if (index(dist, 'immortal') >= 0) {
+    distro_name = 'ImmortalWrt';
+    distro_url = 'https://github.com/immortalwrt/immortalwrt';
+  } else if (index(dist, 'lede') >= 0) {
+    distro_name = 'LEDE';
+    distro_url = 'https://github.com/coolsnowwolf/lede';
+  } else if (index(dist, 'openwrt') >= 0) {
+    distro_name = 'OpenWrt';
+    distro_url = 'https://github.com/openwrt/openwrt';
+  }
+%}
+{% if (!blank_page): %}
+      </main>
+    </div><!-- #scalex-content-wrap -->
+
+    <footer id="scalex-footer">
+      <div class="footer-inner">
+        <div class="footer-group">
+          <span>ScaleX {{ scalex_version }}</span>
+          <span class="footer-dot" aria-hidden="true"></span>
+          <a class="footer-link" href="{{ distro_url }}" target="_blank" rel="noopener noreferrer">{{ distro_name }}</a>
+        </div>
+        <div class="footer-group">
+          <a class="footer-link" href="{{ scalex_theme_repo }}" target="_blank" rel="noopener noreferrer">{{ _('Theme source') }}</a>
+          <span class="footer-dot" aria-hidden="true"></span>
+          <a class="footer-link" href="{{ scalex_theme_repo }}/releases" target="_blank" rel="noopener noreferrer">{{ _('Releases') }}</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>L.require('menu-scalex')</script>
+<script>L.require('ui-scalex')</script>
+<script>L.require('theme-scalex')</script>
+<script>L.require('dashboard-scalex')</script>
+<script>
+if (history.scrollRestoration) history.scrollRestoration = 'manual';
+</script>
+{% endif %}
+{% if (js): %}<script>{{ js }}</script>{% endif %}
+</body>
+</html>

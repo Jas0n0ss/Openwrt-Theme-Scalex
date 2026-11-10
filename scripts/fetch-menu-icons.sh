@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Fetch OpenWrt official dashboard SVG icons used by the Echo menu bar.
+# Fetch OpenWrt official dashboard SVG icons used by the ScaleX menu bar.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-DEST="$ROOT/htdocs/luci-static/echo/icons/menu"
+DEST="$ROOT/htdocs/luci-static/scalex/icons/menu"
 BASE="https://raw.githubusercontent.com/openwrt/luci/master/modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/icons"
 
 mkdir -p "$DEST"

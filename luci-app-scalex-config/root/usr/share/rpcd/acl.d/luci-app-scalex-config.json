@@ -1,0 +1,14 @@
+{
+	"luci-app-scalex-config": {
+		"description": "Grant access to ScaleX theme configuration",
+		"read": {
+			"uci": [ "scalex" ]
+		},
+		"write": {
+			"uci": [ "scalex" ],
+			"file": {
+				"/www/luci-static/scalex/background": [ "write", "read", "list", "delete" ]
+			}
+		}
+	}
+}

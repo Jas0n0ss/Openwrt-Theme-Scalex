@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	var THEME_KEY = 'echo-theme';
+	var THEME_KEY = 'scalex-theme';
 	var MODES = ['auto', 'light', 'dark'];
 	var params = new URLSearchParams(window.location.search);
 	var clean = params.get('clean') === '1';
@@ -25,7 +25,7 @@
 			btn.classList.toggle('active', btn.dataset.view === name);
 		});
 
-		document.body.classList.toggle('echo-login', name === 'login');
+		document.body.classList.toggle('scalex-login', name === 'login');
 		window.scrollTo(0, 0);
 	}
 
@@ -80,7 +80,7 @@
 
 	/* ── Desktop dropdowns ──────────────────────────────────────────── */
 
-	var navBar = document.getElementById('echo-nav-bar');
+	var navBar = document.getElementById('scalex-nav-bar');
 
 	function setDropdown(section, open) {
 		section.classList.toggle('open', open);
@@ -172,37 +172,37 @@
 		if (sheetRefs) return sheetRefs;
 
 		var scrim = document.createElement('div');
-		scrim.className = 'echo-scrim';
-		scrim.id = 'echo-scrim';
+		scrim.className = 'scalex-scrim';
+		scrim.id = 'scalex-scrim';
 		scrim.hidden = true;
 
 		var sheet = document.createElement('div');
-		sheet.className = 'echo-sheet';
-		sheet.id = 'echo-sheet';
+		sheet.className = 'scalex-sheet';
+		sheet.id = 'scalex-sheet';
 		sheet.setAttribute('role', 'dialog');
 		sheet.setAttribute('aria-modal', 'true');
-		sheet.setAttribute('aria-labelledby', 'echo-sheet-title');
+		sheet.setAttribute('aria-labelledby', 'scalex-sheet-title');
 		sheet.hidden = true;
 		sheet.innerHTML =
-			'<div class="echo-sheet-grabber" aria-hidden="true"></div>' +
-			'<div class="echo-sheet-head">' +
-				'<h2 class="echo-sheet-title" id="echo-sheet-title">浏览</h2>' +
-				'<button type="button" class="echo-sheet-close" id="echo-sheet-close" aria-label="关闭菜单">' +
-					'<span class="echo-symbol echo-symbol-close" aria-hidden="true"></span>' +
+			'<div class="scalex-sheet-grabber" aria-hidden="true"></div>' +
+			'<div class="scalex-sheet-head">' +
+				'<h2 class="scalex-sheet-title" id="scalex-sheet-title">浏览</h2>' +
+				'<button type="button" class="scalex-sheet-close" id="scalex-sheet-close" aria-label="关闭菜单">' +
+					'<span class="scalex-symbol scalex-symbol-close" aria-hidden="true"></span>' +
 				'</button>' +
 			'</div>' +
-			'<nav class="echo-sheet-nav" id="echo-sheet-nav" aria-label="主导航"></nav>' +
-			'<div class="echo-sheet-footer" id="echo-sheet-footer"></div>';
+			'<nav class="scalex-sheet-nav" id="scalex-sheet-nav" aria-label="主导航"></nav>' +
+			'<div class="scalex-sheet-footer" id="scalex-sheet-footer"></div>';
 
 		document.body.appendChild(scrim);
 		document.body.appendChild(sheet);
 
-		sheetRefs = { scrim: scrim, sheet: sheet, nav: sheet.querySelector('#echo-sheet-nav') };
+		sheetRefs = { scrim: scrim, sheet: sheet, nav: sheet.querySelector('#scalex-sheet-nav') };
 		buildSheetNav();
 
 		scrim.addEventListener('click', function () { closeSheet(); });
-		sheet.querySelector('#echo-sheet-close').addEventListener('click', function () { closeSheet(); });
-		sheet.querySelector('#echo-sheet-nav').addEventListener('click', function (e) {
+		sheet.querySelector('#scalex-sheet-close').addEventListener('click', function () { closeSheet(); });
+		sheet.querySelector('#scalex-sheet-nav').addEventListener('click', function (e) {
 			if (e.target.closest('a')) closeSheet(false);
 		});
 
@@ -234,7 +234,7 @@
 	function buildSheetNav() {
 		var refs = buildSheet();
 		var nav = refs.nav;
-		var footer = document.getElementById('echo-sheet-footer');
+		var footer = document.getElementById('scalex-sheet-footer');
 		var topNav = document.getElementById('top-nav');
 		if (!nav || !topNav) return;
 
@@ -262,19 +262,19 @@
 				var caret = document.createElement('span');
 				caret.className = 'nav-caret';
 				caret.setAttribute('aria-hidden', 'true');
-				caret.innerHTML = '<span class="echo-symbol echo-symbol-chevron"></span>';
+				caret.innerHTML = '<span class="scalex-symbol scalex-symbol-chevron"></span>';
 				rowChildren.push(caret);
 
 				var details = document.createElement('details');
-				details.className = 'echo-sheet-group';
+				details.className = 'scalex-sheet-group';
 				if (active) details.open = true;
 
 				var summary = document.createElement('summary');
-				summary.className = 'echo-sheet-row' + (active ? ' is-active' : '');
+				summary.className = 'scalex-sheet-row' + (active ? ' is-active' : '');
 				rowChildren.forEach(function (child) { summary.appendChild(child); });
 
 				var sub = document.createElement('div');
-				sub.className = 'echo-sheet-sub';
+				sub.className = 'scalex-sheet-sub';
 				subLinks.forEach(function (link) {
 					var a = document.createElement('a');
 					a.href = link.getAttribute('href');
@@ -289,16 +289,16 @@
 			} else {
 				var row = document.createElement('a');
 				row.href = trigger.getAttribute('href') || '#';
-				row.className = 'echo-sheet-row' + (active ? ' is-active' : '');
+				row.className = 'scalex-sheet-row' + (active ? ' is-active' : '');
 				rowChildren.forEach(function (child) { row.appendChild(child); });
 				nav.appendChild(row);
 			}
 		});
 
 		var logout = document.createElement('a');
-		logout.className = 'echo-sheet-logout';
+		logout.className = 'scalex-sheet-logout';
 		logout.href = '#';
-		logout.innerHTML = '<span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url(\'../htdocs/luci-static/echo/icons/menu/logout.svg\');mask-image:url(\'../htdocs/luci-static/echo/icons/menu/logout.svg\');" aria-hidden="true"></span><span>退出</span>';
+		logout.innerHTML = '<span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url(\'../htdocs/luci-static/scalex/icons/menu/logout.svg\');mask-image:url(\'../htdocs/luci-static/scalex/icons/menu/logout.svg\');" aria-hidden="true"></span><span>退出</span>';
 		footer.appendChild(logout);
 	}
 
@@ -306,7 +306,7 @@
 
 	function openSheet() {
 		var refs = buildSheet();
-		var menuBtn = document.getElementById('echo-menu-btn');
+		var menuBtn = document.getElementById('scalex-menu-btn');
 
 		clearTimeout(sheetCloseTimer);
 		refs.scrim.hidden = false;
@@ -315,21 +315,21 @@
 			refs.scrim.classList.add('is-visible');
 			refs.sheet.classList.add('is-open');
 		});
-		document.body.classList.add('echo-sheet-open');
+		document.body.classList.add('scalex-sheet-open');
 		var app = document.getElementById('view-app');
 		if (app) app.inert = true;
 		if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
-		refs.sheet.querySelector('#echo-sheet-close').focus();
+		refs.sheet.querySelector('#scalex-sheet-close').focus();
 	}
 
 	function closeSheet(restoreFocus) {
 		if (!sheetRefs) return;
 		var refs = sheetRefs;
-		var menuBtn = document.getElementById('echo-menu-btn');
+		var menuBtn = document.getElementById('scalex-menu-btn');
 
 		refs.sheet.classList.remove('is-open');
 		refs.scrim.classList.remove('is-visible');
-		document.body.classList.remove('echo-sheet-open');
+		document.body.classList.remove('scalex-sheet-open');
 		var app = document.getElementById('view-app');
 		if (app) app.inert = false;
 		if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
@@ -342,7 +342,7 @@
 		if (restoreFocus !== false && menuBtn) menuBtn.focus();
 	}
 
-	var menuBtn = document.getElementById('echo-menu-btn');
+	var menuBtn = document.getElementById('scalex-menu-btn');
 	if (menuBtn) {
 		menuBtn.addEventListener('click', function () {
 			var refs = buildSheet();
@@ -358,17 +358,17 @@
 		applyBtn.addEventListener('click', function () {
 			var accent = document.getElementById('cfg-primary').value;
 			var root = document.documentElement;
-			root.style.setProperty('--echo-accent', accent);
-			root.style.setProperty('--echo-accent-hover', accent);
-			root.style.setProperty('--echo-primary', accent);
-			root.style.setProperty('--echo-primary-hover', accent);
+			root.style.setProperty('--scalex-accent', accent);
+			root.style.setProperty('--scalex-accent-hover', accent);
+			root.style.setProperty('--scalex-primary', accent);
+			root.style.setProperty('--scalex-primary-hover', accent);
 
-			var model = document.getElementById('cfg-model').value.trim() || 'Echo-Router';
-			document.querySelectorAll('.brand-host, .echo-login-hostname').forEach(function (el) {
+			var model = document.getElementById('cfg-model').value.trim() || 'ScaleX-Router';
+			document.querySelectorAll('.brand-host, .scalex-login-hostname').forEach(function (el) {
 				el.textContent = model;
 			});
 
-			var overview = document.getElementById('echo-overview');
+			var overview = document.getElementById('scalex-overview');
 			if (overview) overview.style.display = document.getElementById('cfg-dashboard').checked ? '' : 'none';
 
 			showView('dashboard');

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ScaleX 2.1 browser smoke test.
+"""ScaleX 3.0 browser smoke test.
 
 Run against the static demo:
     python tests/ui-smoke.py --base-url http://127.0.0.1:9080/demo/ --channel chrome
@@ -94,14 +94,23 @@ def main() -> int:
         # 2. Desktop interactions
         context, page, errors = new_page(browser, 1440, 1000)
         page.goto(base, wait_until="load")
-        page.click(".nav-section.has-dropdown > .nav-top")
-        page.wait_for_timeout(280)
+        check(page.is_visible("#scalex-sidebar"), "desktop sidebar is hidden")
         check(
-            page.locator(".nav-section.has-dropdown").first.get_attribute("class").find("open") >= 0,
-            "desktop dropdown did not open",
+            page.locator(".sidebar-section.is-active .sidebar-subitem").count() >= 1,
+            "active sidebar section has no subitems",
         )
-        page.keyboard.press("Escape")
-        page.wait_for_timeout(260)
+        check(
+            page.locator("#scalex-sidebar .sidebar-item").count() >= 5,
+            "sidebar is missing primary navigation",
+        )
+        page.fill("#scalex-nav-search", "网络")
+        page.wait_for_timeout(120)
+        check(
+            page.locator("#scalex-sidebar .sidebar-section:visible").count() <= 2,
+            "sidebar search did not filter sections",
+        )
+        page.fill("#scalex-nav-search", "")
+        page.wait_for_timeout(120)
         page.click('[data-theme-mode="dark"]')
         page.wait_for_timeout(120)
         check(page.evaluate("document.documentElement.dataset.theme") == "dark", "dark mode not applied")
@@ -123,9 +132,9 @@ def main() -> int:
 
         # 3. Mobile sheet
         context, page, errors = new_page(browser, 390, 844)
-        page.goto(base, wait_until="load")
+        page.goto(clean, wait_until="load")
         check(page.is_visible("#scalex-menu-btn"), "mobile menu button is hidden")
-        check(not page.is_visible("#top-nav"), "desktop nav should be hidden on mobile")
+        check(not page.is_visible("#scalex-sidebar"), "desktop sidebar should be hidden on mobile")
         page.click("#scalex-menu-btn")
         page.wait_for_timeout(450)
         check("is-open" in (page.locator("#scalex-sheet").get_attribute("class") or ""), "sheet did not open")
@@ -137,6 +146,7 @@ def main() -> int:
         page.keyboard.press("Escape")
         page.wait_for_timeout(500)
         check(page.locator("#scalex-sheet").get_attribute("hidden") is not None, "sheet did not close on Escape")
+        page.evaluate("document.activeElement && document.activeElement.blur()")
         page.screenshot(path=str(ARTIFACTS / "mobile-light.png"), full_page=True)
         check(not errors, f"mobile page errors: {errors[:3]}")
         context.close()
@@ -159,9 +169,12 @@ def main() -> int:
         )
         page.click('#view-login [data-theme-mode="light"]')
         page.wait_for_timeout(150)
+        page.evaluate("document.body.classList.add('demo-clean-view')")
         page.screenshot(path=str(ARTIFACTS / "login.png"), full_page=True)
+        page.evaluate("document.body.classList.remove('demo-clean-view')")
         page.click('[data-view="settings"]')
         page.wait_for_timeout(250)
+        page.evaluate("document.body.classList.add('demo-clean-view')")
         page.screenshot(path=str(ARTIFACTS / "settings.png"), full_page=True)
         check(not errors, f"sign-in page errors: {errors[:3]}")
         context.close()

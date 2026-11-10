@@ -1,5 +1,5 @@
 <%#
-  luci-theme-scalex 2.1 — legacy (Lua / LuCI 18.06) header.
+  luci-theme-scalex 3.0 — legacy (Lua / LuCI 18.06) header.
   Server-rendered navigation: no ui.menu, no modern LuCI modules.
 -%>
 <%
@@ -21,7 +21,7 @@
 	local cattree  = category and disp.node(category)
 
 	local uci = require("luci.model.uci").cursor()
-	local scalex_version = "2.1.0"
+	local scalex_version = "3.0.0"
 	local primary = uci:get("scalex", "global", "primary") or "#0071E3"
 	local dark_primary = uci:get("scalex", "global", "dark_primary") or "#0A84FF"
 	local font_size = uci:get("scalex", "global", "font_size") or "16"

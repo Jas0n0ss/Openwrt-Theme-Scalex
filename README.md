@@ -2,38 +2,38 @@
 
 [![Build IPK](https://github.com/Jas0n0ss/openwrt-theme-scalex/actions/workflows/build.yml/badge.svg)](https://github.com/Jas0n0ss/openwrt-theme-scalex/actions/workflows/build.yml)
 
-**ScaleX 2.1** — 一款贴近 Apple 视觉语言的 OpenWrt / LuCI 主题。
-Liquid Glass 工具栏、网络状态光晕、Apple 风格表单与原生感移动端菜单。
+**ScaleX 3.0** — 一款贴近 Apple 视觉语言的 OpenWrt / LuCI 主题。
+玻璃侧边栏、macOS 设置式分组、克制的状态面板与原生感移动端菜单。
 
-**当前版本：** `2.1.0`
+**当前版本：** `3.0.0`
 
-![ScaleX 2.1 浅色概览](docs/preview.jpg)
+![ScaleX 3.0 浅色概览](docs/preview.jpg)
 
 ---
 
-## 为什么是 ScaleX 2.1
+## 为什么是 ScaleX 3.0
 
 | 设计目标 | 实现 |
 |----------|------|
-| **一眼看懂网络状态** | 概览页首屏给出在线状态、WAN / Wi-Fi / 客户端摘要，以及 CPU、内存、运行时间、客户端四项 Vitals |
-| **Apple 式层级** | 34px 大标题、11px eyebrow、发丝分隔线、连续圆角、唯一强调色 |
-| **只在功能层使用玻璃** | 顶部导航、下拉、移动端 Sheet 使用 Liquid Glass；卡片和表单保持不透明，优先保证可读性 |
+| **一眼看懂网络状态** | 首屏状态面板给出 WAN / Wi-Fi / 客户端摘要，四项 Vitals 收进同一条面板 |
+| **Apple 式层级** | 32px 页面标题、28px 状态标题、20px 连续圆角、发丝分隔线、唯一强调色 |
+| **只在功能层使用玻璃** | 侧边栏、移动端顶栏和 Sheet 使用 Liquid Glass；内容卡片保持不透明，优先保证可读性 |
 | **真正可用的移动端** | ≤980px 切换为「浏览」Sheet，分组展开、焦点陷阱、Escape 关闭、触控目标 ≥44px |
 | **完整深色模式** | Auto / Light / Dark 三态；深色不是反色，使用独立表面与文字层级 |
 | **不牺牲 LuCI 功能** | 保留 Bootstrap CBI / 表格 / 表单底座，第三方插件通过 `ui-scalex.js` 自动适配 |
-| **可访问** | 跳过导航、可见焦点、键盘下拉、`prefers-reduced-motion`、`prefers-reduced-transparency`、表格移动端重排 |
+| **可访问** | 跳过导航、可见焦点、键盘可操作菜单、`prefers-reduced-motion`、`prefers-reduced-transparency`、表格移动端重排 |
 
 **深色模式**
 
-![ScaleX 2.1 深色概览](docs/preview-dark.jpg)
+![ScaleX 3.0 深色概览](docs/preview-dark.jpg)
 
 **登录页**
 
-![ScaleX 2.1 登录页](docs/login.jpg)
+![ScaleX 3.0 登录页](docs/login.jpg)
 
 **移动端**
 
-<img src="docs/preview-mobile.jpg" alt="ScaleX 2.1 移动端" width="320">
+<img src="docs/preview-mobile.jpg" alt="ScaleX 3.0 移动端" width="320">
 
 ---
 
@@ -53,8 +53,10 @@ Liquid Glass 工具栏、网络状态光晕、Apple 风格表单与原生感移�
 | 环境 | 结果 |
 |------|------|
 | OpenWrt 24.10 x86_64 rootfs + `uhttpd` + `ucode`（Docker/QEMU） | ✅ IPK 安装、登录页、静态资源、ucode 模板 |
-| WebKit 27.2（Safari 引擎） | ✅ 8 个宽度、主题切换、移动 Sheet |
-| Firefox 157（Linux Playwright 容器） | ✅ 桌面/移动布局、Sheet、无溢出 |
+| Chromium（Playwright / Chrome） | ✅ 8 个宽度、侧边栏搜索、主题切换、移动 Sheet |
+| WebKit 27.2（Safari 引擎） | ✅ 8 个宽度、侧边栏搜索、主题切换、移动 Sheet |
+| Firefox 157（Linux Playwright 容器） | ✅ 8 个宽度、桌面/移动布局、Sheet、无溢出 |
+| LEDE 18.06 静态壳层 | ✅ 顶部栏、主题切换、Sheet（fixture） |
 | 物理路由器 | ⚠️ 未覆盖 |
 
 > 容器测试使用真实 OpenWrt 24.10 userland，但不是物理路由器；`tests/real-router.sh` 可复现。
@@ -68,8 +70,8 @@ Liquid Glass 工具栏、网络状态光晕、Apple 风格表单与原生感移�
 从 [Releases](https://github.com/Jas0n0ss/openwrt-theme-scalex/releases) 下载：
 
 ```sh
-opkg install luci-theme-scalex_2.1.0-1_all.ipk
-opkg install luci-app-scalex-config_2.1.0-1_all.ipk
+opkg install luci-theme-scalex_3.0.0-1_all.ipk
+opkg install luci-app-scalex-config_3.0.0-1_all.ipk
 
 uci set luci.main.mediaurlbase='/luci-static/scalex'
 uci commit luci
@@ -164,7 +166,7 @@ python3 -m venv .venv
 测试覆盖：
 
 - 320 / 360 / 390 / 768 / 980 / 1024 / 1280 / 1440px：无横向溢出
-- 桌面下拉菜单、主题三态、移动 Sheet 开关与焦点
+- 桌面侧边栏搜索与 L2 展开、主题三态、移动 Sheet 开关与焦点
 - 登录按钮强调色、表单可访问性
 - 截图输出到 `tests/artifacts/`
 
@@ -181,9 +183,9 @@ openwrt-theme-scalex/
 │   ├── img/                          # ScaleX 标记、favicon、符号集
 │   └── ...
 ├── htdocs/luci-static/resources/
-│   ├── menu-scalex.js                  # 导航 / 下拉 / 移动 Sheet
+│   ├── menu-scalex.js                  # 侧边栏 / 搜索 / 移动 Sheet
 │   ├── theme-scalex.js                 # Auto / Light / Dark
-│   ├── dashboard-scalex.js             # Hero / Vitals / 网络面板
+│   ├── dashboard-scalex.js             # 状态 / Vitals / 网络面板
 │   ├── ui-scalex.js                    # 第三方 app 适配
 │   └── menu-bootstrap-core.js
 ├── luasrc/view/themes/scalex/          # Lua / LuCI 18.06 基础兼容层

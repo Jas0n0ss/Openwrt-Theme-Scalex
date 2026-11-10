@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: luci-theme-scalex 2.1.0\n"
+"Project-Id-Version: luci-theme-scalex 3.0.0\n"
 "Language: zh_Hans\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 

@@ -1,9 +1,13 @@
-/* ScaleX 2.1 — Reset, typography and global behaviour */
+/* ScaleX 3.0 — Reset, typography and global behaviour */
 
 *,
 *::before,
 *::after {
 	box-sizing: border-box;
+}
+
+[hidden] {
+	display: none !important;
 }
 
 html {
@@ -26,10 +30,7 @@ body {
 	line-height: var(--scalex-leading-normal);
 	color: var(--scalex-text);
 	background-color: var(--scalex-bg);
-	background-image:
-		radial-gradient(ellipse 70% 45% at 8% -8%, rgba(0, 113, 227, 0.09), transparent 60%),
-		radial-gradient(ellipse 55% 40% at 96% 8%, rgba(48, 176, 199, 0.055), transparent 62%),
-		radial-gradient(ellipse 55% 45% at 50% 108%, rgba(175, 82, 222, 0.045), transparent 60%);
+	background-image: linear-gradient(180deg, #f7f7fa 0%, var(--scalex-bg) 320px);
 	background-attachment: fixed;
 	overflow-x: hidden;
 	text-wrap: pretty;
@@ -40,18 +41,12 @@ body.bg-none {
 }
 
 html[data-theme="dark"] body {
-	background-image:
-		radial-gradient(ellipse 70% 45% at 8% -8%, rgba(10, 132, 255, 0.16), transparent 62%),
-		radial-gradient(ellipse 55% 40% at 96% 8%, rgba(48, 176, 199, 0.07), transparent 62%),
-		radial-gradient(ellipse 55% 45% at 50% 108%, rgba(175, 82, 222, 0.06), transparent 60%);
+	background-image: none;
 }
 
 @media (prefers-color-scheme: dark) {
 	html:not([data-theme="light"]) body {
-		background-image:
-			radial-gradient(ellipse 70% 45% at 8% -8%, rgba(10, 132, 255, 0.16), transparent 62%),
-			radial-gradient(ellipse 55% 40% at 96% 8%, rgba(48, 176, 199, 0.07), transparent 62%),
-			radial-gradient(ellipse 55% 45% at 50% 108%, rgba(175, 82, 222, 0.06), transparent 60%);
+		background-image: none;
 	}
 }
 
@@ -213,12 +208,10 @@ a:hover {
 	.scalex-squircle,
 	.cbi-section,
 	.scalex-card,
-	.scalex-stat,
-	.scalex-hero,
+	.scalex-status,
+	.scalex-vitals,
 	.scalex-login-card,
-	.scalex-sheet,
-	.nav-dropdown,
-	.top-nav-more-menu {
+	.scalex-sheet {
 		corner-shape: squircle;
 	}
 }

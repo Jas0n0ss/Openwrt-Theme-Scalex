@@ -16,7 +16,7 @@ python3 -m venv .venv
 `ui-smoke.py` checks:
 
 - no horizontal overflow at 320, 360, 390, 768, 980, 1024, 1280, 1440px
-- desktop L2 dropdown, appearance switch, mobile sheet open/close/focus
+- desktop sidebar search / L2 expansion, appearance switch, mobile sheet open/close/focus
 - sign-in primary button uses the accent color
 - no uncaught page errors
 

@@ -1,4 +1,4 @@
-/* ScaleX 2.1 — LuCI components: cards, lists, forms, tables, feedback */
+/* ScaleX 3.0 — LuCI components: quieter grouped surfaces */
 
 /* ── Cards and sections ─────────────────────────────────────────────── */
 
@@ -35,7 +35,7 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: var(--scalex-space-3);
-	padding: 16px 20px;
+	padding: 14px 20px;
 	border-bottom: 1px solid var(--scalex-separator);
 	color: var(--scalex-text);
 	font-size: var(--scalex-size-base);
@@ -104,7 +104,7 @@
 	grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
 	align-items: center;
 	gap: 6px var(--scalex-space-5);
-	padding: 13px 20px;
+	padding: 11px 20px;
 	border-bottom: 1px solid var(--scalex-separator);
 }
 
@@ -162,10 +162,10 @@ input[type="password"].cbi-input-password,
 select.cbi-input-select {
 	width: 100%;
 	max-width: 460px;
-	min-height: 38px;
-	padding: 8px 11px;
-	border: 1px solid var(--scalex-separator-strong);
-	border-radius: var(--scalex-radius-sm);
+	min-height: 36px;
+	padding: 7px 11px;
+	border: 1px solid transparent;
+	border-radius: 9px;
 	background: var(--scalex-bg-inset);
 	color: var(--scalex-text);
 	font-size: var(--scalex-size-sm);
@@ -344,9 +344,9 @@ select.cbi-input-select {
 	justify-content: center;
 	gap: 6px;
 	min-height: var(--scalex-control-height);
-	padding: 7px 15px;
+	padding: 7px 14px;
 	border: 1px solid transparent;
-	border-radius: var(--scalex-radius-sm);
+	border-radius: 9px;
 	background: var(--scalex-fill);
 	color: var(--scalex-text);
 	font-size: var(--scalex-size-sm);
@@ -554,10 +554,9 @@ table thead th {
 	padding: 9px 16px;
 	text-align: left;
 	font-size: var(--scalex-size-2xs);
-	font-weight: var(--scalex-weight-semibold);
-	letter-spacing: 0.055em;
-	text-transform: uppercase;
-	color: var(--scalex-text-tertiary);
+	font-weight: var(--scalex-weight-medium);
+	letter-spacing: 0;
+	color: var(--scalex-text-secondary);
 	background: transparent;
 	border-bottom: 1px solid var(--scalex-separator);
 	white-space: nowrap;
@@ -852,4 +851,53 @@ code {
 	.cbi-input-select {
 		min-height: var(--scalex-touch-height);
 	}
+}
+
+/* Native LuCI flag rendered as an iOS-style switch inside form rows. */
+.cbi-value .cbi-checkbox {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+}
+
+.cbi-value .cbi-checkbox input[type="checkbox"] {
+	position: relative;
+	width: 40px;
+	height: 24px;
+	flex-shrink: 0;
+	margin: 0;
+	appearance: none;
+	-webkit-appearance: none;
+	border: 0;
+	border-radius: 999px;
+	background: var(--scalex-fill-strong);
+	cursor: pointer;
+	transition: background-color var(--scalex-duration-fast) var(--scalex-ease-out);
+}
+
+.cbi-value .cbi-checkbox input[type="checkbox"]::after {
+	content: "";
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #ffffff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	transition: transform var(--scalex-duration-fast) var(--scalex-ease-out);
+}
+
+.cbi-value .cbi-checkbox input[type="checkbox"]:checked {
+	background: #34c759;
+}
+
+.cbi-value .cbi-checkbox input[type="checkbox"]:checked::after {
+	transform: translateX(16px);
+}
+
+.cbi-value .cbi-checkbox input[type="checkbox"]:focus-visible {
+	outline: 0;
+	box-shadow: 0 0 0 3px var(--scalex-focus-ring);
 }

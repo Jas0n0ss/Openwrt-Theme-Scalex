@@ -1,4 +1,4 @@
-/* ScaleX 2.1 — LuCI Bootstrap compatibility bridge
+/* ScaleX 3.0 — LuCI Bootstrap compatibility bridge
  *
  * luci-theme-bootstrap still supplies cascade.css for CBI widgets and for
  * third-party apps. This layer maps its variables onto ScaleX tokens and hides
@@ -14,11 +14,6 @@
 	height: 0 !important;
 	overflow: hidden !important;
 	pointer-events: none !important;
-}
-
-#scalex-nav-bar .nav-section:not(.open) > .nav-dropdown,
-#scalex-nav-bar .nav-section:not(.open) > .nav-dropdown * {
-	pointer-events: none;
 }
 
 /* Keep Bootstrap's dark-mode attribute in sync with the ScaleX theme. */

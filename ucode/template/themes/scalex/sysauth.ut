@@ -1,4 +1,4 @@
-{# luci-theme-scalex 2.1 — Sign-in page #}
+{# luci-theme-scalex 3.0 — Sign-in page #}
 {%
   import { readfile, access } from 'fs';
   import { cursor } from 'uci';

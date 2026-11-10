@@ -1,4 +1,4 @@
-/* ScaleX 2.1 — legacy (Lua/LuCI 18.06) interaction layer.
+/* ScaleX 3.0 — legacy (Lua/LuCI 18.06) interaction layer.
  * Plain ES5: no L.require, no modules, no modern syntax. */
 
 (function () {
@@ -208,7 +208,7 @@
 
 			if (subLinks.length) {
 				var details = document.createElement('details');
-				details.className = 'scalex-sheet-group';
+				details.className = 'scalex-sheet-section';
 				if (active) details.open = true;
 
 				var caret = document.createElement('span');
@@ -236,7 +236,7 @@
 		}
 
 		var logout = document.createElement('a');
-		logout.className = 'scalex-sheet-logout';
+		logout.className = 'scalex-sheet-row';
 		logout.href = (document.querySelector('.nav-logout-link') || {}).href || '#';
 		logout.innerHTML = '<span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url(\'/luci-static/scalex/icons/menu/logout.svg\');mask-image:url(\'/luci-static/scalex/icons/menu/logout.svg\');" aria-hidden="true"></span><span>Logout</span>';
 		footer.appendChild(logout);

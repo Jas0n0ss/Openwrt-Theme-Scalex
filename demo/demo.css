@@ -1,4 +1,4 @@
-/* ScaleX 2.1 — static demo chrome (not shipped in the LuCI package) */
+/* ScaleX 3.0 — static demo chrome (not shipped in the LuCI package) */
 
 #view-settings[hidden],
 #view-login[hidden],
@@ -13,11 +13,21 @@
 	padding: 42px 24px 120px;
 }
 
-.scalex-page-title {
+.demo-settings-head {
+	margin-bottom: 24px;
+}
+
+.demo-settings-title {
 	font-size: var(--scalex-size-3xl);
-	font-weight: var(--scalex-weight-bold);
+	font-weight: var(--scalex-weight-semibold);
 	line-height: 1.08;
-	letter-spacing: -0.028em;
+	letter-spacing: -0.032em;
+}
+
+.demo-settings-sub {
+	margin-top: 6px;
+	color: var(--scalex-text-secondary);
+	font-size: var(--scalex-size-sm);
 }
 
 .demo-toolbar {
@@ -130,7 +140,7 @@ body.scalex-login.demo-clean-view {
 		padding: 28px 16px 110px;
 	}
 
-	.scalex-page-title {
+	.demo-settings-title {
 		font-size: var(--scalex-size-2xl);
 	}
 
@@ -145,4 +155,118 @@ body.scalex-login.demo-clean-view {
 	body.scalex-login {
 		padding-bottom: 80px;
 	}
+}
+
+/* ── Settings preview inside the app shell ─────────────────────────── */
+
+.settings-page {
+	max-width: 780px;
+}
+
+.settings-page .cbi-section {
+	margin-bottom: 18px;
+}
+
+.settings-page .cbi-value {
+	grid-template-columns: 190px minmax(0, 1fr);
+	padding: 12px 20px;
+}
+
+.settings-page .cbi-value-title {
+	font-size: var(--scalex-size-sm);
+	font-weight: var(--scalex-weight-medium);
+	color: var(--scalex-text);
+}
+
+.settings-page .cbi-value-description {
+	grid-column: 2;
+	margin-top: 5px;
+}
+
+.settings-page .cbi-input-text,
+.settings-page .cbi-input-select {
+	width: 100%;
+	max-width: 360px;
+}
+
+.settings-page .cbi-color-well {
+	width: 32px;
+	height: 28px;
+	padding: 0;
+	border: 1px solid var(--scalex-separator);
+	border-radius: 7px;
+	background: transparent;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+.settings-page .cbi-color-well::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+.settings-page .cbi-color-well::-webkit-color-swatch {
+	border: 0;
+	border-radius: 6px;
+}
+
+.cbi-switch {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+}
+
+.cbi-switch input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+}
+
+.cbi-switch-track {
+	position: relative;
+	width: 40px;
+	height: 24px;
+	flex-shrink: 0;
+	border-radius: 999px;
+	background: var(--scalex-fill-strong);
+	transition: background-color var(--scalex-duration-fast) var(--scalex-ease-out);
+}
+
+.cbi-switch-track::after {
+	content: "";
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #ffffff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	transition: transform var(--scalex-duration-fast) var(--scalex-ease-out);
+}
+
+.cbi-switch input:checked + .cbi-switch-track {
+	background: #34c759;
+}
+
+.cbi-switch input:checked + .cbi-switch-track::after {
+	transform: translateX(16px);
+}
+
+.cbi-switch input:focus-visible + .cbi-switch-track {
+	box-shadow: 0 0 0 3px var(--scalex-focus-ring);
+}
+
+.cbi-switch-label {
+	color: var(--scalex-text-secondary);
+	font-size: var(--scalex-size-xs);
+}
+
+.settings-actions {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 8px;
+	padding: 14px 20px;
 }

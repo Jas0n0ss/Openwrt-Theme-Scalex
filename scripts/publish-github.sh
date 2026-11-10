@@ -15,7 +15,7 @@ REPO="${1:-openwrt-theme-scalex}"
 
 if ! gh repo view "${OWNER}/${REPO}" >/dev/null 2>&1; then
 	echo "Creating ${OWNER}/${REPO} ..."
-	gh repo create "$REPO" --public --description "ScaleX 2.1 - Apple-inspired Liquid Glass theme for OpenWrt LuCI"
+	gh repo create "$REPO" --public --description "ScaleX 3.0 - Apple-inspired Liquid Glass theme for OpenWrt LuCI"
 fi
 
 if git remote get-url origin >/dev/null 2>&1; then

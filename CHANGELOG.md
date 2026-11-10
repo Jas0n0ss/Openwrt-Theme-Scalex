@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.0.0 — 2026-11-10
+
+Redesigned the interface around a macOS Settings-style sidebar.
+
+### Changed
+
+- Desktop shell: translucent sidebar, searchable primary navigation, active section reveals L2 pages.
+- Mobile: compact glass bar plus a native-feeling navigation sheet.
+- Overview: one status surface, a single four-column vitals strip, and grouped network / interface / client lists.
+- Removed colored status pills and per-metric mini-cards; status is a dot plus quiet text.
+- Flatter surfaces, tighter type scale, a single blue accent, and no glass on content cards.
+- Refined settings form and sign-in surface to match the new shell.
+- Legacy 18.06 shell keeps its top bar and receives matching flat surfaces.
+
 ## 2.1.0 — 2026-11-10
 
 Theme renamed to **ScaleX**.

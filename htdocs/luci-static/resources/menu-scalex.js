@@ -4,7 +4,7 @@
 'require menu-bootstrap-core as ScaleXMenu';
 
 /*
- * ScaleX 3.0 navigation — macOS Settings-style sidebar.
+ * ScaleX 3.1 navigation — macOS Settings-style sidebar.
  *
  * The sidebar is server-independent: LuCI's menu tree is normalized (the
  * 24.10 tree is rooted at "admin"), L1 sections are rows, and only the active
@@ -103,6 +103,7 @@ return baseclass.extend({
 		'watchcat': 'status.svg',
 		'clients': 'clients.svg',
 		'logout': 'logout.svg',
+		'more': 'more.svg',
 		'_default': 'default.svg'
 	},
 
@@ -230,6 +231,8 @@ return baseclass.extend({
 		document.body.dataset.page = L.env.requestpath.join('-') || 'home';
 		this._renderTitle(tree);
 		this._renderContentTabs(tree);
+		this.renderTabBar(entries, activeEntry);
+		this.renderMobileTabs(activeEntry);
 		this.renderSheet();
 	},
 
@@ -267,6 +270,71 @@ return baseclass.extend({
 			'class': 'sidebar-section' + (isActive ? ' is-active' : '') + (subItems.length ? ' has-sub' : ''),
 			'data-nav-item': '1'
 		}, children);
+	},
+
+	renderTabBar: function(entries, activeEntry) {
+		var bar = document.getElementById('scalex-tabbar');
+		if (!bar) return;
+
+		bar.innerHTML = '';
+		var visible = entries.length > 4 ? entries.slice(0, 4) : entries;
+		var self = this;
+
+		visible.forEach(function(entry) {
+			var topNode = entry.node;
+			var subItems = self._getSubItems(entry);
+			var active = ScaleXMenu.isModeActive(topNode, entry.index);
+			var href = subItems.length ? subItems[0].url : ScaleXMenu.topLevelHref(topNode);
+
+			bar.appendChild(E('a', {
+				'class': 'scalex-tabbar-item' + (active ? ' is-active' : ''),
+				'href': href,
+				'aria-current': active ? 'page' : null
+			}, [
+				self.getIcon(topNode.name, topNode.title),
+				E('span', { 'class': 'nav-label' }, [ _(topNode.title) ])
+			]));
+		});
+
+		{
+			var moreActive = visible.indexOf(activeEntry) < 0;
+			var more = E('button', {
+				'type': 'button',
+				'class': 'scalex-tabbar-item' + (moreActive ? ' is-active' : ''),
+				'id': 'scalex-more-btn',
+				'aria-haspopup': 'dialog',
+				'aria-expanded': 'false'
+			}, [
+				self.getIcon('more', _('More')),
+				E('span', { 'class': 'nav-label' }, [ _('More') ])
+			]);
+
+			more.addEventListener('click', function() { self.openSheet(more); });
+			bar.appendChild(more);
+		}
+	},
+
+	renderMobileTabs: function(activeEntry) {
+		var container = document.getElementById('scalex-mobile-tabs');
+		if (!container) return;
+
+		container.innerHTML = '';
+		var subItems = this._getSubItems(activeEntry);
+		if (!subItems.length) {
+			container.hidden = true;
+			return;
+		}
+
+		container.hidden = false;
+		container.setAttribute('role', 'tablist');
+		subItems.forEach(function(item) {
+			container.appendChild(E('a', {
+				'class': 'mobile-tab' + (item.active ? ' active' : ''),
+				'href': item.url,
+				'role': 'tab',
+				'aria-selected': item.active ? 'true' : 'false'
+			}, [ _(item.node.title) ]));
+		});
 	},
 
 	renderLogoutItem: function() {
@@ -329,16 +397,6 @@ return baseclass.extend({
 
 		var self = this;
 		var refs = this._sheet;
-		var menuBtn = document.getElementById('scalex-menu-btn');
-
-		if (menuBtn) {
-			menuBtn.addEventListener('click', function() {
-				if (refs.sheet.classList.contains('is-open'))
-					self.closeSheet();
-				else
-					self.openSheet();
-			});
-		}
 
 		refs.scrim.addEventListener('click', function() { self.closeSheet(); });
 
@@ -432,9 +490,9 @@ return baseclass.extend({
 		footer.appendChild(this.renderLogoutItem());
 	},
 
-	openSheet: function() {
+	openSheet: function(trigger) {
 		var refs = this._ensureSheet();
-		var menuBtn = document.getElementById('scalex-menu-btn');
+		this._sheetTrigger = trigger || null;
 
 		this.renderSheet();
 		clearTimeout(this._sheetCloseTimer);
@@ -449,7 +507,7 @@ return baseclass.extend({
 		document.body.classList.add('scalex-sheet-open');
 		var app = document.getElementById('scalex-app');
 		if (app) app.inert = true;
-		if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
+		if (this._sheetTrigger) this._sheetTrigger.setAttribute('aria-expanded', 'true');
 
 		var closeBtn = refs.sheet.querySelector('#scalex-sheet-close');
 		if (closeBtn) closeBtn.focus();
@@ -464,17 +522,15 @@ return baseclass.extend({
 		document.body.classList.remove('scalex-sheet-open');
 		var app = document.getElementById('scalex-app');
 		if (app) app.inert = false;
-
-		var menuBtn = document.getElementById('scalex-menu-btn');
-		if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
+		if (this._sheetTrigger) this._sheetTrigger.setAttribute('aria-expanded', 'false');
 
 		this._sheetCloseTimer = setTimeout(function() {
 			refs.sheet.hidden = true;
 			refs.scrim.hidden = true;
 		}, 400);
 
-		if (restoreFocus !== false && menuBtn)
-			menuBtn.focus();
+		if (restoreFocus !== false && this._sheetTrigger)
+			this._sheetTrigger.focus();
 	},
 
 	/* ── Titles and section tabs ──────────────────────────────────────── */

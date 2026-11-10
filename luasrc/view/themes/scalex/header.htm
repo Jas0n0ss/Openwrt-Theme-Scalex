@@ -1,6 +1,6 @@
 <%#
-  luci-theme-scalex 3.0 — legacy (Lua / LuCI 18.06) header.
-  Server-rendered navigation: no ui.menu, no modern LuCI modules.
+  luci-theme-scalex 3.1 — legacy (Lua / LuCI 18.06) header.
+  Server-rendered sidebar + bottom tabs; no modern LuCI modules.
 -%>
 <%
 	local sys  = require "luci.sys"
@@ -21,12 +21,29 @@
 	local cattree  = category and disp.node(category)
 
 	local uci = require("luci.model.uci").cursor()
-	local scalex_version = "3.0.0"
+	local scalex_version = "3.1.0"
 	local primary = uci:get("scalex", "global", "primary") or "#0071E3"
 	local dark_primary = uci:get("scalex", "global", "dark_primary") or "#0A84FF"
 	local font_size = uci:get("scalex", "global", "font_size") or "16"
 
 	http.prepare_content("text/html")
+
+	local icon_map = {
+		status = "status.svg",
+		system = "system.svg",
+		admin = "system.svg",
+		services = "services.svg",
+		network = "network.svg",
+		wireless = "wireless.svg",
+		firewall = "firewall.svg",
+		vpn = "vpn.svg",
+		statistics = "statistics.svg",
+		docker = "docker.svg",
+		nas = "storage.svg",
+		store = "store.svg",
+		terminal = "terminal.svg",
+		logout = "logout.svg"
+	}
 
 	local function nodeurl(prefix, name, query)
 		local u = url(prefix, name)
@@ -43,51 +60,109 @@
 		return pcdata(string.upper(string.sub(t, 1, 1)))
 	end
 
-	local function render_submenu(prefix, nnode)
+	local function icon_for(key, nnode)
+		local file = icon_map[key]
+		if file then
+			local u = pcdata(media .. "/icons/menu/" .. file)
+			return '<span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url(\'' .. u ..
+				'\');mask-image:url(\'' .. u .. '\');" aria-hidden="true"></span>'
+		end
+		return '<span class="nav-icon nav-icon-letter" aria-hidden="true">' .. icon_letter(nnode) .. '</span>'
+	end
+
+	local function first_href(prefix, nnode)
 		local childs = disp.node_childs(nnode)
+		if #childs == 0 then return pcdata(url(prefix)) end
+		local child = nnode.nodes[childs[1]]
+		return nodeurl(prefix, childs[1], child and child.query)
+	end
+
+	local function render_sidebar()
+		write('<nav id="top-nav" class="sidebar-nav" aria-label="Main navigation">')
+		for i, r in ipairs(categories) do
+			local nnode = tree.nodes[r]
+			local active = (request[1] == r)
+			local childs = disp.node_childs(nnode)
+			local href = first_href(r, nnode)
+
+			write('<div class="sidebar-section%s%s" data-nav-item>' % {
+				active and " is-active" or "",
+				(#childs > 0) and " has-sub" or ""
+			})
+			write('<a class="sidebar-item%s" href="%s" title="%s">%s<span class="nav-label">%s</span></a>' % {
+				active and " active" or "",
+				href,
+				title_of(nnode),
+				icon_for(r, nnode),
+				title_of(nnode)
+			})
+
+			if active and #childs > 0 then
+				write('<div class="sidebar-sub">')
+				for j, cr in ipairs(childs) do
+					local child = nnode.nodes[cr]
+					local child_active = (request[2] == cr)
+					write('<a class="sidebar-subitem%s" href="%s">%s</a>' % {
+						child_active and " active" or "",
+						nodeurl(r, cr, child and child.query),
+						title_of(child)
+					})
+				end
+				write('</div>')
+			end
+
+			write('</div>')
+		end
+		write('</nav>')
+	end
+
+	local function render_mobile_tabs()
+		if not category or not cattree then return end
+		local childs = disp.node_childs(cattree)
 		if #childs == 0 then return end
 
-		write('<div class="nav-dropdown" hidden aria-hidden="true">')
+		write('<div id="scalex-mobile-tabs" class="scalex-mobile-tabs" role="tablist" aria-label="Section tabs">')
 		for i, r in ipairs(childs) do
-			local child = nnode.nodes[r]
-			local active = (request[1] == prefix and request[2] == r)
-			write('<a class="nav-dropdown-item%s" href="%s">%s</a>' % {
+			local child = cattree.nodes[r]
+			local active = (request[2] == r)
+			write('<a class="mobile-tab%s" href="%s" role="tab" aria-selected="%s">%s</a>' % {
 				active and " active" or "",
-				nodeurl(prefix, r, child.query),
+				nodeurl(category, r, child and child.query),
+				active and "true" or "false",
 				title_of(child)
 			})
 		end
 		write('</div>')
 	end
 
-	local function render_topmenu()
-		write('<nav id="top-nav" class="scalex-top-nav" aria-label="Main navigation">')
-		for i, r in ipairs(categories) do
-			local nnode = tree.nodes[r]
-			local childs = disp.node_childs(nnode)
-			local active = (request[1] == r)
-			local href = (#childs > 0) and "#" or url(r)
+	local function render_tabbar()
+		local count = #categories
+		local visible = (count > 4) and 4 or count
+		write('<nav id="scalex-tabbar" class="scalex-tabbar" aria-label="Primary navigation">')
 
-			write('<div class="nav-section%s%s">' % {
+		for i = 1, visible do
+			local r = categories[i]
+			local nnode = tree.nodes[r]
+			local active = (request[1] == r)
+			write('<a class="scalex-tabbar-item%s" href="%s"%s>%s<span class="nav-label">%s</span></a>' % {
 				active and " is-active" or "",
-				(#childs > 0) and " has-dropdown" or ""
+				first_href(r, nnode),
+				active and ' aria-current="page"' or "",
+				icon_for(r, nnode),
+				title_of(nnode)
 			})
-			write('<a class="nav-top%s%s" href="%s"%s>' % {
-				active and " active" or "",
-				(#childs > 0) and " nav-top-trigger" or "",
-				pcdata(href),
-				(#childs > 0) and ' aria-haspopup="true" aria-expanded="false"' or ''
-			})
-			write('<span class="nav-icon nav-icon-letter" aria-hidden="true">%s</span>' % { icon_letter(nnode) })
-			write('<span class="nav-label">%s</span>' % { title_of(nnode) })
-			if #childs > 0 then
-				write('<span class="nav-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M6 9l6 6 6-6"/></svg></span>')
-			end
-			write('</a>')
-			render_submenu(r, nnode)
-			write('</div>')
 		end
-		write('<div class="nav-section nav-logout"><a class="nav-top nav-logout-link" href="%s" title="Logout"><span class="nav-icon nav-icon-letter" aria-hidden="true">L</span><span class="nav-label">Logout</span></a></div>' % { pcdata(url("logout")) })
+
+		local more_active = true
+		for i = 1, visible do
+			if request[1] == categories[i] then more_active = false end
+		end
+		write('<button type="button" class="scalex-tabbar-item%s" id="scalex-more-btn" aria-haspopup="dialog" aria-expanded="false">' % {
+			more_active and " is-active" or ""
+		})
+		write('<span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url(\'%s/icons/menu/more.svg\');mask-image:url(\'%s/icons/menu/more.svg\');" aria-hidden="true"></span>' % { pcdata(media), pcdata(media) })
+		write('<span class="nav-label">More</span></button>')
+
 		write('</nav>')
 	end
 
@@ -105,7 +180,7 @@
 			local active = (request[3] == r)
 			write('<a class="content-tab%s" href="%s">%s</a>' % {
 				active and " active" or "",
-				nodeurl(category .. "/" .. l2, r, child.query),
+				nodeurl(category .. "/" .. l2, r, child and child.query),
 				title_of(child)
 			})
 		end
@@ -117,7 +192,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-	<meta name="theme-color" content="#f5f5f7" id="meta-theme-color">
+	<meta name="theme-color" content="#f2f2f7" id="meta-theme-color">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<title><%=striptags(hostname .. ((node and node.title) and (" - " .. translate(node.title)) or ""))%> - LuCI</title>
 	<link rel="icon" href="<%=media%>/img/favicon.svg" type="image/svg+xml">
@@ -132,7 +207,7 @@
 	})();
 	</script>
 	<link rel="stylesheet" href="/luci-static/bootstrap/cascade.css">
-	<link rel="stylesheet" href="<%=media%>/css/scalex.css">
+	<link rel="stylesheet" href="<%=media%>/css/scalex.css?v=<%=scalex_version%>">
 	<link rel="stylesheet" href="<%=media%>/css/legacy.css">
 	<style>
 		html { font-size: <%=font_size%>px; }
@@ -148,50 +223,58 @@
 	<script src="<%=resource%>/cbi.js"></script>
 	<script src="<%=resource%>/xhr.js"></script>
 </head>
-<body class="theme-openwrt scalex-legacy has-content-tabs">
+<body class="theme-openwrt scalex-legacy">
 
 <a class="scalex-skip-link" href="#maincontent">Skip to content</a>
 
 <div id="scalex-app">
+	<aside id="scalex-sidebar">
+		<div class="sidebar-head">
+			<a class="sidebar-brand" href="<%=url('admin/status/overview')%>" aria-label="ScaleX home">
+				<img class="scalex-mark" src="<%=media%>/img/scalex-mark.svg" alt="" width="34" height="34">
+				<span class="sidebar-brand-text"><strong>ScaleX</strong><small><%=hostname%></small></span>
+			</a>
+		</div>
+
+		<label class="sidebar-search">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.2"/><path d="m16 16 4.2 4.2"/></svg>
+			<input type="search" id="scalex-nav-search" placeholder="Search" aria-label="Search navigation" autocomplete="off" spellcheck="false">
+		</label>
+
+		<% render_sidebar() %>
+
+		<div class="sidebar-foot">
+			<span class="sidebar-foot-label">ScaleX <%=scalex_version%></span>
+			<div class="theme-switch" role="group" aria-label="Appearance">
+				<button type="button" data-theme-mode="auto" aria-pressed="true" aria-label="Theme: Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg></button>
+				<button type="button" data-theme-mode="light" aria-pressed="false" aria-label="Theme: Light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></button>
+				<button type="button" data-theme-mode="dark" aria-pressed="false" aria-label="Theme: Dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.4A8.4 8.4 0 0 1 9.6 4a8.5 8.5 0 1 0 10.4 10.4Z"/></svg></button>
+			</div>
+			<div id="scalex-sidebar-actions"><a class="sidebar-logout" href="<%=url("logout")%>" title="Logout"><span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url('<%=media%>/icons/menu/logout.svg');mask-image:url('<%=media%>/icons/menu/logout.svg');" aria-hidden="true"></span><span class="nav-label">Logout</span></a></div>
+		</div>
+	</aside>
+
 	<div id="scalex-main">
-		<header id="scalex-nav-bar">
-			<div class="nav-bar-container">
-				<div class="nav-bar-row">
-					<a class="header-brand" href="<%=url('admin/status/overview')%>" aria-label="ScaleX home">
-						<img class="scalex-mark" src="<%=media%>/img/scalex-mark.svg" alt="" width="28" height="28">
-						<span class="brand-name">ScaleX</span>
-						<span class="brand-divider" aria-hidden="true"></span>
-						<span class="brand-host"><%=hostname%></span>
-					</a>
-
-					<div class="top-nav-shell">
-						<div class="top-nav-wrap">
-							<% render_topmenu() %>
-						</div>
-					</div>
-
-					<div class="header-actions">
-						<div class="theme-switch" role="group" aria-label="Appearance">
-							<button type="button" data-theme-mode="auto" aria-pressed="true" aria-label="Theme: Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg></button>
-							<button type="button" data-theme-mode="light" aria-pressed="false" aria-label="Theme: Light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></button>
-							<button type="button" data-theme-mode="dark" aria-pressed="false" aria-label="Theme: Dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.4A8.4 8.4 0 0 1 9.6 4a8.5 8.5 0 1 0 10.4 10.4Z"/></svg></button>
-						</div>
-						<button type="button" class="icon-btn" id="scalex-menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="scalex-sheet">
-							<span class="scalex-symbol scalex-symbol-menu" aria-hidden="true"></span>
-						</button>
-					</div>
+		<div id="scalex-mobile-bar">
+			<a class="mobile-brand" href="<%=url('admin/status/overview')%>" aria-label="ScaleX home">
+				<img class="scalex-mark" src="<%=media%>/img/scalex-mark.svg" alt="" width="28" height="28"><span>ScaleX</span>
+			</a>
+			<div class="mobile-actions">
+				<div class="theme-switch" role="group" aria-label="Appearance">
+					<button type="button" data-theme-mode="auto" aria-pressed="true" aria-label="Theme: Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg></button>
+					<button type="button" data-theme-mode="light" aria-pressed="false" aria-label="Theme: Light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></button>
+					<button type="button" data-theme-mode="dark" aria-pressed="false" aria-label="Theme: Dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.4A8.4 8.4 0 0 1 9.6 4a8.5 8.5 0 1 0 10.4 10.4Z"/></svg></button>
 				</div>
 			</div>
-		</header>
+		</div>
 
 		<header id="scalex-header">
-			<div class="header-toolbar">
-				<div class="header-titles">
-					<div class="header-breadcrumb"><% if category and cattree then %><%=title_of(cattree)%><% end %></div>
-					<h1 id="header-title"><% if node then %><%=title_of(node)%><% end %></h1>
-				</div>
-			</div>
+			<div class="header-breadcrumb"><% if category and cattree then %><%=title_of(cattree)%><% end %></div>
+			<h1 id="header-title"><% if node then %><%=title_of(node)%><% end %></h1>
 		</header>
+
+		<% render_mobile_tabs() %>
+		<% render_tabbar() %>
 
 		<div id="scalex-content-wrap">
 			<% render_tabs() %>

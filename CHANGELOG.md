@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.1.0 — 2026-11-10
+
+Removed the top navigation pattern everywhere.
+
+### Changed
+
+- Phone navigation moved to a bottom Tab Bar (4 primary sections + More); the top bar now only holds the brand and appearance switch.
+- Current section's L2 pages are a horizontal segmented control under the page title.
+- Desktop sidebar breakpoint lowered to 900px so tablets keep the sidebar.
+- Legacy 18.06 shell now renders the same sidebar + bottom tabs instead of a top bar.
+- Sidebar icons use the accent color; sidebar footer shows the installed ScaleX version.
+
 ## 3.0.0 — 2026-11-10
 
 Redesigned the interface around a macOS Settings-style sidebar.

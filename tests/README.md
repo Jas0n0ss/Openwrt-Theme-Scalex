@@ -21,7 +21,7 @@ python3 -m venv .venv
 - no uncaught page errors
 
 `legacy-smoke.py` checks the Lua/18.06 server-rendered shell fixture:
-dropdowns, theme switch, mobile sheet and focus.
+sidebar search, theme switch, bottom tab bar, More sheet and focus.
 
 Screenshots are written to `tests/artifacts/`.
 

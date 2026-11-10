@@ -1,6 +1,5 @@
-/* ScaleX 3.0 — legacy (Lua/LuCI 18.06) interaction layer.
- * Plain ES5: no L.require, no modules, no modern syntax. */
-
+/* ScaleX 3.1 — legacy (Lua/LuCI 18.06) interaction layer.
+ * ES5 only: theme, sidebar search, and the "More" sheet. */
 (function () {
 	'use strict';
 
@@ -13,13 +12,14 @@
 
 	function applyTheme(mode) {
 		if (MODES.indexOf(mode) < 0) mode = 'auto';
-
 		var dark = mode === 'dark' || (mode === 'auto' && systemDark());
-		document.documentElement.setAttribute('data-theme', mode);
-		document.documentElement.setAttribute('data-darkmode', dark ? 'true' : 'false');
+		var root = document.documentElement;
+
+		root.setAttribute('data-theme', mode);
+		root.setAttribute('data-darkmode', dark ? 'true' : 'false');
 
 		var meta = document.getElementById('meta-theme-color');
-		if (meta) meta.setAttribute('content', dark ? '#000000' : '#f5f5f7');
+		if (meta) meta.setAttribute('content', dark ? '#000000' : '#f2f2f7');
 
 		var buttons = document.querySelectorAll('[data-theme-mode]');
 		for (var i = 0; i < buttons.length; i++) {
@@ -28,103 +28,76 @@
 		}
 	}
 
+	function setTheme(mode) {
+		try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
+		applyTheme(mode);
+	}
+
 	var initial = 'auto';
 	try { initial = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
 	applyTheme(initial);
 
 	var themeButtons = document.querySelectorAll('[data-theme-mode]');
 	for (var t = 0; t < themeButtons.length; t++) {
-		themeButtons[t].addEventListener('click', function () {
-			var mode = this.getAttribute('data-theme-mode');
-			try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
-			applyTheme(mode);
-		});
+		(function (btn) {
+			btn.addEventListener('click', function () {
+				setTheme(btn.getAttribute('data-theme-mode'));
+			});
+		})(themeButtons[t]);
 	}
 
 	if (window.matchMedia) {
 		var mq = window.matchMedia('(prefers-color-scheme: dark)');
-		var onChange = function () {
-			var mode = 'auto';
-			try { mode = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
-			if (mode === 'auto') applyTheme('auto');
+		var onScheme = function () {
+			var current = 'auto';
+			try { current = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
+			if (current === 'auto') applyTheme('auto');
 		};
-		if (mq.addEventListener) mq.addEventListener('change', onChange);
-		else if (mq.addListener) mq.addListener(onChange);
+		if (mq.addEventListener) mq.addEventListener('change', onScheme);
+		else if (mq.addListener) mq.addListener(onScheme);
 	}
 
-	/* ── Desktop dropdowns ─────────────────────────────────────────── */
+	/* ── Sidebar search ────────────────────────────────────────────── */
 
-	var navBar = document.getElementById('scalex-nav-bar');
+	var search = document.getElementById('scalex-nav-search');
+	if (search) {
+		var filter = function () {
+			var q = search.value.toLowerCase();
+			var sections = document.querySelectorAll('.sidebar-section');
+			for (var i = 0; i < sections.length; i++) {
+				var match = !q || sections[i].textContent.toLowerCase().indexOf(q) >= 0;
+				sections[i].style.display = match ? '' : 'none';
+			}
+		};
 
-	function setDropdown(section, open) {
-		section.classList.toggle('open', open);
-		var trigger = section.querySelector('.nav-top');
-		var panel = section.querySelector('.nav-dropdown');
-		if (trigger) trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-		if (!panel) return;
-		if (open) {
-			panel.removeAttribute('hidden');
-			panel.setAttribute('aria-hidden', 'false');
-		} else {
-			panel.setAttribute('hidden', '');
-			panel.setAttribute('aria-hidden', 'true');
-		}
-	}
-
-	function closeDropdowns(except) {
-		var sections = document.querySelectorAll('.nav-section.has-dropdown');
-		for (var i = 0; i < sections.length; i++) {
-			if (sections[i] !== except) setDropdown(sections[i], false);
-		}
-	}
-
-	if (navBar) {
-		navBar.addEventListener('click', function (e) {
-			var section = e.target.closest ? e.target.closest('.nav-section.has-dropdown') : null;
-			if (!section || e.target.closest('.nav-dropdown-item')) return;
-
-			var trigger = section.querySelector('.nav-top');
-			if (!trigger || e.target.closest('.nav-top') !== trigger) return;
-
-			e.preventDefault();
-			e.stopPropagation();
-
-			var open = !section.classList.contains('open');
-			closeDropdowns();
-			if (open) setDropdown(section, true);
-		});
-
-		document.addEventListener('click', function (e) {
-			if (!e.target.closest || !e.target.closest('.nav-section.has-dropdown'))
-				closeDropdowns();
-		});
-
-		document.addEventListener('keydown', function (e) {
+		search.addEventListener('input', filter);
+		search.addEventListener('keydown', function (e) {
 			if (e.key === 'Escape') {
-				closeDropdowns();
-				if (e.target.closest) {
-					var trigger = e.target.closest('.nav-top');
-					if (trigger) trigger.focus();
-				}
+				search.value = '';
+				filter();
+				search.blur();
 			}
 		});
 	}
 
-	/* ── Mobile sheet ──────────────────────────────────────────────── */
+	/* ── More sheet ────────────────────────────────────────────────── */
 
-	var refs = null;
+	var sheet = null;
+	var scrim = null;
+	var trigger = null;
+	var closeTimer = null;
 
 	function buildSheet() {
-		if (refs) return refs;
+		if (sheet) return;
 
-		var scrim = document.createElement('div');
-		scrim.id = 'scalex-scrim';
+		scrim = document.createElement('div');
 		scrim.className = 'scalex-scrim';
+		scrim.id = 'scalex-scrim';
 		scrim.hidden = true;
 
-		var sheet = document.createElement('div');
-		sheet.id = 'scalex-sheet';
+		sheet = document.createElement('div');
 		sheet.className = 'scalex-sheet';
+		sheet.id = 'scalex-sheet';
 		sheet.setAttribute('role', 'dialog');
 		sheet.setAttribute('aria-modal', 'true');
 		sheet.setAttribute('aria-labelledby', 'scalex-sheet-title');
@@ -133,23 +106,22 @@
 			'<div class="scalex-sheet-grabber" aria-hidden="true"></div>' +
 			'<div class="scalex-sheet-head">' +
 				'<h2 class="scalex-sheet-title" id="scalex-sheet-title">Browse</h2>' +
-				'<button type="button" class="scalex-sheet-close" aria-label="Close menu">' +
+				'<button type="button" class="scalex-sheet-close" id="scalex-sheet-close" aria-label="Close menu">' +
 					'<span class="scalex-symbol scalex-symbol-close" aria-hidden="true"></span>' +
 				'</button>' +
 			'</div>' +
-			'<nav class="scalex-sheet-nav" aria-label="Main navigation"></nav>' +
-			'<div class="scalex-sheet-footer"></div>';
+			'<nav class="scalex-sheet-nav" id="scalex-sheet-nav" aria-label="Main navigation"></nav>' +
+			'<div class="scalex-sheet-footer" id="scalex-sheet-footer"></div>';
 
 		document.body.appendChild(scrim);
 		document.body.appendChild(sheet);
 
-		refs = { scrim: scrim, sheet: sheet };
-		buildSheetNav();
 		scrim.addEventListener('click', function () { closeSheet(); });
-		sheet.querySelector('.scalex-sheet-close').addEventListener('click', function () { closeSheet(); });
-		sheet.querySelector('.scalex-sheet-nav').addEventListener('click', function (e) {
-			if (e.target.closest('a')) closeSheet(false);
+		sheet.querySelector('#scalex-sheet-close').addEventListener('click', function () { closeSheet(); });
+		sheet.querySelector('#scalex-sheet-nav').addEventListener('click', function (e) {
+			if (e.target.closest && e.target.closest('a')) closeSheet(false);
 		});
+
 		sheet.addEventListener('keydown', function (e) {
 			if (e.key === 'Escape') {
 				e.preventDefault();
@@ -160,7 +132,9 @@
 
 			var focusable = sheet.querySelectorAll('a[href], button:not([disabled]), summary');
 			if (!focusable.length) return;
-			var first = focusable[0], last = focusable[focusable.length - 1];
+			var first = focusable[0];
+			var last = focusable[focusable.length - 1];
+
 			if (e.shiftKey && document.activeElement === first) {
 				e.preventDefault();
 				last.focus();
@@ -169,117 +143,122 @@
 				first.focus();
 			}
 		});
-
-		return refs;
 	}
 
 	function buildSheetNav() {
+		buildSheet();
+		var nav = sheet.querySelector('#scalex-sheet-nav');
+		var footer = sheet.querySelector('#scalex-sheet-footer');
 		var topNav = document.getElementById('top-nav');
-		var nav = refs.sheet.querySelector('.scalex-sheet-nav');
-		var footer = refs.sheet.querySelector('.scalex-sheet-footer');
-		if (!topNav || !nav) return;
+		if (!nav || !topNav) return;
 
 		nav.innerHTML = '';
 		footer.innerHTML = '';
 
-		var sections = topNav.querySelectorAll('.nav-section');
+		var sections = topNav.querySelectorAll('.sidebar-section');
 		for (var i = 0; i < sections.length; i++) {
 			var section = sections[i];
-			if (section.classList.contains('nav-logout')) continue;
+			if (section.style.display === 'none') continue;
 
-			var trigger = section.querySelector('.nav-top');
+			var row = section.querySelector('.sidebar-item');
 			var label = section.querySelector('.nav-label');
-			if (!trigger || !label) continue;
+			if (!row || !label) continue;
 
-			var title = label.textContent;
-			var subLinks = section.querySelectorAll('.nav-dropdown-item');
 			var active = section.classList.contains('is-active');
-			var row = document.createElement(subLinks.length ? 'summary' : 'a');
-
-			if (!subLinks.length) row.href = trigger.getAttribute('href') || '#';
-			row.className = 'scalex-sheet-row' + (active ? ' is-active' : '');
+			var subs = section.querySelectorAll('.sidebar-subitem');
+			var children = [];
 
 			var icon = section.querySelector('.nav-icon');
-			if (icon) row.appendChild(icon.cloneNode(true));
+			if (icon) children.push(icon.cloneNode(true));
 			var text = document.createElement('span');
 			text.className = 'nav-label';
-			text.textContent = title;
-			row.appendChild(text);
+			text.textContent = label.textContent;
+			children.push(text);
 
-			if (subLinks.length) {
+			if (subs.length > 0) {
 				var details = document.createElement('details');
 				details.className = 'scalex-sheet-section';
 				if (active) details.open = true;
+
+				var summary = document.createElement('summary');
+				summary.className = 'scalex-sheet-row' + (active ? ' is-active' : '');
+				for (var c = 0; c < children.length; c++) summary.appendChild(children[c]);
 
 				var caret = document.createElement('span');
 				caret.className = 'nav-caret';
 				caret.setAttribute('aria-hidden', 'true');
 				caret.innerHTML = '<span class="scalex-symbol scalex-symbol-chevron"></span>';
-				row.appendChild(caret);
+				summary.appendChild(caret);
 
 				var sub = document.createElement('div');
 				sub.className = 'scalex-sheet-sub';
-				for (var j = 0; j < subLinks.length; j++) {
+				for (var j = 0; j < subs.length; j++) {
 					var a = document.createElement('a');
-					a.href = subLinks[j].getAttribute('href');
-					a.textContent = subLinks[j].textContent;
-					if (subLinks[j].classList.contains('active')) a.className = 'is-active';
+					a.href = subs[j].getAttribute('href');
+					a.textContent = subs[j].textContent;
+					if (subs[j].classList.contains('active')) a.className = 'is-active';
 					sub.appendChild(a);
 				}
 
-				details.appendChild(row);
+				details.appendChild(summary);
 				details.appendChild(sub);
 				nav.appendChild(details);
 			} else {
-				nav.appendChild(row);
+				var link = document.createElement('a');
+				link.href = row.getAttribute('href') || '#';
+				link.className = 'scalex-sheet-row' + (active ? ' is-active' : '');
+				for (var k = 0; k < children.length; k++) link.appendChild(children[k]);
+				nav.appendChild(link);
 			}
 		}
 
 		var logout = document.createElement('a');
 		logout.className = 'scalex-sheet-row';
-		logout.href = (document.querySelector('.nav-logout-link') || {}).href || '#';
+		logout.href = (document.querySelector('.sidebar-logout') || {}).href || '#';
 		logout.innerHTML = '<span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url(\'/luci-static/scalex/icons/menu/logout.svg\');mask-image:url(\'/luci-static/scalex/icons/menu/logout.svg\');" aria-hidden="true"></span><span>Logout</span>';
 		footer.appendChild(logout);
 	}
 
-	var closeTimer = null;
-
-	function openSheet() {
-		var r = buildSheet();
-		var btn = document.getElementById('scalex-menu-btn');
+	function openSheet(btn) {
+		buildSheet();
+		buildSheetNav();
+		trigger = btn || null;
 		clearTimeout(closeTimer);
-		r.scrim.hidden = false;
-		r.sheet.hidden = false;
-		setTimeout(function () {
-			r.scrim.classList.add('is-visible');
-			r.sheet.classList.add('is-open');
-		}, 10);
-		document.body.classList.add('scalex-sheet-open');
-		if (btn) btn.setAttribute('aria-expanded', 'true');
-		r.sheet.querySelector('.scalex-sheet-close').focus();
-	}
 
-	function closeSheet(restoreFocus) {
-		if (!refs) return;
-		var r = refs;
-		var btn = document.getElementById('scalex-menu-btn');
-		r.sheet.classList.remove('is-open');
-		r.scrim.classList.remove('is-visible');
-		document.body.classList.remove('scalex-sheet-open');
-		if (btn) btn.setAttribute('aria-expanded', 'false');
-		closeTimer = setTimeout(function () {
-			r.sheet.hidden = true;
-			r.scrim.hidden = true;
-		}, 400);
-		if (restoreFocus !== false && btn) btn.focus();
-	}
-
-	var menuBtn = document.getElementById('scalex-menu-btn');
-	if (menuBtn) {
-		menuBtn.addEventListener('click', function () {
-			var r = buildSheet();
-			if (r.sheet.classList.contains('is-open')) closeSheet();
-			else openSheet();
+		scrim.hidden = false;
+		sheet.hidden = false;
+		requestAnimationFrame(function () {
+			scrim.classList.add('is-visible');
+			sheet.classList.add('is-open');
 		});
+
+		document.body.classList.add('scalex-sheet-open');
+		var app = document.getElementById('scalex-app');
+		if (app) app.inert = true;
+		if (trigger) trigger.setAttribute('aria-expanded', 'true');
+		sheet.querySelector('#scalex-sheet-close').focus();
+	}
+
+	function closeSheet(restore) {
+		if (!sheet) return;
+
+		sheet.classList.remove('is-open');
+		scrim.classList.remove('is-visible');
+		document.body.classList.remove('scalex-sheet-open');
+		var app = document.getElementById('scalex-app');
+		if (app) app.inert = false;
+		if (trigger) trigger.setAttribute('aria-expanded', 'false');
+
+		closeTimer = setTimeout(function () {
+			sheet.hidden = true;
+			scrim.hidden = true;
+		}, 400);
+
+		if (restore !== false && trigger) trigger.focus();
+	}
+
+	var more = document.getElementById('scalex-more-btn');
+	if (more) {
+		more.addEventListener('click', function () { openSheet(more); });
 	}
 })();

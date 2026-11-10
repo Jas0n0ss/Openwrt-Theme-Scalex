@@ -39,6 +39,9 @@
 			btn.classList.toggle('active', btn.dataset.view === name);
 		});
 
+		buildTabbar();
+		buildMobileTabs();
+
 		document.body.classList.toggle('scalex-login', isLogin);
 		window.scrollTo(0, 0);
 	}
@@ -92,10 +95,85 @@
 		else if (mq.addListener) mq.addListener(onChange);
 	}
 
+	/* ── Phone navigation ───────────────────────────────────────────── */
+
+	function buildTabbar() {
+		var bar = document.getElementById('scalex-tabbar');
+		if (!bar) return;
+
+		var sections = Array.prototype.slice.call(
+			document.querySelectorAll('#top-nav .sidebar-section')
+		);
+		var visible = sections.length > 4 ? sections.slice(0, 4) : sections;
+		var activeSection = sections.filter(function (s) { return s.classList.contains('is-active'); })[0] || null;
+
+		bar.innerHTML = '';
+
+		visible.forEach(function (section) {
+			var row = section.querySelector('.sidebar-item');
+			var label = section.querySelector('.nav-label');
+			if (!row || !label) return;
+
+			var a = document.createElement('a');
+			a.className = 'scalex-tabbar-item' + (section.classList.contains('is-active') ? ' is-active' : '');
+			a.href = row.getAttribute('href') || '#';
+			if (section.classList.contains('is-active')) a.setAttribute('aria-current', 'page');
+
+			var icon = section.querySelector('.nav-icon');
+			if (icon) a.appendChild(icon.cloneNode(true));
+			var text = document.createElement('span');
+			text.className = 'nav-label';
+			text.textContent = label.textContent.trim();
+			a.appendChild(text);
+			bar.appendChild(a);
+		});
+
+		{
+			var more = document.createElement('button');
+			more.type = 'button';
+			more.id = 'scalex-more-btn';
+			more.className = 'scalex-tabbar-item' +
+				(visible.indexOf(activeSection) < 0 ? ' is-active' : '');
+			more.setAttribute('aria-haspopup', 'dialog');
+			more.setAttribute('aria-expanded', 'false');
+			more.innerHTML =
+				'<span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url(\'../htdocs/luci-static/scalex/icons/menu/more.svg\');mask-image:url(\'../htdocs/luci-static/scalex/icons/menu/more.svg\');" aria-hidden="true"></span>' +
+				'<span class="nav-label">更多</span>';
+			more.addEventListener('click', function () { openSheet(more); });
+			bar.appendChild(more);
+		}
+	}
+
+	function buildMobileTabs() {
+		var container = document.getElementById('scalex-mobile-tabs');
+		if (!container) return;
+
+		var active = document.querySelector('#top-nav .sidebar-section.is-active');
+		var links = active ? active.querySelectorAll('.sidebar-subitem') : [];
+		container.innerHTML = '';
+
+		if (!links.length) {
+			container.hidden = true;
+			return;
+		}
+
+		container.hidden = false;
+		for (var i = 0; i < links.length; i++) {
+			var tab = document.createElement('a');
+			tab.className = 'mobile-tab' + (links[i].classList.contains('active') ? ' active' : '');
+			tab.href = links[i].getAttribute('href') || '#';
+			tab.setAttribute('role', 'tab');
+			tab.setAttribute('aria-selected', links[i].classList.contains('active') ? 'true' : 'false');
+			tab.textContent = links[i].textContent.trim();
+			container.appendChild(tab);
+		}
+	}
+
 	/* ── Mobile sheet ───────────────────────────────────────────────── */
 
 	var sheetRefs = null;
 	var sheetCloseTimer = null;
+	var sheetTrigger = null;
 
 	function buildSheet() {
 		if (sheetRefs) return sheetRefs;
@@ -228,10 +306,10 @@
 		footer.appendChild(logout);
 	}
 
-	function openSheet() {
+	function openSheet(trigger) {
 		var refs = buildSheet();
-		var menuBtn = document.getElementById('scalex-menu-btn');
 		var app = document.getElementById('view-app');
+		sheetTrigger = trigger || null;
 
 		clearTimeout(sheetCloseTimer);
 		refs.scrim.hidden = false;
@@ -242,28 +320,27 @@
 		});
 		document.body.classList.add('scalex-sheet-open');
 		if (app) app.inert = true;
-		if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
+		if (sheetTrigger) sheetTrigger.setAttribute('aria-expanded', 'true');
 		refs.sheet.querySelector('#scalex-sheet-close').focus();
 	}
 
 	function closeSheet(restoreFocus) {
 		if (!sheetRefs) return;
 		var refs = sheetRefs;
-		var menuBtn = document.getElementById('scalex-menu-btn');
 		var app = document.getElementById('view-app');
 
 		refs.sheet.classList.remove('is-open');
 		refs.scrim.classList.remove('is-visible');
 		document.body.classList.remove('scalex-sheet-open');
 		if (app) app.inert = false;
-		if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
+		if (sheetTrigger) sheetTrigger.setAttribute('aria-expanded', 'false');
 
 		sheetCloseTimer = setTimeout(function () {
 			refs.sheet.hidden = true;
 			refs.scrim.hidden = true;
 		}, 400);
 
-		if (restoreFocus !== false && menuBtn) menuBtn.focus();
+		if (restoreFocus !== false && sheetTrigger) sheetTrigger.focus();
 	}
 
 	var navSearch = document.getElementById('scalex-nav-search');
@@ -283,15 +360,6 @@
 				navSearch.dispatchEvent(new Event('input'));
 				navSearch.blur();
 			}
-		});
-	}
-
-	var menuBtn = document.getElementById('scalex-menu-btn');
-	if (menuBtn) {
-		menuBtn.addEventListener('click', function () {
-			var refs = buildSheet();
-			if (refs.sheet.classList.contains('is-open')) closeSheet();
-			else openSheet();
 		});
 	}
 

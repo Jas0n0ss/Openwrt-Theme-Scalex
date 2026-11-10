@@ -2,38 +2,38 @@
 
 [![Build IPK](https://github.com/Jas0n0ss/openwrt-theme-scalex/actions/workflows/build.yml/badge.svg)](https://github.com/Jas0n0ss/openwrt-theme-scalex/actions/workflows/build.yml)
 
-**ScaleX 3.0** — 一款贴近 Apple 视觉语言的 OpenWrt / LuCI 主题。
-玻璃侧边栏、macOS 设置式分组、克制的状态面板与原生感移动端菜单。
+**ScaleX 3.1** — 一款贴近 Apple 视觉语言的 OpenWrt / LuCI 主题。
+玻璃侧边栏、macOS 设置式分组、克制的状态面板与底部 Tab Bar。
 
-**当前版本：** `3.0.0`
+**当前版本：** `3.1.0`
 
-![ScaleX 3.0 浅色概览](docs/preview.jpg)
+![ScaleX 3.1 浅色概览](docs/preview.jpg)
 
 ---
 
-## 为什么是 ScaleX 3.0
+## 为什么是 ScaleX 3.1
 
 | 设计目标 | 实现 |
 |----------|------|
 | **一眼看懂网络状态** | 首屏状态面板给出 WAN / Wi-Fi / 客户端摘要，四项 Vitals 收进同一条面板 |
 | **Apple 式层级** | 32px 页面标题、28px 状态标题、20px 连续圆角、发丝分隔线、唯一强调色 |
 | **只在功能层使用玻璃** | 侧边栏、移动端顶栏和 Sheet 使用 Liquid Glass；内容卡片保持不透明，优先保证可读性 |
-| **真正可用的移动端** | ≤980px 切换为「浏览」Sheet，分组展开、焦点陷阱、Escape 关闭、触控目标 ≥44px |
+| **真正可用的移动端** | ≤900px 切换为底部 Tab Bar + L2 分段控件；溢出分组进入 Sheet，焦点陷阱、Escape、触控目标 ≥44px |
 | **完整深色模式** | Auto / Light / Dark 三态；深色不是反色，使用独立表面与文字层级 |
 | **不牺牲 LuCI 功能** | 保留 Bootstrap CBI / 表格 / 表单底座，第三方插件通过 `ui-scalex.js` 自动适配 |
 | **可访问** | 跳过导航、可见焦点、键盘可操作菜单、`prefers-reduced-motion`、`prefers-reduced-transparency`、表格移动端重排 |
 
 **深色模式**
 
-![ScaleX 3.0 深色概览](docs/preview-dark.jpg)
+![ScaleX 3.1 深色概览](docs/preview-dark.jpg)
 
 **登录页**
 
-![ScaleX 3.0 登录页](docs/login.jpg)
+![ScaleX 3.1 登录页](docs/login.jpg)
 
 **移动端**
 
-<img src="docs/preview-mobile.jpg" alt="ScaleX 3.0 移动端" width="320">
+<img src="docs/preview-mobile.jpg" alt="ScaleX 3.1 移动端" width="320">
 
 ---
 
@@ -44,7 +44,7 @@
 | OpenWrt 23.05+ / 24.x | `ucode/*.ut` | ✅ 推荐 |
 | ImmortalWrt | `ucode/*.ut` | ✅ |
 | OpenWrt 22.03 | `ucode/*.ut` | ⚠️ 基本可用，未在 CI 覆盖 |
-| LEDE 18.06 / Lean | Lua `luasrc/` | ⚠️ 基础兼容层（服务端导航 + 移动 Sheet），未实机覆盖 |
+| LEDE 18.06 / Lean | Lua `luasrc/` | ⚠️ 基础兼容层（服务端侧边栏 + 底部 Tab Bar），未实机覆盖 |
 
 依赖：`luci-theme-bootstrap`（提供 CBI / 表单 / 表格底座，固件一般已自带）。
 
@@ -53,10 +53,10 @@
 | 环境 | 结果 |
 |------|------|
 | OpenWrt 24.10 x86_64 rootfs + `uhttpd` + `ucode`（Docker/QEMU） | ✅ IPK 安装、登录页、静态资源、ucode 模板 |
-| Chromium（Playwright / Chrome） | ✅ 8 个宽度、侧边栏搜索、主题切换、移动 Sheet |
-| WebKit 27.2（Safari 引擎） | ✅ 8 个宽度、侧边栏搜索、主题切换、移动 Sheet |
-| Firefox 157（Linux Playwright 容器） | ✅ 8 个宽度、桌面/移动布局、Sheet、无溢出 |
-| LEDE 18.06 静态壳层 | ✅ 顶部栏、主题切换、Sheet（fixture） |
+| Chromium（Playwright / Chrome） | ✅ 8 个宽度、侧边栏搜索、主题切换、移动 Tab Bar + More Sheet |
+| WebKit 27.2（Safari 引擎） | ✅ 8 个宽度、侧边栏搜索、主题切换、移动 Tab Bar + More Sheet |
+| Firefox 157（Linux Playwright 容器） | ✅ 8 个宽度、桌面/移动布局、Tab Bar、More Sheet、无溢出 |
+| LEDE 18.06 静态壳层 | ✅ 侧边栏、底部 Tab Bar、主题切换、More Sheet（fixture） |
 | 物理路由器 | ⚠️ 未覆盖 |
 
 > 容器测试使用真实 OpenWrt 24.10 userland，但不是物理路由器；`tests/real-router.sh` 可复现。
@@ -70,8 +70,8 @@
 从 [Releases](https://github.com/Jas0n0ss/openwrt-theme-scalex/releases) 下载：
 
 ```sh
-opkg install luci-theme-scalex_3.0.0-1_all.ipk
-opkg install luci-app-scalex-config_3.0.0-1_all.ipk
+opkg install luci-theme-scalex_3.1.0-1_all.ipk
+opkg install luci-app-scalex-config_3.1.0-1_all.ipk
 
 uci set luci.main.mediaurlbase='/luci-static/scalex'
 uci commit luci
@@ -106,6 +106,23 @@ uci commit luci
 ```
 
 ---
+
+### 升级后仍然看到顶部菜单？
+
+3.1 的桌面布局是左侧边栏（≥900px），手机是底部 Tab Bar（<900px），顶部不再放主导航。如果仍看到旧的顶部菜单，按顺序检查：
+
+```sh
+opkg list-installed | grep scalex
+# 应显示 luci-theme-scalex 3.1.0-1 / luci-app-scalex-config 3.1.0-1
+
+uci get luci.main.mediaurlbase
+# 应为 /luci-static/scalex
+```
+
+- 包版本仍是 3.0.x / 2.x：先升级到 3.1.0，再强刷浏览器缓存。
+- 浏览器缓存：`Cmd/Ctrl + Shift + R`，或开发者工具禁用缓存后刷新。
+- LEDE 18.06：预编译 IPK 面向 23.05+；18.06 需要从源码编译，3.1 的 Lua 模板也已改为侧边栏 + 底部 Tab Bar。
+- 侧边栏底部会显示 `ScaleX 3.1.0`；看到这个版本号才说明新壳层已加载。
 
 ## 主题配置
 
@@ -166,7 +183,7 @@ python3 -m venv .venv
 测试覆盖：
 
 - 320 / 360 / 390 / 768 / 980 / 1024 / 1280 / 1440px：无横向溢出
-- 桌面侧边栏搜索与 L2 展开、主题三态、移动 Sheet 开关与焦点
+- 桌面侧边栏搜索与 L2 展开、主题三态、移动 Tab Bar 与 More Sheet 开关/焦点
 - 登录按钮强调色、表单可访问性
 - 截图输出到 `tests/artifacts/`
 
@@ -183,7 +200,7 @@ openwrt-theme-scalex/
 │   ├── img/                          # ScaleX 标记、favicon、符号集
 │   └── ...
 ├── htdocs/luci-static/resources/
-│   ├── menu-scalex.js                  # 侧边栏 / 搜索 / 移动 Sheet
+│   ├── menu-scalex.js                  # 侧边栏 / 搜索 / 底部 Tab Bar
 │   ├── theme-scalex.js                 # Auto / Light / Dark
 │   ├── dashboard-scalex.js             # 状态 / Vitals / 网络面板
 │   ├── ui-scalex.js                    # 第三方 app 适配

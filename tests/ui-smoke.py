@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ScaleX 3.0 browser smoke test.
+"""ScaleX 3.1 browser smoke test.
 
 Run against the static demo:
     python tests/ui-smoke.py --base-url http://127.0.0.1:9080/demo/ --channel chrome
@@ -133,9 +133,10 @@ def main() -> int:
         # 3. Mobile sheet
         context, page, errors = new_page(browser, 390, 844)
         page.goto(clean, wait_until="load")
-        check(page.is_visible("#scalex-menu-btn"), "mobile menu button is hidden")
+        check(page.is_visible("#scalex-tabbar"), "mobile tab bar is hidden")
         check(not page.is_visible("#scalex-sidebar"), "desktop sidebar should be hidden on mobile")
-        page.click("#scalex-menu-btn")
+        check(page.locator("#scalex-tabbar .scalex-tabbar-item").count() >= 4, "mobile tab bar is incomplete")
+        page.click("#scalex-more-btn")
         page.wait_for_timeout(450)
         check("is-open" in (page.locator("#scalex-sheet").get_attribute("class") or ""), "sheet did not open")
         check(
@@ -147,7 +148,7 @@ def main() -> int:
         page.wait_for_timeout(500)
         check(page.locator("#scalex-sheet").get_attribute("hidden") is not None, "sheet did not close on Escape")
         page.evaluate("document.activeElement && document.activeElement.blur()")
-        page.screenshot(path=str(ARTIFACTS / "mobile-light.png"), full_page=True)
+        page.screenshot(path=str(ARTIFACTS / "mobile-light.png"), full_page=False)
         check(not errors, f"mobile page errors: {errors[:3]}")
         context.close()
 

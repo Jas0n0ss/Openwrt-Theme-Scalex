@@ -2,7 +2,7 @@
 {%
   import { readfile } from 'fs';
 
-  const scalex_version = trim(readfile('/usr/share/ucode/luci/template/themes/scalex/version')) ?? '3.0.0';
+  const scalex_version = trim(readfile('/usr/share/ucode/luci/template/themes/scalex/version')) ?? '3.1.0';
   const scalex_theme_repo = 'https://github.com/Jas0n0ss/openwrt-theme-scalex';
 
   let raw_dist = version.distname ?? 'OpenWrt';

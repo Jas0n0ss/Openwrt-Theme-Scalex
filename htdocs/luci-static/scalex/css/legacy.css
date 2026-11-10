@@ -1,15 +1,22 @@
-/* ScaleX 3.0 — Lua / LuCI 18.06 compatibility layer.
+/* ScaleX 3.1 — Lua / LuCI 18.06 compatibility layer.
  * Only loaded by the legacy header/sysauth templates. */
 
-/* The legacy shell renders tabs server-side; hide the empty container. */
+/* The legacy shell renders L3 tabs server-side; hide the empty container. */
 #content-tabs:empty {
 	display: none !important;
 }
 
-/* The legacy header writes letter icons instead of mask URLs. */
+/* 18.06 has no mask helper for unknown menu entries. */
 .scalex-legacy .nav-icon-letter {
+	display: grid;
+	place-items: center;
+	width: 18px;
+	height: 18px;
+	border-radius: 5px;
 	background: var(--scalex-accent-soft);
 	color: var(--scalex-accent-text);
+	font-size: 9px;
+	font-weight: var(--scalex-weight-semibold);
 }
 
 /* 18.06's cascade.css sizes #maincontent differently. */
@@ -17,208 +24,12 @@
 	display: block;
 }
 
-/* Keep 18.06's XHR / busy indicators from colliding with the glass bar. */
+/* Keep 18.06's XHR / busy indicators from colliding with the shell. */
 .scalex-legacy #xhr_poll_status {
 	display: none !important;
 }
 
-/* ── Legacy (Lua / 18.06) top bar ───────────────────────────────────── */
-
-.scalex-legacy #scalex-nav-bar {
-	position: sticky;
-	top: 0;
-	z-index: var(--scalex-z-nav);
-	background: var(--scalex-glass-bg);
-	-webkit-backdrop-filter: blur(30px) saturate(180%);
-	backdrop-filter: blur(30px) saturate(180%);
-	border-bottom: 1px solid var(--scalex-separator);
-	box-shadow: 0 1px 0 var(--scalex-glass-highlight) inset;
-}
-
-.scalex-legacy .nav-bar-container {
-	width: 100%;
-	max-width: var(--scalex-max-width);
-	margin: 0 auto;
-	padding: 0 var(--scalex-page-pad);
-}
-
-.scalex-legacy .nav-bar-row {
-	display: flex;
-	align-items: center;
-	gap: 18px;
-	min-height: 58px;
-}
-
-.scalex-legacy .header-brand {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	flex-shrink: 0;
-	color: var(--scalex-text);
-	text-decoration: none;
-}
-
-.scalex-legacy .header-brand .scalex-mark {
-	width: 28px;
-	height: 28px;
-	border-radius: 8px;
-}
-
-.scalex-legacy .brand-name {
-	font-size: var(--scalex-size-sm);
-	font-weight: var(--scalex-weight-semibold);
-	letter-spacing: -0.02em;
-}
-
-.scalex-legacy .brand-divider {
-	width: 1px;
-	height: 12px;
-	background: var(--scalex-separator-strong);
-}
-
-.scalex-legacy .brand-host {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	max-width: 180px;
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-xs);
-}
-
-.scalex-legacy .top-nav-shell {
-	flex: 1;
-	min-width: 0;
-}
-
-.scalex-legacy .top-nav-wrap {
-	display: flex;
-	justify-content: center;
-}
-
-.scalex-legacy .scalex-top-nav {
-	display: flex;
-	align-items: center;
-	gap: 1px;
-	min-width: 0;
-}
-
-.scalex-legacy .nav-section {
-	position: relative;
-}
-
-.scalex-legacy .nav-top {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	height: 32px;
-	padding: 0 10px;
-	border-radius: 8px;
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-xs);
-	font-weight: var(--scalex-weight-medium);
-	text-decoration: none;
-	white-space: nowrap;
-}
-
-.scalex-legacy .nav-top:hover {
-	background: var(--scalex-bg-hover);
-	color: var(--scalex-text);
-	text-decoration: none;
-}
-
-.scalex-legacy .nav-section.is-active > .nav-top {
-	background: var(--scalex-accent-soft);
-	color: var(--scalex-accent-text);
-	font-weight: var(--scalex-weight-semibold);
-}
-
-.scalex-legacy .nav-icon-letter {
-	display: grid;
-	place-items: center;
-	width: 17px;
-	height: 17px;
-	border-radius: 5px;
-	background: var(--scalex-fill);
-	color: var(--scalex-text-secondary);
-	font-size: 9px;
-	font-weight: var(--scalex-weight-semibold);
-}
-
-.scalex-legacy .nav-section.is-active .nav-icon-letter {
-	background: var(--scalex-accent-soft);
-	color: var(--scalex-accent-text);
-}
-
-.scalex-legacy .nav-caret {
-	opacity: 0.55;
-}
-
-.scalex-legacy .nav-dropdown {
-	position: absolute;
-	top: calc(100% + 7px);
-	left: 0;
-	z-index: calc(var(--scalex-z-nav) + 1);
-	display: none;
-	min-width: 190px;
-	padding: 6px;
-	border: 1px solid var(--scalex-glass-border);
-	border-radius: 12px;
-	background: var(--scalex-glass-bg-strong);
-	-webkit-backdrop-filter: blur(30px) saturate(190%);
-	backdrop-filter: blur(30px) saturate(190%);
-	box-shadow: var(--scalex-shadow-popover);
-}
-
-.scalex-legacy .nav-section.open > .nav-dropdown {
-	display: flex;
-	flex-direction: column;
-	gap: 1px;
-}
-
-.scalex-legacy .nav-dropdown-item {
-	display: flex;
-	align-items: center;
-	min-height: 30px;
-	padding: 5px 9px;
-	border-radius: 7px;
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-xs);
-	text-decoration: none;
-}
-
-.scalex-legacy .nav-dropdown-item:hover,
-.scalex-legacy .nav-dropdown-item.active {
-	background: var(--scalex-bg-hover);
-	color: var(--scalex-text);
-	text-decoration: none;
-}
-
-.scalex-legacy .header-actions {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	flex-shrink: 0;
-}
-
-.scalex-legacy #scalex-menu-btn {
-	display: none;
-}
-
-@media (max-width: 980px) {
-	.scalex-legacy .top-nav-shell,
-	.scalex-legacy .brand-divider,
-	.scalex-legacy .brand-host {
-		display: none;
-	}
-
-	.scalex-legacy .nav-bar-row {
-		justify-content: space-between;
-		min-height: 56px;
-	}
-
-	.scalex-legacy #scalex-menu-btn {
-		display: inline-grid;
-		width: 44px;
-		height: 44px;
-	}
+/* The legacy server render has no mobile L2 JS; hide an empty segmented row. */
+.scalex-legacy #scalex-mobile-tabs:empty {
+	display: none !important;
 }

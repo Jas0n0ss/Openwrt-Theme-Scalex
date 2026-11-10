@@ -4,12 +4,13 @@
 -#}
 
 {%
-  import { access } from 'fs';
+  import { access, readfile } from 'fs';
   import { cursor } from 'uci';
   import { getuid, getspnam } from 'luci.core';
 
   const boardinfo = ubus.call('system', 'board');
   const hostname = striptags(boardinfo?.hostname ?? 'OpenWrt');
+  const scalex_version = trim(readfile('/usr/share/ucode/luci/template/themes/scalex/version')) ?? '3.1.0';
 
   let scalex_primary = '#0071e3';
   let scalex_dark_primary = '#0a84ff';
@@ -75,7 +76,7 @@
   })();
   </script>
   <link rel="stylesheet" href="/luci-static/bootstrap/cascade.css" data-scalex-base="bootstrap">
-  <link rel="stylesheet" href="{{ media }}/css/scalex.css">
+  <link rel="stylesheet" href="{{ media }}/css/scalex.css?v={{ scalex_version }}">
   <style id="scalex-config">
     html { font-size: {{ scalex_font_size }}px; }
     :root {
@@ -154,6 +155,7 @@
     <nav id="top-nav" class="sidebar-nav" aria-label="{{ _('Main navigation') }}"></nav>
 
     <div class="sidebar-foot">
+      <span class="sidebar-version">ScaleX {{ scalex_version }}</span>
       <span class="sidebar-foot-label">{{ _('Appearance') }}</span>
       <div class="theme-switch" role="group" aria-label="{{ _('Appearance') }}">
         <button type="button" data-theme-mode="auto" aria-pressed="true" aria-label="{{ _('Theme: Auto (System)') }}" title="{{ _('Theme: Auto (System)') }}">
@@ -188,9 +190,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.4A8.4 8.4 0 0 1 9.6 4a8.5 8.5 0 1 0 10.4 10.4Z"/></svg>
           </button>
         </div>
-        <button type="button" class="icon-btn" id="scalex-menu-btn" aria-label="{{ _('Open menu') }}" aria-expanded="false" aria-controls="scalex-sheet">
-          <span class="scalex-symbol scalex-symbol-menu" aria-hidden="true"></span>
-        </button>
       </div>
     </div>
 
@@ -198,6 +197,10 @@
       <div class="header-breadcrumb" id="header-breadcrumb"></div>
       <h1 id="header-title"></h1>
     </header>
+
+    <div id="scalex-mobile-tabs" class="scalex-mobile-tabs" role="tablist" aria-label="{{ _('Section tabs') }}"></div>
+
+    <nav id="scalex-tabbar" class="scalex-tabbar" aria-label="{{ _('Primary navigation') }}"></nav>
 
     <div id="scalex-content-wrap">
       <div class="content-tabs-container">

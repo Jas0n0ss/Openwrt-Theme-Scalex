@@ -1,4 +1,4 @@
-/* ScaleX 3.0 — LuCI Bootstrap compatibility bridge
+/* ScaleX 3.1 — LuCI Bootstrap compatibility bridge
  *
  * luci-theme-bootstrap still supplies cascade.css for CBI widgets and for
  * third-party apps. This layer maps its variables onto ScaleX tokens and hides

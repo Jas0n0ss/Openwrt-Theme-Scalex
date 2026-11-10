@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ScaleX 3.1 — Design tokens
+   ScaleX 4.0 — Design tokens
    A quiet, Apple-inspired network console for OpenWrt / LuCI.
 
    Three tiers:
@@ -145,10 +145,10 @@
 	--scalex-ease-spring: cubic-bezier(0.34, 1.46, 0.64, 1);
 
 	/* ── Component contracts ─────────────────────────────────────────── */
-	--scalex-max-width: 1040px;
+	--scalex-max-width: 1180px;
 	--scalex-reading-width: 720px;
 	--scalex-nav-height: 58px;
-	--scalex-page-pad: 36px;
+	--scalex-page-pad: 40px;
 	--scalex-card-radius: 20px;
 	--scalex-card-pad: 24px;
 	--scalex-control-height: 34px;

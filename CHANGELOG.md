@@ -1,5 +1,18 @@
 # Changelog
 
+## 4.0.0 — 2026-11-10
+
+Returned primary navigation to the top, Apple.com style.
+
+### Changed
+
+- Desktop: translucent 52px top bar with brand, centered text links, active underline, and glass L2 menus.
+- Phone: the top bar keeps brand, appearance and menu; L2 pages become a segmented row under the title.
+- Removed the sidebar and bottom tab bar entirely.
+- Legacy 18.06: server-rendered top bar with hover/focus L2 menus and a menu sheet.
+- Content width increased to 1180px now that the sidebar no longer takes horizontal space.
+- Version 4.0.0.
+
 ## 3.1.0 — 2026-11-10
 
 Removed the top navigation pattern everywhere.

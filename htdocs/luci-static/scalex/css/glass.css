@@ -1,31 +1,26 @@
-/* ScaleX 3.1 — Liquid Glass on the functional layer only.
+/* ScaleX 4.0 — Liquid Glass on the functional layer only.
  *
- * The sidebar, mobile bar and sheet are the only translucent surfaces. Content
- * cards stay opaque so text contrast never depends on the wallpaper.
+ * The top bar, dropdown menus and sheet are the only translucent surfaces.
+ * Content cards stay opaque so text contrast never depends on the wallpaper.
  */
 
-#scalex-sidebar,
-#scalex-mobile-bar,
+#scalex-topbar,
 .scalex-sheet {
 	background: var(--scalex-glass-bg);
-	-webkit-backdrop-filter: blur(30px) saturate(180%);
-	backdrop-filter: blur(30px) saturate(180%);
-	box-shadow:
-		0 1px 0 var(--scalex-glass-highlight) inset,
-		0 -1px 0 rgba(0, 0, 0, 0.035) inset,
-		0 8px 30px rgba(0, 0, 0, 0.05);
+	-webkit-backdrop-filter: blur(24px) saturate(180%);
+	backdrop-filter: blur(24px) saturate(180%);
+	box-shadow: 0 1px 0 var(--scalex-glass-highlight) inset;
 }
 
-#scalex-sidebar {
-	border-right: 1px solid var(--scalex-separator);
-}
-
-#scalex-mobile-bar {
+#scalex-topbar {
 	border-bottom: 1px solid var(--scalex-separator);
 }
 
+.top-nav-menu,
 .scalex-sheet {
 	background: var(--scalex-glass-bg-strong);
+	-webkit-backdrop-filter: blur(30px) saturate(190%);
+	backdrop-filter: blur(30px) saturate(190%);
 	box-shadow: var(--scalex-shadow-popover), 0 1px 0 var(--scalex-glass-highlight) inset;
 }
 
@@ -34,16 +29,16 @@
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-	#scalex-sidebar,
-	#scalex-mobile-bar,
+	#scalex-topbar,
+	.top-nav-menu,
 	.scalex-sheet {
 		background: var(--scalex-bg-elevated);
 	}
 }
 
 @media (prefers-reduced-transparency: reduce) {
-	#scalex-sidebar,
-	#scalex-mobile-bar,
+	#scalex-topbar,
+	.top-nav-menu,
 	.scalex-sheet {
 		background: var(--scalex-bg-elevated);
 		-webkit-backdrop-filter: none;

@@ -31,7 +31,7 @@
 		if (pageCrumb) pageCrumb.textContent = isSettings ? '系统' : '状态';
 
 		var navView = isSettings ? 'system' : 'status';
-		document.querySelectorAll('.sidebar-section[data-view]').forEach(function (section) {
+		document.querySelectorAll('.top-nav-section[data-view]').forEach(function (section) {
 			section.classList.toggle('is-active', section.dataset.view === navView);
 		});
 
@@ -39,7 +39,6 @@
 			btn.classList.toggle('active', btn.dataset.view === name);
 		});
 
-		buildTabbar();
 		buildMobileTabs();
 
 		document.body.classList.toggle('scalex-login', isLogin);
@@ -95,61 +94,14 @@
 		else if (mq.addListener) mq.addListener(onChange);
 	}
 
-	/* ── Phone navigation ───────────────────────────────────────────── */
-
-	function buildTabbar() {
-		var bar = document.getElementById('scalex-tabbar');
-		if (!bar) return;
-
-		var sections = Array.prototype.slice.call(
-			document.querySelectorAll('#top-nav .sidebar-section')
-		);
-		var visible = sections.length > 4 ? sections.slice(0, 4) : sections;
-		var activeSection = sections.filter(function (s) { return s.classList.contains('is-active'); })[0] || null;
-
-		bar.innerHTML = '';
-
-		visible.forEach(function (section) {
-			var row = section.querySelector('.sidebar-item');
-			var label = section.querySelector('.nav-label');
-			if (!row || !label) return;
-
-			var a = document.createElement('a');
-			a.className = 'scalex-tabbar-item' + (section.classList.contains('is-active') ? ' is-active' : '');
-			a.href = row.getAttribute('href') || '#';
-			if (section.classList.contains('is-active')) a.setAttribute('aria-current', 'page');
-
-			var icon = section.querySelector('.nav-icon');
-			if (icon) a.appendChild(icon.cloneNode(true));
-			var text = document.createElement('span');
-			text.className = 'nav-label';
-			text.textContent = label.textContent.trim();
-			a.appendChild(text);
-			bar.appendChild(a);
-		});
-
-		{
-			var more = document.createElement('button');
-			more.type = 'button';
-			more.id = 'scalex-more-btn';
-			more.className = 'scalex-tabbar-item' +
-				(visible.indexOf(activeSection) < 0 ? ' is-active' : '');
-			more.setAttribute('aria-haspopup', 'dialog');
-			more.setAttribute('aria-expanded', 'false');
-			more.innerHTML =
-				'<span class="nav-icon nav-icon-mask" style="-webkit-mask-image:url(\'../htdocs/luci-static/scalex/icons/menu/more.svg\');mask-image:url(\'../htdocs/luci-static/scalex/icons/menu/more.svg\');" aria-hidden="true"></span>' +
-				'<span class="nav-label">更多</span>';
-			more.addEventListener('click', function () { openSheet(more); });
-			bar.appendChild(more);
-		}
-	}
+	/* ── Phone L2 segmented control ─────────────────────────────────── */
 
 	function buildMobileTabs() {
 		var container = document.getElementById('scalex-mobile-tabs');
 		if (!container) return;
 
-		var active = document.querySelector('#top-nav .sidebar-section.is-active');
-		var links = active ? active.querySelectorAll('.sidebar-subitem') : [];
+		var active = document.querySelector('#top-nav .top-nav-section.is-active');
+		var links = active ? active.querySelectorAll('.top-nav-menu a') : [];
 		container.innerHTML = '';
 
 		if (!links.length) {
@@ -247,15 +199,15 @@
 		nav.innerHTML = '';
 		footer.innerHTML = '';
 
-		Array.prototype.forEach.call(topNav.querySelectorAll('.sidebar-section'), function (section) {
-			var top = section.querySelector('.sidebar-item');
+		Array.prototype.forEach.call(topNav.querySelectorAll('.top-nav-section'), function (section) {
+			var top = section.querySelector('.top-nav-link');
 			var label = section.querySelector('.nav-label');
 			if (!top || !label) return;
 
 			var title = label.textContent.trim();
 			var href = top.getAttribute('href') || '#';
 			var icon = section.querySelector('.nav-icon');
-			var subLinks = section.querySelectorAll('.sidebar-subitem');
+			var subLinks = section.querySelectorAll('.top-nav-menu a');
 			var active = section.classList.contains('is-active');
 			var rowChildren = [];
 
@@ -343,23 +295,12 @@
 		if (restoreFocus !== false && sheetTrigger) sheetTrigger.focus();
 	}
 
-	var navSearch = document.getElementById('scalex-nav-search');
-	if (navSearch) {
-		navSearch.addEventListener('input', function () {
-			var q = navSearch.value.trim().toLowerCase();
-			document.querySelectorAll('.sidebar-section').forEach(function (section) {
-				var match = !q || section.textContent.toLowerCase().indexOf(q) >= 0;
-				section.hidden = !match;
-				section.classList.toggle('is-search', !!q && match);
-			});
-			if (sheetRefs) buildSheetNav();
-		});
-		navSearch.addEventListener('keydown', function (e) {
-			if (e.key === 'Escape') {
-				navSearch.value = '';
-				navSearch.dispatchEvent(new Event('input'));
-				navSearch.blur();
-			}
+	var menuBtn = document.getElementById('scalex-menu-btn');
+	if (menuBtn) {
+		menuBtn.addEventListener('click', function () {
+			var refs = buildSheet();
+			if (refs.sheet.classList.contains('is-open')) closeSheet();
+			else openSheet(menuBtn);
 		});
 	}
 
@@ -376,7 +317,7 @@
 			root.style.setProperty('--scalex-primary-hover', accent);
 
 			var model = document.getElementById('cfg-model').value.trim() || 'ScaleX-Router';
-			document.querySelectorAll('.sidebar-brand-text small, .scalex-login-hostname').forEach(function (el) {
+			document.querySelectorAll('.topbar-brand-text small, .scalex-login-hostname').forEach(function (el) {
 				el.textContent = model;
 			});
 

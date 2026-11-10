@@ -1,4 +1,4 @@
-/* ScaleX 3.1 — Lua / LuCI 18.06 compatibility layer.
+/* ScaleX 4.0 — Lua / LuCI 18.06 compatibility layer.
  * Only loaded by the legacy header/sysauth templates. */
 
 /* The legacy shell renders L3 tabs server-side; hide the empty container. */
@@ -6,17 +6,12 @@
 	display: none !important;
 }
 
-/* 18.06 has no mask helper for unknown menu entries. */
-.scalex-legacy .nav-icon-letter {
-	display: grid;
-	place-items: center;
-	width: 18px;
-	height: 18px;
-	border-radius: 5px;
-	background: var(--scalex-accent-soft);
-	color: var(--scalex-accent-text);
-	font-size: 9px;
-	font-weight: var(--scalex-weight-semibold);
+/* No JS dropdown controller in 18.06: open L2 on hover/focus. */
+.scalex-legacy .top-nav-section:hover > .top-nav-menu,
+.scalex-legacy .top-nav-section:focus-within > .top-nav-menu {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
 }
 
 /* 18.06's cascade.css sizes #maincontent differently. */

@@ -113,7 +113,7 @@ mkdir -p "$OUT"
 rm -f "$OUT"/*.ipk
 chmod +x "$ROOT/scripts/compile-i18n.sh"
 "$ROOT/scripts/compile-i18n.sh" "$I18N_DIR"
-build_ipk "luci-theme-scalex" "ScaleX 3.1 - Apple-inspired LuCI theme" "libc, luci-theme-bootstrap"
+build_ipk "luci-theme-scalex" "ScaleX 4.0 - Apple-inspired LuCI theme" "libc, luci-theme-bootstrap"
 build_ipk "luci-app-scalex-config" "ScaleX Theme Configuration" "luci-theme-scalex, luci-base"
 
 echo ""

@@ -38,18 +38,14 @@ def main() -> int:
         page.goto(args.base_url, wait_until="load")
         page.wait_for_timeout(300)
 
-        check(page.is_visible("#scalex-sidebar"), "legacy sidebar is hidden")
-        check(
-            page.locator(".sidebar-section.is-active .sidebar-subitem").count() >= 1,
-            "legacy active section has no subitems",
-        )
-        page.fill("#scalex-nav-search", "network")
+        check(page.is_visible("#scalex-topbar"), "legacy top bar is hidden")
+        check(page.locator("#top-nav .top-nav-section").count() >= 4, "legacy top nav is incomplete")
+        page.hover("#top-nav .top-nav-section.is-active")
         page.wait_for_timeout(150)
         check(
-            page.locator("#top-nav .sidebar-section:visible").count() <= 2,
-            "legacy sidebar search did not filter",
+            page.locator("#top-nav .top-nav-section.is-active .top-nav-menu").is_visible(),
+            "legacy L2 menu did not open on hover",
         )
-        page.fill("#scalex-nav-search", "")
 
         page.click('[data-theme-mode="dark"]')
         page.wait_for_timeout(150)
@@ -58,9 +54,8 @@ def main() -> int:
 
         page.set_viewport_size({"width": 390, "height": 844})
         page.wait_for_timeout(250)
-        check(page.is_visible("#scalex-tabbar"), "legacy tab bar hidden on mobile")
-        check(page.is_visible("#scalex-more-btn"), "legacy More tab missing")
-        page.click("#scalex-more-btn")
+        check(page.is_visible("#scalex-menu-btn"), "legacy menu button hidden on mobile")
+        page.click("#scalex-menu-btn")
         page.wait_for_timeout(450)
         check(page.locator("#scalex-sheet").count() == 1, "legacy sheet was not created")
         check("is-open" in (page.locator("#scalex-sheet").get_attribute("class") or ""), "legacy sheet did not open")

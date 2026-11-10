@@ -2,7 +2,7 @@
 'require baseclass';
 
 /*
- * ScaleX 3.1 appearance controller.
+ * ScaleX 4.0 appearance controller.
  * Three explicit modes are persisted; "auto" follows the OS. Dark tokens live in
  * CSS, so switching only changes data-theme, color-scheme and the theme-color
  * meta value. No injected stylesheet is required.

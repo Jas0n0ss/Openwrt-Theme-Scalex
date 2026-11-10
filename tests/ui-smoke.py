@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ScaleX 3.1 browser smoke test.
+"""ScaleX 4.0 browser smoke test.
 
 Run against the static demo:
     python tests/ui-smoke.py --base-url http://127.0.0.1:9080/demo/ --channel chrome
@@ -94,23 +94,17 @@ def main() -> int:
         # 2. Desktop interactions
         context, page, errors = new_page(browser, 1440, 1000)
         page.goto(base, wait_until="load")
-        check(page.is_visible("#scalex-sidebar"), "desktop sidebar is hidden")
+        check(page.is_visible("#scalex-topbar"), "desktop top bar is hidden")
         check(
-            page.locator(".sidebar-section.is-active .sidebar-subitem").count() >= 1,
-            "active sidebar section has no subitems",
+            page.locator("#top-nav .top-nav-section").count() >= 5,
+            "top navigation is incomplete",
         )
+        page.hover("#top-nav .top-nav-section.is-active")
+        page.wait_for_timeout(180)
         check(
-            page.locator("#scalex-sidebar .sidebar-item").count() >= 5,
-            "sidebar is missing primary navigation",
+            page.locator("#top-nav .top-nav-section.is-active .top-nav-menu").is_visible(),
+            "desktop L2 menu did not open",
         )
-        page.fill("#scalex-nav-search", "网络")
-        page.wait_for_timeout(120)
-        check(
-            page.locator("#scalex-sidebar .sidebar-section:visible").count() <= 2,
-            "sidebar search did not filter sections",
-        )
-        page.fill("#scalex-nav-search", "")
-        page.wait_for_timeout(120)
         page.click('[data-theme-mode="dark"]')
         page.wait_for_timeout(120)
         check(page.evaluate("document.documentElement.dataset.theme") == "dark", "dark mode not applied")
@@ -133,10 +127,9 @@ def main() -> int:
         # 3. Mobile sheet
         context, page, errors = new_page(browser, 390, 844)
         page.goto(clean, wait_until="load")
-        check(page.is_visible("#scalex-tabbar"), "mobile tab bar is hidden")
-        check(not page.is_visible("#scalex-sidebar"), "desktop sidebar should be hidden on mobile")
-        check(page.locator("#scalex-tabbar .scalex-tabbar-item").count() >= 4, "mobile tab bar is incomplete")
-        page.click("#scalex-more-btn")
+        check(page.is_visible("#scalex-menu-btn"), "mobile menu button is hidden")
+        check(not page.is_visible("#top-nav"), "desktop top navigation should be hidden on mobile")
+        page.click("#scalex-menu-btn")
         page.wait_for_timeout(450)
         check("is-open" in (page.locator("#scalex-sheet").get_attribute("class") or ""), "sheet did not open")
         check(

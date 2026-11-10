@@ -16,12 +16,12 @@ python3 -m venv .venv
 `ui-smoke.py` checks:
 
 - no horizontal overflow at 320, 360, 390, 768, 980, 1024, 1280, 1440px
-- desktop sidebar search / L2 expansion, appearance switch, mobile sheet open/close/focus
+- desktop top nav / L2 menu, appearance switch, mobile sheet open/close/focus
 - sign-in primary button uses the accent color
 - no uncaught page errors
 
 `legacy-smoke.py` checks the Lua/18.06 server-rendered shell fixture:
-sidebar search, theme switch, bottom tab bar, More sheet and focus.
+top nav, L2 hover menu, theme switch, mobile sheet and focus.
 
 Screenshots are written to `tests/artifacts/`.
 

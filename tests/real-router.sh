@@ -27,8 +27,17 @@ start)
 	docker exec "$NAME" sh -c 'mkdir -p /var/lock /var/run/ubus'
 	docker cp "$THEME" "$NAME:/tmp/theme.ipk"
 	docker cp "$CONFIG" "$NAME:/tmp/config.ipk"
+	for attempt in 1 2 3; do
+		if docker exec "$NAME" sh -c '
+			opkg install /tmp/theme.ipk /tmp/config.ipk >/dev/null 2>&1 &&
+			opkg list-installed | grep -q "luci-theme-scalex"
+		'; then
+			break
+		fi
+		[[ "$attempt" -lt 3 ]] && sleep 1
+	done
 	docker exec "$NAME" sh -c '
-		opkg install /tmp/theme.ipk /tmp/config.ipk >/dev/null
+		opkg list-installed | grep -q "luci-theme-scalex" || { echo "theme install failed" >&2; exit 1; }
 		printf "root\nroot\n" | passwd root >/dev/null 2>&1 || true
 	'
 

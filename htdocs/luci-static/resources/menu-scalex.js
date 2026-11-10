@@ -4,19 +4,18 @@
 'require menu-bootstrap-core as ScaleXMenu';
 
 /*
- * ScaleX 3.1 navigation — macOS Settings-style sidebar.
+ * ScaleX 4.0 navigation — Apple.com-style horizontal top bar.
  *
- * The sidebar is server-independent: LuCI's menu tree is normalized (the
- * 24.10 tree is rooted at "admin"), L1 sections are rows, and only the active
- * section reveals its L2 pages. The same tree feeds the mobile sheet.
+ * L1 lives in the top bar. Items with children open a glass L2 menu on
+ * hover, focus or touch. Phones use the same tree in a bottom sheet.
  */
 return baseclass.extend({
 	__init__: function() {
 		this._sheet = null;
 		this._sheetBound = false;
 		this._sheetCloseTimer = null;
+		this._outsideBound = false;
 
-		this._bindSearch();
 		ui.menu.load().then(L.bind(this.render, this));
 
 		document.addEventListener('visibilitychange', L.bind(function() {
@@ -27,35 +26,6 @@ return baseclass.extend({
 
 	_iconBase: null,
 	_iconKeys: null,
-
-	_bindSearch: function() {
-		var input = document.getElementById('scalex-nav-search');
-		if (!input) return;
-
-		input.addEventListener('input', L.bind(this._filterNav, this));
-		input.addEventListener('keydown', function(e) {
-			if (e.key === 'Escape') {
-				input.value = '';
-				input.dispatchEvent(new Event('input'));
-				input.blur();
-			}
-		});
-	},
-
-	_filterNav: function() {
-		var input = document.getElementById('scalex-nav-search');
-		var query = input ? input.value.trim().toLowerCase() : '';
-		var topNav = document.getElementById('top-nav');
-		if (!topNav) return;
-
-		Array.prototype.forEach.call(topNav.querySelectorAll('.sidebar-section'), function(section) {
-			var match = !query || section.textContent.toLowerCase().indexOf(query) >= 0;
-			section.hidden = !match;
-			section.classList.toggle('is-search', !!query && match);
-		});
-
-		if (this._sheet) this.renderSheet();
-	},
 
 	iconFiles: {
 		'status': 'status.svg',
@@ -103,7 +73,6 @@ return baseclass.extend({
 		'watchcat': 'status.svg',
 		'clients': 'clients.svg',
 		'logout': 'logout.svg',
-		'more': 'more.svg',
 		'_default': 'default.svg'
 	},
 
@@ -170,14 +139,11 @@ return baseclass.extend({
 	},
 
 	_getSubItems: function(entry) {
-		var self = this;
 		var items = [];
 		if (!entry || !entry.node) return items;
 
-		var children = ui.menu.getChildren(entry.node);
 		var idx = (L.env.dispatchpath[0] === 'admin') ? 2 : 1;
-
-		children.forEach(function(child) {
+		ui.menu.getChildren(entry.node).forEach(function(child) {
 			items.push({
 				node: child,
 				active: L.env.dispatchpath[idx] === child.name,
@@ -211,14 +177,14 @@ return baseclass.extend({
 		}));
 		var activeEntry = null;
 
-		for (var i = 0; i < entries.length; i++) {
-			var section = this.renderSection(entries[i]);
+		entries.forEach(L.bind(function(entry) {
+			var section = this.renderTopItem(entry);
 			topNav.appendChild(section);
 			if (section.classList.contains('is-active'))
-				activeEntry = entries[i];
-		}
+				activeEntry = entry;
+		}, this));
 
-		var actions = document.getElementById('scalex-sidebar-actions');
+		var actions = document.getElementById('scalex-topbar-actions');
 		if (actions) {
 			actions.innerHTML = '';
 			actions.appendChild(this.renderLogoutItem());
@@ -227,92 +193,110 @@ return baseclass.extend({
 		if (activeEntry && this._getSubItems(activeEntry).length > 0)
 			document.body.classList.add('has-sub-nav');
 
-		this._filterNav();
 		document.body.dataset.page = L.env.requestpath.join('-') || 'home';
 		this._renderTitle(tree);
 		this._renderContentTabs(tree);
-		this.renderTabBar(entries, activeEntry);
 		this.renderMobileTabs(activeEntry);
 		this.renderSheet();
+		this._bindOutside();
 	},
 
-	renderSection: function(entry) {
+	renderTopItem: function(entry) {
 		var topNode = entry.node;
 		var subItems = this._getSubItems(entry);
 		var isActive = ScaleXMenu.isModeActive(topNode, entry.index);
 		var href = subItems.length ? subItems[0].url : ScaleXMenu.topLevelHref(topNode);
-		var children = [
-			E('a', {
-				'class': 'sidebar-item' + (isActive ? ' active' : '') + (topNode.readonly ? ' readonly' : ''),
-				'href': href,
-				'title': _(topNode.title),
-				'aria-current': (isActive && subItems.length === 0) ? 'page' : null
-			}, [
-				this.getIcon(topNode.name, topNode.title),
-				E('span', { 'class': 'nav-label' }, [ _(topNode.title) ])
-			])
-		];
+		var link = E('a', {
+			'class': 'top-nav-link',
+			'href': href,
+			'aria-current': (isActive && subItems.length === 0) ? 'page' : null,
+			'aria-haspopup': subItems.length ? 'true' : null,
+			'aria-expanded': subItems.length ? 'false' : null
+		}, [ _(topNode.title) ]);
 
-		if (subItems.length > 0) {
-			children.push(E('div', { 'class': 'sidebar-sub' },
-				subItems.map(function(item) {
-					return E('a', {
-						'class': 'sidebar-subitem' + (item.active ? ' active' : '') +
-							(item.node.readonly ? ' readonly' : ''),
-						'href': item.url,
-						'aria-current': item.active ? 'page' : null
-					}, [ _(item.node.title) ]);
-				})
-			));
+		var section = E('div', {
+			'class': 'top-nav-section' + (isActive ? ' is-active' : '')
+		}, [ link ]);
+
+		if (subItems.length) {
+			var menu = E('div', { 'class': 'top-nav-menu' }, subItems.map(function(item) {
+				return E('a', {
+					'href': item.url,
+					'class': item.active ? 'active' : '',
+					'aria-current': item.active ? 'page' : null
+				}, [ _(item.node.title) ]);
+			}));
+			section.appendChild(menu);
+
+			var open = function() {
+				section.classList.add('open');
+				link.setAttribute('aria-expanded', 'true');
+				menu.querySelectorAll('a').forEach(function(a) { a.tabIndex = 0; });
+			};
+			var close = function() {
+				section.classList.remove('open');
+				link.setAttribute('aria-expanded', 'false');
+			};
+
+			section.addEventListener('mouseenter', open);
+			section.addEventListener('mouseleave', close);
+			section.addEventListener('focusin', open);
+			section.addEventListener('focusout', function(e) {
+				if (!section.contains(e.relatedTarget)) close();
+			});
+			link.addEventListener('keydown', function(e) {
+				if (e.key === 'Escape') {
+					close();
+					link.focus();
+				}
+				if (e.key === 'ArrowDown') {
+					e.preventDefault();
+					open();
+					var first = menu.querySelector('a');
+					if (first) first.focus();
+				}
+			});
+			menu.addEventListener('keydown', function(e) {
+				if (e.key === 'Escape') {
+					close();
+					link.focus();
+				}
+			});
 		}
 
-		return E('div', {
-			'class': 'sidebar-section' + (isActive ? ' is-active' : '') + (subItems.length ? ' has-sub' : ''),
-			'data-nav-item': '1'
-		}, children);
+		return section;
 	},
 
-	renderTabBar: function(entries, activeEntry) {
-		var bar = document.getElementById('scalex-tabbar');
-		if (!bar) return;
+	renderLogoutItem: function() {
+		var url = (L.env.requestpath[0] === 'admin')
+			? L.url('admin', 'logout')
+			: L.url('logout');
 
-		bar.innerHTML = '';
-		var visible = entries.length > 4 ? entries.slice(0, 4) : entries;
-		var self = this;
+		return E('a', {
+			'class': 'topbar-logout',
+			'href': url,
+			'title': _('Logout')
+		}, [
+			this.getIcon('logout', _('Logout')),
+			E('span', { 'class': 'nav-label' }, [ _('Logout') ])
+		]);
+	},
 
-		visible.forEach(function(entry) {
-			var topNode = entry.node;
-			var subItems = self._getSubItems(entry);
-			var active = ScaleXMenu.isModeActive(topNode, entry.index);
-			var href = subItems.length ? subItems[0].url : ScaleXMenu.topLevelHref(topNode);
+	_bindOutside: function() {
+		if (this._outsideBound) return;
+		this._outsideBound = true;
 
-			bar.appendChild(E('a', {
-				'class': 'scalex-tabbar-item' + (active ? ' is-active' : ''),
-				'href': href,
-				'aria-current': active ? 'page' : null
-			}, [
-				self.getIcon(topNode.name, topNode.title),
-				E('span', { 'class': 'nav-label' }, [ _(topNode.title) ])
-			]));
+		document.addEventListener('click', function(e) {
+			if (e.target.closest && e.target.closest('.top-nav-section')) return;
+			document.querySelectorAll('.top-nav-section.open').forEach(function(section) {
+				section.classList.remove('open');
+				var link = section.querySelector('.top-nav-link');
+				if (link) link.setAttribute('aria-expanded', 'false');
+			});
 		});
-
-		{
-			var moreActive = visible.indexOf(activeEntry) < 0;
-			var more = E('button', {
-				'type': 'button',
-				'class': 'scalex-tabbar-item' + (moreActive ? ' is-active' : ''),
-				'id': 'scalex-more-btn',
-				'aria-haspopup': 'dialog',
-				'aria-expanded': 'false'
-			}, [
-				self.getIcon('more', _('More')),
-				E('span', { 'class': 'nav-label' }, [ _('More') ])
-			]);
-
-			more.addEventListener('click', function() { self.openSheet(more); });
-			bar.appendChild(more);
-		}
 	},
+
+	/* ── Phone L2 segmented control ──────────────────────────────────── */
 
 	renderMobileTabs: function(activeEntry) {
 		var container = document.getElementById('scalex-mobile-tabs');
@@ -337,22 +321,7 @@ return baseclass.extend({
 		});
 	},
 
-	renderLogoutItem: function() {
-		var url = (L.env.requestpath[0] === 'admin')
-			? L.url('admin', 'logout')
-			: L.url('logout');
-
-		return E('a', {
-			'class': 'sidebar-logout',
-			'href': url,
-			'title': _('Logout')
-		}, [
-			this.getIcon('logout', _('Logout')),
-			E('span', { 'class': 'nav-label' }, [ _('Logout') ])
-		]);
-	},
-
-	/* ── Mobile sheet ─────────────────────────────────────────────────── */
+	/* ── Mobile sheet ────────────────────────────────────────────────── */
 
 	_ensureSheet: function() {
 		if (this._sheet) return this._sheet;
@@ -397,6 +366,16 @@ return baseclass.extend({
 
 		var self = this;
 		var refs = this._sheet;
+		var menuBtn = document.getElementById('scalex-menu-btn');
+
+		if (menuBtn) {
+			menuBtn.addEventListener('click', function() {
+				if (refs.sheet.classList.contains('is-open'))
+					self.closeSheet();
+				else
+					self.openSheet();
+			});
+		}
 
 		refs.scrim.addEventListener('click', function() { self.closeSheet(); });
 
@@ -441,58 +420,45 @@ return baseclass.extend({
 		nav.innerHTML = '';
 		footer.innerHTML = '';
 
-		Array.prototype.forEach.call(topNav.querySelectorAll('.sidebar-section'), function(section) {
-			if (section.hidden) return;
-			var top = section.querySelector('.sidebar-item');
-			var label = section.querySelector('.nav-label');
-			if (!top || !label) return;
+		Array.prototype.forEach.call(topNav.querySelectorAll('.top-nav-section'), function(section) {
+			var link = section.querySelector('.top-nav-link');
+			if (!link) return;
 
-			var title = label.textContent.trim();
-			var href = top.getAttribute('href') || '#';
-			var icon = section.querySelector('.nav-icon');
-			var subLinks = section.querySelectorAll('.sidebar-subitem');
+			var title = link.textContent.trim();
+			var href = link.getAttribute('href') || '#';
+			var subLinks = section.querySelectorAll('.top-nav-menu a');
 			var active = section.classList.contains('is-active');
-			var rowChildren = [];
-
-			if (icon) rowChildren.push(icon.cloneNode(true));
-			rowChildren.push(E('span', { 'class': 'nav-label' }, [ title ]));
+			var children = [ E('span', { 'class': 'nav-label' }, [ title ]) ];
 
 			if (subLinks.length > 0) {
-				rowChildren.push(E('span', { 'class': 'nav-caret', 'aria-hidden': 'true' }, [
-					E('span', { 'class': 'scalex-symbol scalex-symbol-chevron' })
-				]));
-
-				var subChildren = Array.prototype.map.call(subLinks, function(link) {
-					return E('a', {
-						'href': link.getAttribute('href'),
-						'class': link.classList.contains('active') ? 'is-active' : '',
-						'aria-current': link.classList.contains('active') ? 'page' : null
-					}, [ link.textContent.trim() ]);
-				});
-
 				var details = E('details', {
 					'class': 'scalex-sheet-section' + (active ? ' is-active' : '')
 				}, [
-					E('summary', { 'class': 'scalex-sheet-row' + (active ? ' is-active' : '') }, rowChildren),
-					E('div', { 'class': 'scalex-sheet-sub' }, subChildren)
+					E('summary', { 'class': 'scalex-sheet-row' + (active ? ' is-active' : '') }, children),
+					E('div', { 'class': 'scalex-sheet-sub' }, Array.prototype.map.call(subLinks, function(a) {
+						return E('a', {
+							'href': a.getAttribute('href'),
+							'class': a.classList.contains('active') ? 'is-active' : '',
+							'aria-current': a.classList.contains('active') ? 'page' : null
+						}, [ a.textContent.trim() ]);
+					}))
 				]);
-
 				if (active) details.setAttribute('open', '');
 				nav.appendChild(details);
 			} else {
 				nav.appendChild(E('a', {
 					'href': href,
 					'class': 'scalex-sheet-row' + (active ? ' is-active' : '')
-				}, rowChildren));
+				}, children));
 			}
 		});
 
 		footer.appendChild(this.renderLogoutItem());
 	},
 
-	openSheet: function(trigger) {
+	openSheet: function() {
 		var refs = this._ensureSheet();
-		this._sheetTrigger = trigger || null;
+		var menuBtn = document.getElementById('scalex-menu-btn');
 
 		this.renderSheet();
 		clearTimeout(this._sheetCloseTimer);
@@ -507,7 +473,7 @@ return baseclass.extend({
 		document.body.classList.add('scalex-sheet-open');
 		var app = document.getElementById('scalex-app');
 		if (app) app.inert = true;
-		if (this._sheetTrigger) this._sheetTrigger.setAttribute('aria-expanded', 'true');
+		if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
 
 		var closeBtn = refs.sheet.querySelector('#scalex-sheet-close');
 		if (closeBtn) closeBtn.focus();
@@ -522,15 +488,17 @@ return baseclass.extend({
 		document.body.classList.remove('scalex-sheet-open');
 		var app = document.getElementById('scalex-app');
 		if (app) app.inert = false;
-		if (this._sheetTrigger) this._sheetTrigger.setAttribute('aria-expanded', 'false');
+
+		var menuBtn = document.getElementById('scalex-menu-btn');
+		if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
 
 		this._sheetCloseTimer = setTimeout(function() {
 			refs.sheet.hidden = true;
 			refs.scrim.hidden = true;
 		}, 400);
 
-		if (restoreFocus !== false && this._sheetTrigger)
-			this._sheetTrigger.focus();
+		if (restoreFocus !== false && menuBtn)
+			menuBtn.focus();
 	},
 
 	/* ── Titles and section tabs ──────────────────────────────────────── */
@@ -543,9 +511,8 @@ return baseclass.extend({
 		var node = tree;
 		var parts = [];
 		var title = '';
-		var i;
 
-		for (i = 0; i < L.env.dispatchpath.length && node; i++) {
+		for (var i = 0; i < L.env.dispatchpath.length && node; i++) {
 			node = node.children[L.env.dispatchpath[i]];
 			if (node && node.title) {
 				title = node.title;

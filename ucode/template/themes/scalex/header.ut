@@ -1,5 +1,5 @@
 {#
-  luci-theme-scalex 4.0 — Main document header
+  luci-theme-scalex 5.0 — Main document header
   macOS Settings-inspired shell for OpenWrt / LuCI.
 -#}
 
@@ -10,11 +10,11 @@
 
   const boardinfo = ubus.call('system', 'board');
   const hostname = striptags(boardinfo?.hostname ?? 'OpenWrt');
-  const scalex_version = trim(readfile('/usr/share/ucode/luci/template/themes/scalex/version')) ?? '4.0.0';
+  const scalex_version = trim(readfile('/usr/share/ucode/luci/template/themes/scalex/version')) ?? '5.0.0';
 
-  let scalex_primary = '#0071e3';
-  let scalex_dark_primary = '#0a84ff';
-  let scalex_bg_mode = 'gradient';
+  let scalex_primary = null;
+  let scalex_dark_primary = null;
+  let scalex_bg_mode = 'dots';
   let scalex_font_size = '16';
   let scalex_bg_src = null;
   let scalex_preset = 'openwrt';
@@ -50,7 +50,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#f2f2f7" id="meta-theme-color">
+  <meta name="theme-color" content="#f7f7f8" id="meta-theme-color">
   <meta name="color-scheme" content="light dark">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -72,37 +72,41 @@
     root.setAttribute('data-darkmode', isDark ? 'true' : 'false');
 
     var meta = document.getElementById('meta-theme-color');
-    if (meta) meta.setAttribute('content', isDark ? '#000000' : '#f2f2f7');
+    if (meta) meta.setAttribute('content', isDark ? '#08080a' : '#f7f7f8');
   })();
   </script>
   <link rel="stylesheet" href="/luci-static/bootstrap/cascade.css" data-scalex-base="bootstrap">
   <link rel="stylesheet" href="{{ media }}/css/scalex.css?v={{ scalex_version }}">
   <style id="scalex-config">
     html { font-size: {{ scalex_font_size }}px; }
+    {% if (scalex_primary): %}
     :root {
       --scalex-accent: {{ scalex_primary }};
       --scalex-accent-hover: {{ scalex_primary }};
-      --scalex-primary: {{ scalex_primary }};
-      --scalex-primary-hover: {{ scalex_primary }};
+      --scalex-accent-soft: color-mix(in srgb, {{ scalex_primary }} 12%, transparent);
+      --scalex-focus-ring: color-mix(in srgb, {{ scalex_primary }} 32%, transparent);
     }
+    {% endif %}
+    {% if (scalex_dark_primary): %}
     html[data-theme="dark"] {
       --scalex-accent: {{ scalex_dark_primary }};
       --scalex-accent-hover: {{ scalex_dark_primary }};
-      --scalex-primary: {{ scalex_dark_primary }};
-      --scalex-primary-hover: {{ scalex_dark_primary }};
+      --scalex-accent-soft: color-mix(in srgb, {{ scalex_dark_primary }} 14%, transparent);
+      --scalex-focus-ring: color-mix(in srgb, {{ scalex_dark_primary }} 36%, transparent);
     }
     @media (prefers-color-scheme: dark) {
       html:not([data-theme="light"]) {
         --scalex-accent: {{ scalex_dark_primary }};
         --scalex-accent-hover: {{ scalex_dark_primary }};
-        --scalex-primary: {{ scalex_dark_primary }};
-        --scalex-primary-hover: {{ scalex_dark_primary }};
+        --scalex-accent-soft: color-mix(in srgb, {{ scalex_dark_primary }} 14%, transparent);
+        --scalex-focus-ring: color-mix(in srgb, {{ scalex_dark_primary }} 36%, transparent);
       }
     }
+    {% endif %}
     {% if (scalex_bg_src): %}
     body.has-custom-bg {
       background-image:
-        linear-gradient(rgba(242, 242, 247, 0.86), rgba(242, 242, 247, 0.86)),
+        linear-gradient(rgba(247, 247, 248, 0.88), rgba(247, 247, 248, 0.88)),
         url('{{ scalex_bg_src }}');
       background-position: center;
       background-size: cover;
@@ -110,13 +114,13 @@
     }
     html[data-theme="dark"] body.has-custom-bg {
       background-image:
-        linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.76)),
+        linear-gradient(rgba(8, 8, 10, 0.82), rgba(8, 8, 10, 0.82)),
         url('{{ scalex_bg_src }}');
     }
     @media (prefers-color-scheme: dark) {
       html:not([data-theme="light"]) body.has-custom-bg {
         background-image:
-          linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.76)),
+          linear-gradient(rgba(8, 8, 10, 0.82), rgba(8, 8, 10, 0.82)),
           url('{{ scalex_bg_src }}');
       }
     }
@@ -131,7 +135,7 @@
   <style title="text/css">{{ css }}</style>
   {% endif %}
 </head>
-<body class="theme-openwrt{% if (scalex_preset == 'openwrt'): %} preset-openwrt{% endif %}{% if (scalex_bg_src): %} has-custom-bg{% elif (scalex_bg_mode == 'none'): %} bg-none{% endif %}">
+<body class="theme-openwrt{% if (scalex_preset == 'openwrt'): %} preset-openwrt{% endif %}{% if (scalex_bg_src): %} has-custom-bg{% elif (scalex_bg_mode == 'none' || scalex_bg_mode == 'gradient'): %} bg-none{% endif %}">
 
 <a class="scalex-skip-link" href="#maincontent">{{ _('Skip to content') }}</a>
 

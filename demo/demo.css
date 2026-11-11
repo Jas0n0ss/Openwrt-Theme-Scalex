@@ -39,13 +39,11 @@
 	align-items: center;
 	gap: 3px;
 	max-width: calc(100vw - 24px);
-	padding: 5px;
-	border: 1px solid var(--scalex-glass-border);
-	border-radius: var(--scalex-radius-pill);
-	background: var(--scalex-glass-bg-strong);
-	-webkit-backdrop-filter: blur(28px) saturate(190%);
-	backdrop-filter: blur(28px) saturate(190%);
-	box-shadow: var(--scalex-shadow-lg), 0 1px 0 var(--scalex-glass-highlight) inset;
+	padding: 4px;
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-radius-md);
+	background: var(--scalex-bg-elevated);
+	box-shadow: var(--scalex-shadow-lg);
 	transform: translateX(-50%);
 	overflow-x: auto;
 	scrollbar-width: none;
@@ -72,7 +70,7 @@
 	height: 32px;
 	padding: 0 12px;
 	border: 0;
-	border-radius: var(--scalex-radius-pill);
+	border-radius: var(--scalex-radius-xs);
 	background: transparent;
 	color: var(--scalex-text-secondary);
 	font-size: var(--scalex-size-xs);
@@ -87,9 +85,8 @@
 
 .demo-btn:hover,
 .demo-btn.active {
-	background: var(--scalex-bg-elevated);
-	color: var(--scalex-text);
-	box-shadow: 0 0 0 1px var(--scalex-separator);
+	background: var(--scalex-accent-soft);
+	color: var(--scalex-accent-text);
 }
 
 .demo-toolbar-divider {
@@ -194,7 +191,7 @@ body.scalex-login.demo-clean-view {
 	height: 28px;
 	padding: 0;
 	border: 1px solid var(--scalex-separator);
-	border-radius: 7px;
+	border-radius: 4px;
 	background: transparent;
 	overflow: hidden;
 	cursor: pointer;
@@ -206,7 +203,7 @@ body.scalex-login.demo-clean-view {
 
 .settings-page .cbi-color-well::-webkit-color-swatch {
 	border: 0;
-	border-radius: 6px;
+	border-radius: 3px;
 }
 
 .cbi-switch {
@@ -225,32 +222,32 @@ body.scalex-login.demo-clean-view {
 
 .cbi-switch-track {
 	position: relative;
-	width: 40px;
-	height: 24px;
+	width: 38px;
+	height: 22px;
 	flex-shrink: 0;
-	border-radius: 999px;
-	background: var(--scalex-fill-strong);
+	border-radius: var(--scalex-radius-sm);
+	background: var(--scalex-bg-inset);
 	transition: background-color var(--scalex-duration-fast) var(--scalex-ease-out);
 }
 
 .cbi-switch-track::after {
 	content: "";
 	position: absolute;
-	top: 2px;
-	left: 2px;
-	width: 20px;
-	height: 20px;
-	border-radius: 50%;
-	background: #ffffff;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	top: 3px;
+	left: 3px;
+	width: 16px;
+	height: 16px;
+	border-radius: 2px;
+	background: var(--scalex-text-tertiary);
 	transition: transform var(--scalex-duration-fast) var(--scalex-ease-out);
 }
 
 .cbi-switch input:checked + .cbi-switch-track {
-	background: #34c759;
+	background: var(--scalex-accent);
 }
 
 .cbi-switch input:checked + .cbi-switch-track::after {
+	background: var(--scalex-on-accent);
 	transform: translateX(16px);
 }
 

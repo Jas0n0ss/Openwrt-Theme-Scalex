@@ -63,7 +63,7 @@
 		document.documentElement.setAttribute('data-darkmode', dark ? 'true' : 'false');
 
 		var meta = document.getElementById('meta-theme-color');
-		if (meta) meta.setAttribute('content', dark ? '#000000' : '#f2f2f7');
+		if (meta) meta.setAttribute('content', dark ? '#08080a' : '#f7f7f8');
 
 		document.querySelectorAll('[data-theme-mode]').forEach(function (btn) {
 			btn.setAttribute('aria-pressed', btn.getAttribute('data-theme-mode') === mode ? 'true' : 'false');
@@ -75,8 +75,11 @@
 		applyTheme(mode);
 	}
 
-	var initialTheme = 'auto';
-	try { initialTheme = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
+	var initialTheme = params.get('theme') || 'auto';
+	if (MODES.indexOf(initialTheme) < 0) initialTheme = 'auto';
+	if (!params.get('theme')) {
+		try { initialTheme = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
+	}
 	applyTheme(initialTheme);
 
 	document.querySelectorAll('[data-theme-mode]').forEach(function (btn) {
@@ -378,5 +381,5 @@
 
 	setInterval(tick, 4200);
 
-	showView('dashboard');
+	showView(params.get('view') || 'dashboard');
 })();

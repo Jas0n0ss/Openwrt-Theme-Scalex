@@ -1,30 +1,30 @@
-# ScaleX 4.0 — 设计规范
+# ScaleX 5.0 — 设计规范
 
-> 一款为 OpenWrt / LuCI 打造的 Apple 风格主题。
-> 设计命题：**路由器后台也可以安静、清楚、值得信任。**
+> 一款为 OpenWrt / LuCI 打造的简约极客风主题。
+> 设计命题：**像读一份干净的终端输出，一眼看到 WAN 与 LAN 是否通。**
 
-![ScaleX 4.0 浅色预览](docs/preview.jpg)
+![ScaleX 5.0 浅色预览](docs/preview.jpg)
 
 ---
 
 ## 1. 设计方向
 
-**Apple.com 的顶部导航，网络控制台的内容。**
+**纸面与墨色，一个信号色，发丝线，方角，等宽数字。**
 
-ScaleX 4.0 把导航放回顶部：桌面是居中的横向文字菜单，L2 在悬停 / 聚焦时展开为玻璃菜单；手机保留顶部品牌栏与菜单按钮，L2 收成标题下的分段控件。侧边栏与底部 Tab Bar 都已移除。
+ScaleX 5.0 把 4.0 的 Apple / Liquid Glass 语言整体收回：没有玻璃模糊、没有渐变、没有彩色光斑、没有投影。导航仍在顶部，但只剩一行等宽小字；首页第一屏是 WAN 与 LAN 两张开卡，其余指标依次下移。
 
 | 原则 | 落地 |
 |------|------|
-| **内容优先，外壳后退** | 52px 顶部玻璃导航；内容卡片不透明 |
-| **一个页面一个任务** | 首屏回答「网络现在怎么样」，细节交给下方分组 |
-| **分组而不是堆卡片** | 四项 Vitals 共用一块面板；端口、无线、接口、客户端都是分组列表 |
-| **状态用点，不用彩色药丸** | 绿色只用于 6px 状态点；文字保持中性色 |
-| **一个强调色** | 蓝色只给主操作、焦点、选中项；绿色只表示在线 |
-| **安静的细节** | 发丝分隔线、20px 连续圆角、极轻的 1px 轮廓 |
+| **链路优先** | 首屏第一块内容就是 WAN / LAN；地址、网关、在线时长、流量、客户端与端口都在卡内 |
+| **一个信号色** | 绿只表示「可达 / 已连接」；橙表示降级，红表示断开；其余全部是墨色层级 |
+| **规则代替装饰** | 1px 分隔线与边框构成层次，不用阴影、模糊与渐变 |
+| **方角** | 2–8px，只够 soften 边缘；没有胶囊、没有 squircle |
+| **等宽数据** | IP、速率、运行时间、状态标签用 mono + `tabular-nums`；正文用系统 sans |
+| **安静** | 小字号、大写标签、0.1em 字距，靠排版建立层级而不是靠颜色 |
 
 ### 签名元素
 
-蓝色圆角路由器图标 + 右侧三列实时状态；导航保持 Apple.com 的低存在感，让状态面板成为唯一有重量的区域。
+点阵画布 + 一行 `ONLINE / 主机名 / 固件 / 运行时间` 的系统状态行 + `WAN`、`LAN` 两张开卡，卡顶一条 2px 状态色带。
 
 ---
 
@@ -32,37 +32,44 @@ ScaleX 4.0 把导航放回顶部：桌面是居中的横向文字菜单，L2 在
 
 | Token | 浅色 | 深色 | 用途 |
 |-------|------|------|------|
-| `--scalex-bg` | `#F2F2F7` | `#000000` | 页面画布 |
-| `--scalex-bg-elevated` | `#FFFFFF` | `#1C1C1E` | 卡片、菜单 |
-| `--scalex-bg-inset` | `#F2F2F7` | `#2C2C2E` | 输入框、分段控件 |
-| `--scalex-text` | `#1D1D1F` | `#F5F5F7` | 主文字 |
-| `--scalex-text-secondary` | `#6E6E73` | `#A1A1A6` | 说明、标签、表头 |
-| `--scalex-accent` | `#0071E3` | `#0A84FF` | 主操作、选中、焦点 |
-| `--scalex-success` | `#34C759` | `#30D158` | 仅在状态点 |
-| `--scalex-danger` | `#FF3B30` | `#FF453A` | 仅错误/离线点 |
+| `--scalex-bg` | `#F7F7F8` | `#08080A` | 页面画布（叠加 24px 点阵） |
+| `--scalex-bg-elevated` | `#FFFFFF` | `#0F0F12` | 卡片、菜单、Sheet |
+| `--scalex-bg-inset` | `#F1F1F2` | `#16161A` | 输入框、分段控件 |
+| `--scalex-text` | `#111114` | `#EDEDF0` | 主文字 |
+| `--scalex-text-secondary` | `#5C5C64` | `#9B9BA3` | 说明、标签、表头 |
+| `--scalex-text-tertiary` | `#6F6F78` | `#7C7C85` | 注释、fact 标签 |
+| `--scalex-accent` | `#0A8F4D` | `#2ED97C` | 在线、主操作、选中、焦点 |
+| `--scalex-accent-text` | `#06703B` | `#5CEB9B` | 强调文字（保证对比） |
+| `--scalex-on-accent` | `#FFFFFF` | `#05130A` | 绿底上的文字 |
+| `--scalex-warning` | `#B4690E` | `#F5B544` | 降级、半连接 |
+| `--scalex-danger` | `#C62F2A` | `#FF5C57` | 断开、错误 |
+| `--scalex-separator` | `#E3E3E6` | `#24242A` | 发丝分隔线 |
+| `--scalex-grid-dots` | `rgba(17,17,20,.055)` | `rgba(255,255,255,.045)` | 画布点阵 |
 
-对比度：主文字 15.6:1（深色）/ 16.8:1（浅色）；次要文字 5.1:1（白底）、5.2:1（深色卡片）。强调文字 `#0066CC` 在浅蓝选中底上为 4.9:1。
+对比度：主文字 15.9:1（浅）/ 16.4:1（深）；次要文字 6.4:1（浅）/ 6.1:1（深）；`--scalex-accent-text` 在 accent-soft 底上 ≥ 5.4:1。深色主按钮使用 `--scalex-on-accent`（近黑）而不是白字。
+
+**规则：绿色只代表「通」，不用于装饰。** 需要非状态强调时使用墨色（加粗、字距、边线），不加第二种彩色。
 
 ---
 
 ## 3. 字体
 
-- 系统字体：`-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Helvetica Neue", sans-serif`
-- 数字：等宽数字 `font-variant-numeric: tabular-nums`；技术值使用 `ui-monospace / SF Mono`。
-- 层级靠字号和字重，不靠颜色堆叠。
+- 正文：`system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif`
+- 数据与标签：`ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace`
+- 所有数字 `font-variant-numeric: tabular-nums`，避免轮询刷新时跳动。
 
-| 角色 | 字号 / 行高 | 字重 |
-|------|-------------|------|
-| 页面标题 | 32 / 35 | 600 |
-| 状态标题 | 28 / 33 | 600 |
-| 区块标题 | 15 / 20 | 600 |
-| 正文 | 15 / 22 | 400 |
-| 顶部导航 | 14 / 20 | 500–600 |
-| 控件 / 表格 | 13 / 18 | 400–500 |
-| 说明 / 表头 | 11–12 / 16 | 400–500 |
-| 技术数据 | 11 / 16 | 400 mono |
+| 角色 | 字号 | 字重 / 字距 |
+|------|------|-------------|
+| 页面标题 | 24px（桌面 30px） | 600 / `-0.01em` |
+| WAN·LAN 地址 | 20px mono | 600 |
+| 区块标题（LINKS / PORTS） | 11px mono 大写 | 500 / `0.1em` |
+| 系统状态行 | 11px mono | 400 / `0.01em` |
+| 正文 | 14px | 400 |
+| 表格 | 12–13px | 400 |
+| 表头 / 卡内标签 | 10px mono 大写 | 500 / `0.08em` |
+| 注释 | 11px | 400，tertiary |
 
-字距：大标题 `-0.032em`，状态标题 `-0.03em`；中文不额外加字距。
+中文不额外加字距；等宽字体只用于数据与英文标签本身。
 
 ---
 
@@ -72,89 +79,100 @@ ScaleX 4.0 把导航放回顶部：桌面是居中的横向文字菜单，L2 在
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────┐
-│  ◉ ScaleX      状态   系统   服务   网络   统计        ◐ ☀ ☾  退出  │  52px 玻璃
-│                 ────                                                 │
+│  ▣ SCALEX    状态  系统  服务  网络  统计         ◐ ☀ ☾   └─ 退出   │  48px 实色顶栏
+│               ────                                                   │
 ├──────────────────────────────────────────────────────────────────────┤
-│  状态                                                                 │
-│  概览                                                                 │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │ ◉  网络 / 一切正常              WAN   Wi-Fi   客户端           │  │
-│  │    主机 · 固件 · 运行时间       在线   3/3     3               │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-│  ┌──────────┬──────────┬──────────┬──────────┐                       │
-│  │ CPU      │ 内存      │ 运行时间  │ 客户端    │                       │
-│  └──────────┴──────────┴──────────┴──────────┘                       │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │ 网络            端口 / Wi-Fi 分组列表                           │  │
-│  └────────────────────────────────────────────────────────────────┘  │
+│  ~/ 状态                                                             │
+│  概览                                                                │
+│  ■ ONLINE / ScaleX-Router / OpenWrt 24.10 / UP 3D 14H                │  系统状态行
+│  ──────────────────────────────────────────────────────────────────  │
+│  LINKS                                          LIVE · 10S           │
 │  ┌────────────────────────────┬──────────────────────────────────┐  │
-│  │ 接口                        │ 客户端                            │  │
+│  │ WAN                     ■UP │ LAN                          ■UP │  │  2px 状态色带
+│  │ 203.0.113.42/32            │ 192.168.1.1/24                   │  │  mono 20px
+│  │ wan · PPPoE · eth0         │ lan · Static · br-lan           │  │
+│  │ 网关 203.0.113.1 │ 在线 18h │ 客户端 3 │ 端口 4/5           │  │
+│  │ 下行 18.2 GB     │ 上行 6.4GB│ 下行 42.1GB │ 上行 38.5GB    │  │
 │  └────────────────────────────┴──────────────────────────────────┘  │
+│  CPU LOAD │ MEM 58% │ UP 3D 14H │ CLIENTS 3                          │  四格指标
+│  PORTS & RADIOS                                                      │
+│  INTERFACES                              │ CLIENTS                  │
 └──────────────────────────────────────────────────────────────────────┘
-       最大 1180px 内容区，页面左右留白 40px
+       最大 1180px 内容区，页面左右留白 32px
 ```
 
-- 顶部栏 52px，品牌左、导航居中、外观/退出右。
-- L1 链接 14px；当前项文字加粗 + 2px 蓝色下划线，不使用填充药丸。
-- L2 菜单：玻璃面板、12px 圆角、34px 行高；悬停、聚焦、点击外部关闭。
-- 内容区最大 1180px；标题与卡片同轴。
-- 没有侧边栏，也没有底部 Tab Bar。
+- 顶栏 48px 实色，底部 1px 线；品牌等宽 13px 大写，L1 链接 12px。
+- L2 菜单为实心卡片（`--scalex-bg-elevated`），4px 圆角，1px 边线 + 轻投影。
+- 内容区最大 1180px；标题、卡片同轴。
+- 面包屑等宽 10px 大写，前缀 `~/`（绿色）。
 
 ### 4.2 移动（≤ 900px）
 
-- 顶部栏保留 54px：品牌、外观、菜单按钮。
-- 主导航进入底部 Sheet：grabber、标题、关闭按钮、可展开分组；当前分组自动展开。
-- 当前分区的 L2 页面变成标题下的分段控件，可横向滚动。
-- 页面左右留白 20px，640px 以下 16px；标题 26px。
-- 指标 2×2；网络分组上下堆叠；表格转为 label/value 行。
+- 顶栏 46px：品牌 + 外观分段 + 菜单按钮；退出进 Sheet。
+- L2 变成标题下的分段控件，可横向滚动。
+- 首页顺序不变：状态行 → WAN → LAN → 指标 → 端口 → 表格。
+- ≤720px：WAN / LAN 单列堆叠；≤640px：表格转为 label + 值，label 列固定 64px。
+- 页面留白 32 → 20 → 16px；标题 30 → 24 → 20px。
 
 ### 4.3 18.06 legacy
 
-Lua 模板使用服务端顶部导航：L1 横向链接、L2 悬停/聚焦菜单、移动端菜单 Sheet。Surface、字体、状态点、表格和 Sheet 与新壳共用 token。
+Lua 模板仍是服务端顶栏壳层，共用同一套 token、状态点、表格与 Sheet 结构。
 
 ---
 
 ## 5. 组件
 
-### 5.1 顶部导航
-- 背景 `rgba(250,250,252,.72)` + `blur(24px) saturate(180%)`，底部 1px 分隔线。
-- 当前 L1：文字 600 + 2px 蓝色下划线；未选中为次要色。
-- L2 菜单 232px 宽，玻璃背景，行高 34px；选中项蓝色文字。
-- 键盘：Tab 进入 L1，聚焦展开 L2；Escape 关闭。
+### 5.1 顶栏与导航
+- 背景 `--scalex-bg-elevated`，底部 1px；无 `backdrop-filter`。
+- L1：12px，padding 12px；当前项文字加深 + 2px 绿下划线，紧贴底边（`bottom: -1px`）。
+- 品牌标记 26px / 3px 圆角；等宽大写。
+- L2 菜单：实心卡、4px 圆角、34px 行高；悬停 / 聚焦 / 点外部关闭。
 
-### 5.2 状态面板
-- 78px 蓝色圆角图标（22px 圆角，160° 渐变，1px 内高光）。
-- 左侧：网络 / 状态标题 / 主机 · 固件 · 运行时间。
-- 右侧：WAN、Wi-Fi、客户端三列；每列 6px 状态点 + 10px 标签 + 13px 值。
-- 移动端右侧三列移到面板底部，用顶部发丝线分隔。
+### 5.2 系统状态行
+- 一行 mono 11px：`■ ONLINE / 主机名 / 固件 / 运行时间`。
+- 状态词等宽大写 0.12em：`ONLINE`（绿）、`OFFLINE`（橙）、`NO WAN`（红）。
+- 状态点 5px 方块；分隔符 `/` 为 tertiary。
 
-### 5.3 Vitals
-- 一块面板，四列；列间 1px 分隔。
-- 标签 12px 次要色 + 14px 线性图标；数值 26px / 600；注释 11px。
-- 内存条 3px 高，仅内存列有；颜色随阈值变化。
-- 移动端 2×2，第二行顶部加分隔线。
+### 5.3 WAN / LAN 链路卡（首屏核心）
+- 2 列网格（≤720px 单列），每卡 1px 边框、4px 圆角、无阴影。
+- 卡片顶部 2px 状态色带：`.is-up` 绿、`.is-down` 橙、`.is-off` 灰（`::before` 实现）。
+- 头部：等宽大写 tag（`WAN` / `LAN`）+ 右侧状态（5px 方块 + `UP` / `DOWN` / `N/A`）。
+- 地址 20px mono 600；副行 `接口 · 协议 · 设备` mono 11px。
+- 事实区 `dl` 两列：`dt` 10px mono 大写 tertiary，`dd` mono 12px，右对齐；格间用发丝线分隔。
+- WAN 事实：网关 / 在线 / 下行 / 上行。LAN 事实：客户端 / 端口 / 下行 / 上行。
 
-### 5.4 网络分组
-- 一张卡片，左右两列：端口 / Wi-Fi；列间 1px 分隔。
-- 行高 36px，行间发丝线；状态点 + 名称 + 速率/频段 + 角色/接入点。
-- 没有端口或无线时隐藏对应列；两者都没有时隐藏整卡。
+### 5.4 指标（Vitals）
+- 四格，2×2（≤900px）；每格 1px 边框拼接，内侧不留缝。
+- 标签 10px mono 大写 + 14px 线性符号；数值 18–24px mono；注释 11px。
+- 内存条 2px，仅内存格；绿 → 橙 → 红随水位变化。
 
-### 5.5 表格
-- 表头 11px 次要色，标题式大小写，不使用全大写字距。
-- 行高 44px，行间发丝线；数字使用 mono + tabular-nums。
-- 状态列使用状态点 + 文字，不使用彩色背景。
-- 移动端每行转为 label/value 两列；`data-label` 提供字段名。
+### 5.5 端口与射频
+- 一张卡两列（≤720px 上下堆叠）。
+- 行高 36px，发丝线分隔；状态点 + 名称 + 速率/频段 + 角色/SSID。
+- 无端口或无射频时隐藏对应列，两者皆无则整卡隐藏。
 
-### 5.6 表单与开关
-- 输入框高 36px，圆角 9px，填充式背景，无边框；聚焦 3px 蓝色外环。
-- 原生 LuCI flag 渲染为 40×24 的 iOS 开关，绿色仅表示开启。
-- 设置页使用 190px 标签列 + 内容列；分组卡片 20px 圆角；底部右对齐主操作。
+### 5.6 表格
+- 表头 10px mono 大写 0.08em，透明底，1px 下边线。
+- 行 40px；地址列用 mono，副行显示 `↓ rx · ↑ tx`。
+- 状态列用 `.label`：无底色、mono 大写、5px 方块前缀。
+- 移动端 `data-label` 转 label/value 两列，label 64px，值左对齐。
 
-### 5.7 移动 Sheet
-- 底部圆角 26px，玻璃背景，最大宽 520px。
-- 顶部 grabber、标题、关闭按钮。
-- 分组用原生 `<details>`，当前分组自动展开；底部退出。
+### 5.7 表单与开关
+- 输入框 32–36px，1px 边线、3px 圆角、inset 底；聚焦 3px 绿色软环。
+- 开关：38×22 方形成 toggle，选中绿底 + 绿块；不使用 iOS 圆形滑杆。
+- 按钮：透明底 + 1px 边线 + 3px 圆角；主按钮绿底 + `--scalex-on-accent` 文字。
+- 设置页：190px 标签列 + 内容列；分组卡用边线而不是阴影。
+
+### 5.8 移动 Sheet
+- 底部 8px 上圆角，实心背景，无模糊；最大宽 520px。
+- grabber 32×3 方条；标题 18px；关闭按钮 30px 边线方框。
 - 打开时 `inert` 主界面，焦点进入关闭按钮，`Esc` 关闭。
+
+### 5.9 登录页
+- 380px 单卡，1px 边线，8px 圆角，无阴影，直接坐在点阵画布上。
+- 品牌标记 44px；主机名 18px mono；副标题/提示 11px mono。
+- 输入 44px 高、mono；主按钮 44px 全宽；错误条为 2px 左边线的方框。
+- ≤520px 卡片去掉边框与底色，直接平铺。
 
 ---
 
@@ -162,27 +180,25 @@ Lua 模板使用服务端顶部导航：L1 横向链接、L2 悬停/聚焦菜单
 
 | 场景 | 时长 / 曲线 |
 |------|-------------|
-| 内容进入 | 380ms / `cubic-bezier(.22,1,.36,1)`，6px 上移 + 淡入 |
-| Sheet 打开/关闭 | 420ms / 弹簧曲线 |
-| 悬停、按压 | 140ms / ease-out |
+| 内容进入 | 320ms / `cubic-bezier(.22,.8,.24,1)`，6px 上移 + 淡入 |
+| Sheet 打开/关闭 | 320ms / 同曲线 |
+| 悬停、按压 | 140ms / ease-out（只变色，不缩放） |
 | L2 菜单 | 140ms / 透明度 + 2px 位移 |
 
-- 不使用持续呼吸、漂浮或装饰性循环动画。
-- `prefers-reduced-motion: reduce` 关闭位移和过渡。
-- `prefers-reduced-transparency: reduce` 用实色替代玻璃。
-- `prefers-contrast: more` 加强分隔线和焦点环。
+- 没有持续呼吸、漂浮或装饰性循环动画。
+- `prefers-reduced-motion: reduce` 关闭位移与过渡。
+- `prefers-reduced-transparency: reduce` 与不支持 `backdrop-filter` 的环境下，菜单与 Sheet 一律实色。
 
 ---
 
 ## 7. 可访问性
 
-- 跳过导航链接；焦点环 2px 蓝色 + 2px offset。
-- 当前页使用 `aria-current="page"`；L2 菜单可用键盘聚焦，Escape 关闭。
-- 移动 Sheet：`role=dialog`、`aria-modal`、焦点陷阱、`Esc`、关闭后归还焦点。
+- 跳过导航链接；焦点环 2px 绿 + 2px offset。
+- 当前页 `aria-current="page"`；L2 可键盘展开，`Esc` 关闭。
+- 移动 Sheet：`role=dialog`、`aria-modal`、焦点陷阱、关闭后归还焦点。
 - 触控目标：移动 ≥ 44px；桌面控件 ≥ 28px。
-- 状态不只用颜色：点旁始终有文字。
-- 表格移动端保留表头语义（`caption` + `data-label`）。
-- 深浅色都经过对比度检查；状态色只用于 6px 点。
+- 状态不只靠颜色：点旁始终有 `UP` / `DOWN` / `N/A` 文本。
+- 表格移动端保留语义（`caption` + `data-label`）。
 
 ---
 
@@ -191,17 +207,17 @@ Lua 模板使用服务端顶部导航：L1 横向链接、L2 悬停/聚焦菜单
 ```text
 htdocs/luci-static/scalex/
 ├── css/
-│   ├── variables.css       # token（颜色、字号、间距、玻璃）
-│   ├── base.css            # reset、字体、背景、焦点
-│   ├── layout.css          # 顶部导航、页头、Sheet
-│   ├── glass.css           # 仅功能层玻璃
-│   ├── components.css      # LuCI 表单、按钮、表格、开关
-│   ├── dashboard.css       # 状态面板、Vitals、网络分组
+│   ├── variables.css       # token（颜色、字号、间距、半径、点阵）
+│   ├── base.css            # reset、字体、点阵画布、焦点
+│   ├── layout.css          # 顶栏、页头、分段控件、Sheet
+│   ├── glass.css           # 仅 scrim（无玻璃的入口占位）
+│   ├── components.css      # LuCI 表单、按钮、表格、方形开关
+│   ├── dashboard.css       # 状态行、WAN/LAN 卡、指标、端口、表格
 │   ├── login.css           # 登录页
 │   ├── adaptive.css        # 第三方 LuCI app 适配
 │   ├── openwrt.css         # OpenWrt 预设
 │   ├── symbols.css         # 线性符号
-│   └── legacy.css          # 18.06 顶部导航兼容
+│   └── legacy.css          # 18.06 兼容
 ├── js/legacy.js            # 18.06 交互
 ├── img/                    # 标记、favicon、符号集
 └── icons/menu/             # 菜单图标
@@ -210,18 +226,40 @@ htdocs/luci-static/scalex/
 ```text
 htdocs/luci-static/resources/
 ├── menu-bootstrap-core.js  # LuCI 菜单树归一化
-├── menu-scalex.js          # 顶部导航 / L2 菜单 / 移动 Sheet
+├── menu-scalex.js          # 顶栏 / L2 菜单 / 移动 Sheet
 ├── theme-scalex.js         # Auto / Light / Dark
-├── dashboard-scalex.js     # RPC、状态面板、Vitals、分组
+├── dashboard-scalex.js     # RPC、状态行、WAN/LAN、指标、端口、表格
 └── ui-scalex.js            # 第三方页面适配
 ```
 
 ---
 
-## 9. 约束
+## 9. DOM 契约（dashboard）
+
+| 选择器 | 内容 |
+|--------|------|
+| `#scalex-overview` | 概览注入容器 |
+| `.scalex-meta` | 系统状态行 |
+| `#scalex-meta-host` / `#scalex-meta-fw` / `#scalex-meta-uptime` | 主机名 / 固件 / 运行时间 |
+| `#scalex-wan-card` / `#scalex-lan-card` | 链路卡（`.is-up` / `.is-down` / `.is-off`） |
+| `#scalex-wan-state` / `#scalex-lan-state` | 状态点 + 文案 |
+| `#scalex-wan-ip` / `#scalex-lan-ip` | 地址（mono 20px） |
+| `#scalex-wan-sub` / `#scalex-lan-sub` | 接口 · 协议 · 设备 |
+| `#scalex-wan-gw` / `#scalex-wan-uptime` | 网关 / 在线时长 |
+| `#scalex-wan-rx` / `#scalex-wan-tx` / `#scalex-lan-rx` / `#scalex-lan-tx` | 上下行 |
+| `#scalex-lan-clients` / `#scalex-lan-ports` | 客户端数 / 端口占用 |
+| `#scalex-vital-cpu-value` (`-note`) | CPU 指标 |
+| `#scalex-vital-memory-value` (`-note` / `-bar`) | 内存指标 |
+| `#scalex-vital-uptime-value` / `#scalex-vital-clients-value` | 运行时间 / 客户端 |
+
+刷新节奏 10s；数据源 `system.info`、`system.board`、`network.interface.dump`、`luci-rpc getDHCPLeases`、`network.device.status`、`luci getBuiltinEthernetPorts`。
+
+---
+
+## 10. 约束
 
 - 主路径：OpenWrt 23.05 / 24.10 / ImmortalWrt，ucode 模板。
-- LuCI 24.10 菜单根节点是 `admin`；所有路径和 active 判断都要归一化。
+- LuCI 24.10 菜单根节点是 `admin`；所有路径与 active 判断都要归一化。
 - 不依赖外部字体、图片 CDN 或运行时 CSS-in-JS。
-- 玻璃只在功能层；正文卡片不使用 `backdrop-filter`。
+- 功能层不使用 `backdrop-filter`；只有 `.scalex-scrim` 保留半透明。
 - 18.06 只做基础兼容，不在 CI 中跑真实固件。

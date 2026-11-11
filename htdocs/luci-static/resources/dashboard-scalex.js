@@ -41,6 +41,10 @@ return baseclass.extend({
 		this._portsGroup = null;
 		this._wifiGroup = null;
 		this._networkPanel = null;
+		this._links = null;
+		this._metaState = null;
+		this._metaStateDot = null;
+		this._metaStateText = null;
 
 		uci.load('scalex').then(L.bind(function() {
 			this.enabled = uci.get('scalex', 'global', 'dashboard') !== '0';
@@ -91,49 +95,191 @@ return baseclass.extend({
 		document.body.classList.add('scalex-has-overview');
 	},
 
-	buildStatus: function() {
-		var wan = this.statusItem('WAN', _('Checking…'));
-		var wifi = this.statusItem('Wi-Fi', '—');
-		var clients = this.statusItem('Clients', '—');
+	buildMeta: function() {
+		this._metaStateDot = E('span', { 'class': 'scalex-dot is-off' });
+		this._metaStateText = E('span', {}, [ '—' ]);
+		this._metaState = E('span', { 'class': 'scalex-meta-state' }, [
+			this._metaStateDot,
+			this._metaStateText
+		]);
 
-		this._statusWan = wan;
-		this._statusWifi = wifi;
-		this._statusClients = clients;
-
-		this._statusTitle = E('h2', {
-			'class': 'scalex-status-title',
-			'id': 'scalex-status-title',
-			'aria-live': 'polite'
-		}, [ _('Checking network…') ]);
-
-		this._statusSub = E('p', {
-			'class': 'scalex-status-sub',
-			'id': 'scalex-status-sub'
-		}, [ _('Reading system status') ]);
-
-		return E('section', { 'class': 'scalex-status', 'aria-labelledby': 'scalex-status-title' }, [
-			E('div', { 'class': 'scalex-status-icon', 'aria-hidden': 'true' }, [
-				E('span', { 'class': 'scalex-symbol scalex-symbol-router' })
-			]),
-			E('div', { 'class': 'scalex-status-copy' }, [
-				E('p', { 'class': 'scalex-kicker' }, [ _('Network') ]),
-				this._statusTitle,
-				this._statusSub
-			]),
-			E('div', { 'class': 'scalex-status-aside' }, [ wan.el, wifi.el, clients.el ])
+		return E('div', { 'class': 'scalex-meta' }, [
+			this._metaState,
+			E('span', { 'class': 'scalex-meta-sep' }, [ '/' ]),
+			E('span', { 'class': 'scalex-meta-item', 'id': 'scalex-meta-host' }, [ '—' ]),
+			E('span', { 'class': 'scalex-meta-sep' }, [ '/' ]),
+			E('span', { 'class': 'scalex-meta-item is-dim', 'id': 'scalex-meta-fw' }, [ '—' ]),
+			E('span', { 'class': 'scalex-meta-sep' }, [ '/' ]),
+			E('span', { 'class': 'scalex-meta-item is-dim', 'id': 'scalex-meta-uptime' }, [ '—' ])
 		]);
 	},
 
-	statusItem: function(label, value) {
-		var dot = E('span', { 'class': 'scalex-dot is-off' });
-		var valueEl = E('strong', {}, [ value ]);
-		var el = E('span', { 'class': 'scalex-status-item' }, [
-			dot,
-			E('span', {}, [ label ]),
-			valueEl
+	/* WAN and LAN are the two questions the page exists to answer. */
+	buildLinks: function() {
+		this._links = {
+			wan: this.linkCard('wan', 'WAN', [
+				{ id: 'gw', label: _('Gateway') },
+				{ id: 'uptime', label: _('Uptime') },
+				{ id: 'rx', label: _('Download') },
+				{ id: 'tx', label: _('Upload') }
+			]),
+			lan: this.linkCard('lan', 'LAN', [
+				{ id: 'clients', label: _('Clients') },
+				{ id: 'ports', label: _('Ports') },
+				{ id: 'rx', label: _('Download') },
+				{ id: 'tx', label: _('Upload') }
+			])
+		};
+
+		return E('section', { 'class': 'scalex-links', 'aria-label': _('WAN and LAN links') }, [
+			E('div', { 'class': 'scalex-section-head' }, [
+				E('h2', { 'class': 'scalex-section-title' }, [ _('Links') ]),
+				E('span', { 'class': 'scalex-section-note' }, [ _('Live · 10s') ])
+			]),
+			E('div', { 'class': 'scalex-link-grid' }, [
+				this._links.wan.el,
+				this._links.lan.el
+			])
+		]);
+	},
+
+	linkCard: function(side, label, facts) {
+		var state = E('span', { 'class': 'scalex-link-state', 'id': 'scalex-' + side + '-state' }, [
+			E('span', { 'class': 'scalex-dot is-off' }),
+			E('span', {}, [ '—' ])
 		]);
 
-		return { el: el, value: valueEl, dot: dot };
+		var rows = facts.map(function(f) {
+			return E('div', { 'class': 'scalex-fact' }, [
+				E('dt', {}, [ f.label ]),
+				E('dd', { 'id': 'scalex-' + side + '-' + f.id }, [ '—' ])
+			]);
+		});
+
+		var el = E('article', { 'class': 'scalex-link', 'id': 'scalex-' + side + '-card' }, [
+			E('div', { 'class': 'scalex-link-head' }, [
+				E('span', { 'class': 'scalex-link-tag' }, [ label ]),
+				state
+			]),
+			E('div', { 'class': 'scalex-link-value', 'id': 'scalex-' + side + '-ip' }, [ '—' ]),
+			E('div', { 'class': 'scalex-link-sub', 'id': 'scalex-' + side + '-sub' }, [ _('Reading…') ]),
+			E('dl', { 'class': 'scalex-link-facts' }, rows)
+		]);
+
+		return { el: el, state: state };
+	},
+
+	setLinkState: function(side, state, label) {
+		var card = document.getElementById('scalex-' + side + '-card');
+		if (card)
+			card.className = 'scalex-link' + (state ? ' is-' + state : '');
+
+		var box = document.getElementById('scalex-' + side + '-state');
+		if (!box || box.children.length < 2) return;
+
+		var dot = box.children[0];
+		var text = box.children[1];
+
+		dot.className = 'scalex-dot' + (state === 'up' ? '' :
+			(state === 'down' ? ' is-bad' : ' is-off'));
+		text.textContent = label;
+	},
+
+	renderLink: function(side, iface) {
+		if (!iface) {
+			this.setLinkState(side, 'off', _('N/A'));
+			this.setText('scalex-' + side + '-ip', '—');
+			this.setText('scalex-' + side + '-sub', _('Not configured'));
+			return;
+		}
+
+		var up = iface.up === true;
+		var name = iface.interface || '—';
+		var proto = (iface.protocol || '').toLowerCase();
+		var device = iface.l3_device || iface.device || '';
+
+		this.setLinkState(side, up ? 'up' : 'down', up ? _('Up') : _('Down'));
+
+		this.setText('scalex-' + side + '-ip', this.ifaceAddress(iface));
+		this.setText('scalex-' + side + '-sub', name + ' · ' + this.protocolLabel(proto) +
+			(device ? ' · ' + device : ''));
+
+		var stats = iface.stats || iface.statistics || {};
+		this.setText('scalex-' + side + '-rx', this.formatBytes(stats.rx_bytes));
+		this.setText('scalex-' + side + '-tx', this.formatBytes(stats.tx_bytes));
+
+		if (side === 'wan') {
+			this.setText('scalex-wan-gw', this.ifaceGateway(iface));
+			this.setText('scalex-wan-uptime', this.formatUptime(iface.uptime));
+		}
+	},
+
+	protocolLabel: function(proto) {
+		var map = {
+			dhcp: 'DHCP', dhcpv6: 'DHCPv6', pppoe: 'PPPoE', static: 'Static',
+			none: 'None', qmi: 'QMI', ncm: 'NCM', '3g': '3G', ppp: 'PPP'
+		};
+		return map[proto] || (proto ? proto.toUpperCase() : '—');
+	},
+
+	ifaceAddress: function(iface) {
+		var a = (iface['ipv4-address'] || [])[0];
+		if (a && a.address)
+			return a.address + '/' + (a.mask != null ? a.mask : '32');
+
+		var a6 = (iface['ipv6-address'] || [])[0];
+		if (a6 && a6.address)
+			return a6.address + '/' + (a6.prefix != null ? a6.prefix : '128');
+
+		return '—';
+	},
+
+	ifaceGateway: function(iface) {
+		var routes = iface.route || iface.routes || [];
+		for (var i = 0; i < routes.length; i++) {
+			var r = routes[i];
+			if (r && r.gateway && (r.target === '0.0.0.0' || r.target === '::' || r.mask === 0))
+				return r.gateway;
+		}
+		return '—';
+	},
+
+	/* Pick the most meaningful interface for a role: up first, then IPv4. */
+	pickIface: function(ifaces, re) {
+		var list = (ifaces || []).filter(function(i) {
+			var n = i.interface || '';
+			return n && n.charAt(0) !== '@' && re.test(n);
+		}).sort(function(a, b) {
+			return (a.interface || '').length - (b.interface || '').length;
+		});
+
+		for (var i = 0; i < list.length; i++)
+			if (list[i].up === true && (list[i]['ipv4-address'] || []).length)
+				return list[i];
+
+		for (var j = 0; j < list.length; j++)
+			if (list[j].up === true)
+				return list[j];
+
+		return list[0] || null;
+	},
+
+	updateMeta: function(wan, failed) {
+		var state = failed ? 'NO DATA' : 'NO WAN';
+		var dot = 'scalex-dot is-bad';
+
+		if (!failed && wan) {
+			if (wan.up === true) {
+				state = 'ONLINE';
+				dot = 'scalex-dot';
+			} else {
+				state = 'OFFLINE';
+				dot = 'scalex-dot is-warn';
+			}
+		}
+
+		if (this._metaStateText) this._metaStateText.textContent = state;
+		if (this._metaStateDot) this._metaStateDot.className = dot;
 	},
 
 	buildVitals: function() {
@@ -204,7 +350,8 @@ return baseclass.extend({
 		this._leasesBody = E('tbody', {});
 
 		return E('div', { id: 'scalex-overview', 'class': 'scalex-overview' }, [
-			this.buildStatus(),
+			this.buildMeta(),
+			this.buildLinks(),
 			this.buildVitals(),
 			this.buildNetwork(),
 			E('div', { 'class': 'scalex-grid' }, [
@@ -220,7 +367,7 @@ return baseclass.extend({
 				], this._leasesBody), 'devices')
 			]),
 			E('p', { 'class': 'scalex-overview-note' }, [
-				_('Primary status at a glance. Detailed metrics are shown in the sections below.')
+				_('WAN and LAN first, everything else below. Native LuCI panels follow.')
 			])
 		]);
 	},
@@ -274,19 +421,9 @@ return baseclass.extend({
 			(level === 'warning' ? 'var(--scalex-warning)' : 'var(--scalex-accent)');
 	},
 
-	setStatusItem: function(item, value, state) {
-		if (!item) return;
-		item.value.textContent = value;
-		item.dot.className = 'scalex-dot' + (state ? ' ' + state : '');
-	},
-
-	setStatusTitle: function(value) {
-		if (this._statusTitle && this._statusTitle.textContent !== value)
-			this._statusTitle.textContent = value;
-	},
-
 	formatBytes: function(n) {
-		if (!n || n < 0) return '0 B';
+		if (n == null || isNaN(n)) return '\u2014';
+		if (n <= 0) return '0 B';
 		var u = ['B', 'KB', 'MB', 'GB', 'TB'];
 		var i = 0;
 		while (n >= 1024 && i < u.length - 1) { n /= 1024; i++; }
@@ -423,11 +560,10 @@ return baseclass.extend({
 			self.setText('scalex-vital-uptime-value', self.formatUptime(info.uptime));
 			self.setText('scalex-vital-uptime-note', _('Since last boot'));
 
-			if (self._statusSub) {
-				var model = board.model || board.system || 'OpenWrt';
-				var release = board.release && board.release.description ? board.release.description : '';
-				self._statusSub.textContent = model + (release ? ' · ' + release : '');
-			}
+			self.setText('scalex-meta-host', board.hostname || board.model || 'OpenWrt');
+			self.setText('scalex-meta-fw', board.release && board.release.description
+				? board.release.description : _('OpenWrt'));
+			self.setText('scalex-meta-uptime', 'UP ' + self.formatUptime(info.uptime));
 		}).catch(function() {
 			self.setText('scalex-vital-cpu-value', '—');
 			self.setText('scalex-vital-memory-value', '—');
@@ -439,67 +575,61 @@ return baseclass.extend({
 		var self = this;
 		if (!this._ifaceBody) return Promise.resolve();
 
-		return rpc.declare({
-			object: 'network.interface',
-			method: 'dump',
-			expect: { interface: [] }
-		})().then(function(ifaces) {
-			self._ifaceBody.innerHTML = '';
+		return callInterfaceDump().then(function(ifaces) {
+			ifaces = ifaces || [];
 
-			var shown = 0;
-			var sawWan = false;
-			var wanUp = false;
+			var wan = self.pickIface(ifaces, /^wan/i);
+			var lan = self.pickIface(ifaces, /^lan/i);
 
-			for (var i = 0; i < ifaces.length; i++) {
-				var iface = ifaces[i];
-				var name = iface.interface || ('if' + i);
-				var up = iface.up === true;
-				var addr = '—';
-
-				if (iface['ipv4-address'] && iface['ipv4-address'][0])
-					addr = iface['ipv4-address'][0].address + '/' + iface['ipv4-address'][0].mask;
-				else if (iface['ipv6-address'] && iface['ipv6-address'][0])
-					addr = iface['ipv6-address'][0].address;
-
-				if (name.charAt(0) === '@') continue;
-
-				if (/wan/i.test(name)) {
-					sawWan = true;
-					if (up) wanUp = true;
-				}
-
-				var stats = iface.stats || {};
-				var rx = stats.rx_bytes || 0;
-				var tx = stats.tx_bytes || 0;
-
-				self._ifaceBody.appendChild(E('tr', {}, [
-					E('td', { 'data-label': _('Interface') }, [ E('strong', {}, [ name ]) ]),
-					E('td', { 'data-label': _('Address'), 'class': 'scalex-mono' }, [ addr ]),
-					E('td', { 'data-label': _('Download'), 'class': 'scalex-mono' }, [ self.formatBytes(rx) ]),
-					E('td', { 'data-label': _('Upload'), 'class': 'scalex-mono' }, [ self.formatBytes(tx) ]),
-					E('td', { 'data-label': _('Status'), 'class': 'scalex-col-narrow' }, [ self.statusBadge(up) ])
-				]));
-				shown++;
-			}
-
-			if (shown === 0) {
-				self._ifaceBody.appendChild(E('tr', {}, [
-					E('td', { colspan: '3', 'class': 'scalex-empty' }, [ '—' ])
-				]));
-			}
-
-			if (sawWan)
-				self.setStatusTitle(wanUp ? _('All systems online') : _('Internet needs attention'));
-			else
-				self.setStatusTitle(_('Network is running'));
-
-			if (!sawWan)
-				self.setStatusItem(self._statusWan, _('Not found'), 'is-off');
-			else
-				self.setStatusItem(self._statusWan, wanUp ? _('Online') : _('Offline'), wanUp ? '' : 'is-bad');
+			self.renderLink('wan', wan);
+			self.renderLink('lan', lan);
+			self.updateMeta(wan);
+			self.renderInterfaces(ifaces);
 		}).catch(function() {
-			self.setStatusTitle(_('Network status unavailable'));
+			self.updateMeta(null, true);
+			self.setLinkState('wan', 'off', _('N/A'));
+			self.setLinkState('lan', 'off', _('N/A'));
 		});
+	},
+
+	renderInterfaces: function(ifaces) {
+		var self = this;
+		this._ifaceBody.innerHTML = '';
+
+		var shown = 0;
+
+		for (var i = 0; i < ifaces.length; i++) {
+			var iface = ifaces[i];
+			var name = iface.interface || ('if' + i);
+			if (name.charAt(0) === '@') continue;
+
+			var up = iface.up === true;
+			var stats = iface.stats || iface.statistics || {};
+			var rx = stats.rx_bytes;
+			var tx = stats.tx_bytes;
+
+			self._ifaceBody.appendChild(E('tr', {}, [
+				E('td', { 'data-label': _('Interface') }, [ E('strong', {}, [ name ]) ]),
+				E('td', { 'data-label': _('Address') }, [
+					E('div', { 'class': 'scalex-address' }, [
+						E('span', { 'class': 'scalex-mono' }, [ self.ifaceAddress(iface) ]),
+						E('small', { 'class': 'scalex-cell-sub' }, [
+							'\u2193 ' + self.formatBytes(rx) + ' \u00b7 \u2191 ' + self.formatBytes(tx)
+						])
+					])
+				]),
+				E('td', { 'data-label': _('Status'), 'class': 'scalex-col-narrow' }, [
+					self.statusBadge(up)
+				])
+			]));
+			shown++;
+		}
+
+		if (shown === 0) {
+			self._ifaceBody.appendChild(E('tr', {}, [
+				E('td', { colspan: '3', 'class': 'scalex-empty' }, [ '—' ])
+			]));
+		}
 	},
 
 	fetchLeases: function() {
@@ -516,7 +646,7 @@ return baseclass.extend({
 
 			self.setText('scalex-vital-clients-value', leases.length);
 			self.setText('scalex-vital-clients-note', _('Active devices'));
-			self.setStatusItem(self._statusClients, leases.length, leases.length > 0 ? '' : 'is-off');
+			self.setText('scalex-lan-clients', leases.length);
 
 			if (leases.length === 0) {
 				self._leasesBody.appendChild(E('tr', {}, [
@@ -563,10 +693,9 @@ return baseclass.extend({
 			self.renderWifiRadios(res[1]);
 			self.updateNetworkMapLayout(res[0].length, res[1].length);
 
-			var radios = res[1] || [];
-			var active = radios.filter(function(r) { return r.up; }).length;
-			self.setStatusItem(self._statusWifi, radios.length ? (active + '/' + radios.length) : '—',
-				radios.length ? (active === radios.length ? '' : 'is-warn') : 'is-off');
+			var ports = res[0] || [];
+			var portUp = ports.filter(function(p) { return p.up; }).length;
+			self.setText('scalex-lan-ports', ports.length ? (portUp + '/' + ports.length) : '—');
 		}).catch(function() {
 			self.renderPorts([]);
 			self.renderWifiRadios([]);

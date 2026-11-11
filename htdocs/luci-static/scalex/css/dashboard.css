@@ -1,114 +1,259 @@
-/* ScaleX 4.0 — Overview: one status surface, one vitals strip, grouped lists */
+/* ScaleX 5.0 — Overview: one system line, WAN/LAN link pair,
+   vitals strip, then grouped lists. Flat surfaces, hairline rules. */
 
 .scalex-overview {
 	display: flex;
 	flex-direction: column;
-	gap: 18px;
-	margin-bottom: 28px;
+	gap: 12px;
+	margin-bottom: 24px;
 }
 
-/* ── Status header ──────────────────────────────────────────────────── */
+/* ── System line ────────────────────────────────────────────────────── */
 
-.scalex-status {
+.scalex-meta {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	gap: 22px;
-	padding: 26px 28px;
-	border-radius: 22px;
-	background: var(--scalex-bg-elevated);
-	box-shadow: var(--scalex-shadow-card);
-}
-
-.scalex-status-icon {
-	display: grid;
-	place-items: center;
-	width: 78px;
-	height: 78px;
-	flex-shrink: 0;
-	border-radius: 22px;
-	background: linear-gradient(160deg, #3aa0ff 0%, #0071e3 54%, #0059c7 100%);
-	box-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.4) inset,
-		0 10px 24px rgba(0, 95, 196, 0.24);
-	color: #ffffff;
-}
-
-.scalex-status-icon .scalex-symbol {
-	width: 36px;
-	height: 36px;
-}
-
-.scalex-status-copy {
-	flex: 1;
-	min-width: 0;
-}
-
-.scalex-kicker {
-	margin-bottom: 4px;
+	flex-wrap: wrap;
+	gap: 6px 10px;
+	padding: 0 2px 10px;
+	border-bottom: 1px solid var(--scalex-separator);
 	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-xs);
-	font-weight: var(--scalex-weight-medium);
+	font-family: var(--scalex-font-mono);
+	font-size: 11px;
+	letter-spacing: 0.01em;
 }
 
-.scalex-status-title {
-	color: var(--scalex-text);
-	font-size: 28px;
+.scalex-meta-state {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	color: var(--scalex-accent-text);
 	font-weight: var(--scalex-weight-semibold);
-	line-height: 1.16;
-	letter-spacing: -0.03em;
+	letter-spacing: var(--scalex-tracking-label);
+	text-transform: uppercase;
 }
 
-.scalex-status-sub {
-	margin-top: 5px;
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-sm);
+.scalex-meta-sep {
+	color: var(--scalex-text-quaternary);
 }
 
-.scalex-status-aside {
-	display: flex;
-	align-items: stretch;
-	gap: 26px;
-	flex-shrink: 0;
-	padding-left: 26px;
-	border-left: 1px solid var(--scalex-separator);
-}
-
-.scalex-status-item {
-	display: grid;
-	grid-template-columns: auto 1fr;
-	grid-template-rows: auto auto;
-	gap: 2px 7px;
-	align-content: center;
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-2xs);
+.scalex-meta-item {
 	white-space: nowrap;
 }
 
-.scalex-status-item .scalex-dot {
-	grid-row: 1;
-	grid-column: 1;
-	align-self: center;
+.scalex-meta-item.is-dim {
+	color: var(--scalex-text-tertiary);
 }
 
-.scalex-status-item > span:not(.scalex-dot) {
-	grid-row: 1;
-	grid-column: 2;
+/* ── Links: the first thing the page answers ────────────────────────── */
+
+.scalex-links {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 }
 
-.scalex-status-item strong {
-	grid-row: 2;
-	grid-column: 2;
+.scalex-section-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 0 2px;
+}
+
+.scalex-section-title {
 	color: var(--scalex-text);
-	font-size: var(--scalex-size-sm);
+	font-size: var(--scalex-size-2xs);
 	font-weight: var(--scalex-weight-semibold);
+	letter-spacing: var(--scalex-tracking-label);
+	text-transform: uppercase;
 }
 
-.scalex-dot {
+.scalex-section-note {
+	color: var(--scalex-text-tertiary);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.scalex-link-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.scalex-link {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	padding: 16px 20px 18px;
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-card-radius);
+	background: var(--scalex-bg-elevated);
+	overflow: hidden;
+	transition:
+		border-color var(--scalex-duration-fast) var(--scalex-ease-out),
+		background-color var(--scalex-duration-fast) var(--scalex-ease-out);
+}
+
+/* A 2px rule on the top edge carries the state, nothing else. */
+.scalex-link::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: var(--scalex-text-quaternary);
+	opacity: 0.55;
+}
+
+.scalex-link.is-up::before {
+	background: var(--scalex-success);
+	opacity: 1;
+}
+
+.scalex-link.is-warn::before {
+	background: var(--scalex-warning);
+	opacity: 1;
+}
+
+.scalex-link.is-down::before {
+	background: var(--scalex-danger);
+	opacity: 1;
+}
+
+.scalex-link-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 14px;
+}
+
+.scalex-link-tag {
+	color: var(--scalex-text);
+	font-family: var(--scalex-font-mono);
+	font-size: 11px;
+	font-weight: var(--scalex-weight-semibold);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.scalex-link-state {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--scalex-text-quaternary);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
+	font-weight: var(--scalex-weight-semibold);
+	letter-spacing: var(--scalex-tracking-label);
+	text-transform: uppercase;
+}
+
+.scalex-link-state .scalex-dot {
 	width: 6px;
 	height: 6px;
+}
+
+.scalex-link.is-up .scalex-link-state {
+	color: var(--scalex-accent-text);
+}
+
+.scalex-link.is-warn .scalex-link-state {
+	color: var(--scalex-warning-text);
+}
+
+.scalex-link.is-down .scalex-link-state {
+	color: var(--scalex-danger-text);
+}
+
+.scalex-link-value {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--scalex-text);
+	font-family: var(--scalex-font-mono);
+	font-size: var(--scalex-size-xl);
+	font-weight: var(--scalex-weight-semibold);
+	line-height: 1.2;
+	letter-spacing: var(--scalex-tracking-tight);
+	font-variant-numeric: tabular-nums;
+}
+
+.scalex-link-sub {
+	margin-top: 4px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--scalex-text-secondary);
+	font-family: var(--scalex-font-mono);
+	font-size: 11px;
+	letter-spacing: 0.01em;
+}
+
+.scalex-link-facts {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0;
+	margin: 16px 0 0;
+	padding: 0;
+	border-top: 1px solid var(--scalex-separator);
+}
+
+.scalex-fact {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+	min-width: 0;
+	padding: 7px 0;
+	border-bottom: 1px solid var(--scalex-separator);
+}
+
+.scalex-fact:nth-child(odd) {
+	padding-right: 14px;
+}
+
+.scalex-fact:nth-child(even) {
+	padding-left: 14px;
+	border-left: 1px solid var(--scalex-separator);
+}
+
+.scalex-fact:nth-last-child(-n + 2) {
+	border-bottom: 0;
+}
+
+.scalex-fact dt {
 	flex-shrink: 0;
-	border-radius: 50%;
+	color: var(--scalex-text-tertiary);
+	font-size: 10px;
+	font-weight: var(--scalex-weight-medium);
+	letter-spacing: 0.04em;
+}
+
+.scalex-fact dd {
+	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--scalex-text);
+	font-family: var(--scalex-font-mono);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ── Dots ───────────────────────────────────────────────────────────── */
+
+.scalex-dot {
+	width: 5px;
+	height: 5px;
+	flex-shrink: 0;
+	border-radius: 1px;
 	background: var(--scalex-success);
 }
 
@@ -129,15 +274,15 @@
 .scalex-vitals {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
-	padding: 4px 0;
-	border-radius: 20px;
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-card-radius);
 	background: var(--scalex-bg-elevated);
-	box-shadow: var(--scalex-shadow-card);
+	overflow: hidden;
 }
 
 .scalex-vital {
 	min-width: 0;
-	padding: 18px 22px;
+	padding: 14px 18px 15px;
 }
 
 .scalex-vital + .scalex-vital {
@@ -148,15 +293,17 @@
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-xs);
+	color: var(--scalex-text-tertiary);
+	font-size: 10px;
 	font-weight: var(--scalex-weight-medium);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
 }
 
 .scalex-vital-label .scalex-symbol {
-	width: 14px;
-	height: 14px;
-	opacity: 0.65;
+	width: 12px;
+	height: 12px;
+	opacity: 0.5;
 }
 
 .scalex-vital-value {
@@ -166,10 +313,11 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	color: var(--scalex-text);
-	font-size: 26px;
+	font-family: var(--scalex-font-mono);
+	font-size: var(--scalex-size-xl);
 	font-weight: var(--scalex-weight-semibold);
-	line-height: 1.05;
-	letter-spacing: -0.035em;
+	line-height: 1.1;
+	letter-spacing: var(--scalex-tracking-tight);
 	font-variant-numeric: tabular-nums;
 }
 
@@ -180,14 +328,15 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-2xs);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
+	font-variant-numeric: tabular-nums;
 }
 
 .scalex-vital-meter {
-	height: 3px;
-	margin-top: 10px;
+	height: 2px;
+	margin-top: 9px;
 	overflow: hidden;
-	border-radius: 999px;
 	background: var(--scalex-fill);
 }
 
@@ -195,17 +344,16 @@
 	display: block;
 	width: 0;
 	height: 100%;
-	border-radius: inherit;
 	background: var(--scalex-accent);
 	transition: width var(--scalex-duration-slow) var(--scalex-ease-out);
 }
 
-/* ── Group cards ────────────────────────────────────────────────────── */
+/* ── Cards ──────────────────────────────────────────────────────────── */
 
 .scalex-card {
-	border-radius: 20px;
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-card-radius);
 	background: var(--scalex-bg-elevated);
-	box-shadow: var(--scalex-shadow-card);
 	overflow: hidden;
 }
 
@@ -214,41 +362,40 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 12px;
-	min-height: 46px;
-	padding: 12px 22px;
+	min-height: 40px;
+	padding: 9px 18px;
 	border-bottom: 1px solid var(--scalex-separator);
 }
 
 .scalex-card-title {
 	display: flex;
 	align-items: center;
-	gap: 8px;
+	gap: 7px;
 	color: var(--scalex-text);
-	font-size: var(--scalex-size-base);
+	font-size: 11px;
 	font-weight: var(--scalex-weight-semibold);
-	letter-spacing: -0.012em;
+	letter-spacing: var(--scalex-tracking-label);
+	text-transform: uppercase;
 }
 
 .scalex-card-title .scalex-symbol {
-	width: 16px;
-	height: 16px;
-	opacity: 0.6;
+	width: 13px;
+	height: 13px;
+	opacity: 0.45;
 }
 
 .scalex-live {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-2xs);
-	font-weight: var(--scalex-weight-medium);
+	color: var(--scalex-text-tertiary);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
 }
 
-.scalex-card-body {
-	padding: 0;
-}
-
-/* ── Network lists ──────────────────────────────────────────────────── */
+/* ── Network: ports and radios ──────────────────────────────────────── */
 
 .scalex-network-grid {
 	display: grid;
@@ -257,7 +404,7 @@
 
 .scalex-network-group {
 	min-width: 0;
-	padding: 16px 22px 18px;
+	padding: 12px 18px 14px;
 }
 
 .scalex-network-group + .scalex-network-group {
@@ -273,11 +420,12 @@
 }
 
 .scalex-group-label {
-	margin-bottom: 6px;
-	color: var(--scalex-text-secondary);
+	margin-bottom: 4px;
+	color: var(--scalex-text-tertiary);
+	font-family: var(--scalex-font-mono);
 	font-size: 10px;
-	font-weight: var(--scalex-weight-semibold);
-	letter-spacing: 0.055em;
+	font-weight: var(--scalex-weight-medium);
+	letter-spacing: var(--scalex-tracking-label);
 	text-transform: uppercase;
 }
 
@@ -285,7 +433,7 @@
 	display: flex;
 	align-items: center;
 	gap: 9px;
-	min-height: 36px;
+	min-height: 32px;
 	border-bottom: 1px solid var(--scalex-separator);
 }
 
@@ -294,30 +442,36 @@
 }
 
 .scalex-row-name {
-	min-width: 46px;
+	min-width: 48px;
 	color: var(--scalex-text);
-	font-size: var(--scalex-size-sm);
+	font-family: var(--scalex-font-mono);
+	font-size: 12px;
 	font-weight: var(--scalex-weight-medium);
+	letter-spacing: 0.02em;
 }
 
 .scalex-row-meta {
 	min-width: 0;
 	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-xs);
+	font-family: var(--scalex-font-mono);
+	font-size: 11px;
 	font-variant-numeric: tabular-nums;
 }
 
 .scalex-row-role {
 	margin-left: auto;
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-2xs);
+	color: var(--scalex-text-tertiary);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
+	letter-spacing: 0.06em;
 	white-space: nowrap;
 }
 
 .scalex-row-status {
 	margin-left: auto;
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-2xs);
+	color: var(--scalex-text-tertiary);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
 	white-space: nowrap;
 }
 
@@ -327,7 +481,7 @@
 	white-space: nowrap;
 	min-width: 0;
 	color: var(--scalex-text);
-	font-size: var(--scalex-size-sm);
+	font-size: 12px;
 	font-weight: var(--scalex-weight-medium);
 }
 
@@ -335,12 +489,14 @@
 	width: 62px;
 	flex-shrink: 0;
 	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-xs);
+	font-family: var(--scalex-font-mono);
+	font-size: 11px;
 }
 
 .scalex-wifi-gen {
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-2xs);
+	color: var(--scalex-text-tertiary);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
 }
 
 /* ── Two-column information ─────────────────────────────────────────── */
@@ -348,7 +504,7 @@
 .scalex-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 18px;
+	gap: 12px;
 	align-items: start;
 }
 
@@ -359,18 +515,21 @@
 }
 
 .scalex-data-table thead th {
-	padding: 9px 22px;
+	padding: 7px 18px;
 	text-align: left;
-	font-size: var(--scalex-size-2xs);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
 	font-weight: var(--scalex-weight-medium);
-	color: var(--scalex-text-secondary);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--scalex-text-tertiary);
 	background: transparent;
 	border-bottom: 1px solid var(--scalex-separator);
 	white-space: nowrap;
 }
 
 .scalex-data-table tbody td {
-	padding: 11px 22px;
+	padding: 9px 18px;
 	border-bottom: 1px solid var(--scalex-separator);
 	color: var(--scalex-text);
 	vertical-align: middle;
@@ -399,7 +558,7 @@
 	font-family: var(--scalex-font-mono);
 	font-size: 11px;
 	font-variant-numeric: tabular-nums;
-	letter-spacing: -0.01em;
+	letter-spacing: 0;
 	overflow-wrap: anywhere;
 	white-space: nowrap;
 }
@@ -413,32 +572,37 @@
 
 .scalex-cell-sub {
 	color: var(--scalex-text-secondary);
+	font-family: var(--scalex-font-mono);
 	font-size: 10px;
 	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
 }
 
 .scalex-dim {
-	color: var(--scalex-text-secondary);
+	color: var(--scalex-text-tertiary);
 }
 
 .scalex-empty,
 .scalex-more,
 .scalex-map-empty {
-	padding: 18px 22px !important;
+	padding: 16px 18px !important;
 	margin: 0;
 	text-align: center;
-	color: var(--scalex-text-secondary);
+	color: var(--scalex-text-tertiary);
 	font-size: var(--scalex-size-xs);
 }
 
 .scalex-overview-note {
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-2xs);
-	line-height: 1.5;
+	margin-top: 2px;
+	padding: 0 2px;
+	color: var(--scalex-text-tertiary);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
+	line-height: 1.6;
+	letter-spacing: 0.01em;
 }
 
-/* Native LuCI panels below Echo/ScaleX overview */
+/* Native LuCI panels below the overview */
 .scalex-has-overview #maincontent > .cbi-map:first-of-type,
 .scalex-has-overview #maincontent > div > .cbi-map:first-of-type {
 	margin-top: 4px;
@@ -449,10 +613,10 @@
 }
 
 body.scalex-has-overview .cbi-section {
-	border-radius: 20px;
+	border-radius: var(--scalex-card-radius);
 }
 
-/* ── Status label: a dot and quiet text, never a colored pill ───────── */
+/* ── Status label: square marker + mono text ────────────────────────── */
 
 .label {
 	display: inline-flex;
@@ -462,22 +626,29 @@ body.scalex-has-overview .cbi-section {
 	border-radius: 0;
 	background: transparent !important;
 	color: var(--scalex-text-secondary) !important;
-	font-size: var(--scalex-size-2xs);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
 	font-weight: var(--scalex-weight-medium);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
 	white-space: nowrap;
 }
 
 .label::before {
 	content: "";
-	width: 6px;
-	height: 6px;
-	border-radius: 50%;
+	width: 5px;
+	height: 5px;
+	border-radius: 1px;
 	background: var(--scalex-text-quaternary);
 	flex-shrink: 0;
 }
 
 .label.success::before {
 	background: var(--scalex-success);
+}
+
+.label.success {
+	color: var(--scalex-success-text) !important;
 }
 
 .label.warning::before {
@@ -514,34 +685,16 @@ body.scalex-has-overview .cbi-section {
 }
 
 @media (max-width: 720px) {
-	.scalex-status {
-		align-items: flex-start;
-		flex-wrap: wrap;
-		gap: 16px;
-		padding: 22px 20px;
+	.scalex-link-grid {
+		grid-template-columns: 1fr;
 	}
 
-	.scalex-status-aside {
-		width: 100%;
-		padding: 13px 0 0;
-		border-left: 0;
-		border-top: 1px solid var(--scalex-separator);
-		gap: 22px;
+	.scalex-link {
+		padding: 14px 16px 15px;
 	}
 
-	.scalex-status-icon {
-		width: 58px;
-		height: 58px;
-		border-radius: 17px;
-	}
-
-	.scalex-status-icon .scalex-symbol {
-		width: 28px;
-		height: 28px;
-	}
-
-	.scalex-status-title {
-		font-size: 22px;
+	.scalex-link-value {
+		font-size: var(--scalex-size-lg);
 	}
 
 	.scalex-network-grid {
@@ -556,20 +709,29 @@ body.scalex-has-overview .cbi-section {
 
 @media (max-width: 640px) {
 	.scalex-overview {
-		gap: 14px;
+		gap: 10px;
+	}
+
+	.scalex-meta {
+		row-gap: 4px;
+		column-gap: 10px;
+	}
+
+	.scalex-meta-sep {
+		display: none;
 	}
 
 	.scalex-vital {
-		padding: 15px 18px;
+		padding: 12px 15px;
 	}
 
 	.scalex-vital-value {
-		font-size: 22px;
+		font-size: var(--scalex-size-lg);
 	}
 
 	.scalex-card-head,
 	.scalex-network-group {
-		padding-inline: 18px;
+		padding-inline: 15px;
 	}
 
 	.scalex-data-table thead {
@@ -585,7 +747,7 @@ body.scalex-has-overview .cbi-section {
 	}
 
 	.scalex-data-table tbody tr {
-		padding: 10px 18px;
+		padding: 9px 15px;
 		border-bottom: 1px solid var(--scalex-separator);
 	}
 
@@ -596,18 +758,20 @@ body.scalex-has-overview .cbi-section {
 	.scalex-data-table tbody td {
 		display: flex;
 		align-items: baseline;
-		justify-content: space-between;
-		gap: 16px;
+		gap: 12px;
 		padding: 3px 0;
 		border: 0;
-		text-align: right !important;
+		text-align: left !important;
 	}
 
 	.scalex-data-table tbody td::before {
 		content: attr(data-label);
-		flex: 0 0 40%;
-		color: var(--scalex-text-secondary);
-		font-size: var(--scalex-size-2xs);
+		flex: 0 0 64px;
+		color: var(--scalex-text-tertiary);
+		font-family: var(--scalex-font-mono);
+		font-size: 10px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
 		text-align: left;
 	}
 
@@ -617,6 +781,7 @@ body.scalex-has-overview .cbi-section {
 
 	.scalex-col-narrow {
 		width: auto;
+		text-align: left !important;
 	}
 
 	.scalex-col-narrow .label {

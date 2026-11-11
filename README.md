@@ -2,38 +2,38 @@
 
 [![Build IPK](https://github.com/Jas0n0ss/openwrt-theme-scalex/actions/workflows/build.yml/badge.svg)](https://github.com/Jas0n0ss/openwrt-theme-scalex/actions/workflows/build.yml)
 
-**ScaleX 4.0** — 一款贴近 Apple 视觉语言的 OpenWrt / LuCI 主题。
-玻璃顶部导航、居中的 Apple.com 式菜单、克制的状态面板与原生感移动端 Sheet。
+**ScaleX 5.0** — 一款简约极客风的 OpenWrt / LuCI 主题。
+纸面与墨色、单一信号绿、发丝分隔线、方角与等宽数字；首页第一屏直接给出 **WAN 与 LAN 的实时连接状态**。
 
-**当前版本：** `4.0.0`
+**当前版本：** `5.0.0`
 
-![ScaleX 4.0 浅色概览](docs/preview.jpg)
+![ScaleX 5.0 浅色概览](docs/preview.jpg)
 
 ---
 
-## 为什么是 ScaleX 4.0
+## 为什么是 ScaleX 5.0
 
 | 设计目标 | 实现 |
 |----------|------|
-| **一眼看懂网络状态** | 首屏状态面板给出 WAN / Wi-Fi / 客户端摘要，四项 Vitals 收进同一条面板 |
-| **Apple 式层级** | 32px 页面标题、28px 状态标题、20px 连续圆角、发丝分隔线、唯一强调色 |
-| **只在功能层使用玻璃** | 顶部导航、L2 菜单和移动 Sheet 使用 Liquid Glass；内容卡片保持不透明，优先保证可读性 |
+| **首页先看链路** | WAN / LAN 双卡并排首屏：连接状态、地址、ISP 网关、在线时长、实时上下行，LAN 另有客户端数与端口占用 |
+| **简约极客** | 单一信号绿、2–8px 方角、等宽数据字体、点阵画布、发丝分隔线；没有玻璃、渐变、彩色光斑与投影 |
+| **信息密度** | 顶部一行系统状态（ONLINE / 主机名 / 固件 / 运行时间），四格指标（CPU / MEM / UP / CLIENTS），端口与射频一览 |
 | **真正可用的移动端** | ≤900px 保留顶部品牌栏与菜单按钮；L2 变成标题下的分段控件，完整导航进入 Sheet，焦点陷阱、Escape、触控目标 ≥44px |
-| **完整深色模式** | Auto / Light / Dark 三态；深色不是反色，使用独立表面与文字层级 |
+| **完整深色模式** | Auto / Light / Dark 三态；深色是独立的纸面与墨色，不是简单反色 |
 | **不牺牲 LuCI 功能** | 保留 Bootstrap CBI / 表格 / 表单底座，第三方插件通过 `ui-scalex.js` 自动适配 |
 | **可访问** | 跳过导航、可见焦点、键盘可操作菜单、`prefers-reduced-motion`、`prefers-reduced-transparency`、表格移动端重排 |
 
 **深色模式**
 
-![ScaleX 4.0 深色概览](docs/preview-dark.jpg)
+![ScaleX 5.0 深色概览](docs/preview-dark.jpg)
 
 **登录页**
 
-![ScaleX 4.0 登录页](docs/login.jpg)
+![ScaleX 5.0 登录页](docs/login.jpg)
 
 **移动端**
 
-<img src="docs/preview-mobile.jpg" alt="ScaleX 4.0 移动端" width="320">
+<img src="docs/preview-mobile.jpg" alt="ScaleX 5.0 移动端" width="320">
 
 ---
 
@@ -54,8 +54,8 @@
 |------|------|
 | OpenWrt 24.10 x86_64 rootfs + `uhttpd` + `ucode`（Docker/QEMU） | ✅ IPK 安装、登录页、静态资源、ucode 模板 |
 | Chromium（Playwright / Chrome） | ✅ 8 个宽度、顶部导航 + L2 菜单、主题切换、移动 Sheet |
-| WebKit 27.2（Safari 引擎） | ✅ 8 个宽度、顶部导航 + L2 菜单、主题切换、移动 Sheet |
-| Firefox 157（Linux Playwright 容器） | ✅ 8 个宽度、桌面/移动布局、L2 菜单、Sheet、无溢出 |
+| WebKit 27.2（Safari 引擎） | ⚠️ 4.0 通过，5.0 未重跑 |
+| Firefox 157（Linux Playwright 容器） | ⚠️ 4.0 通过，5.0 未重跑 |
 | LEDE 18.06 静态壳层 | ✅ 顶部导航、L2 菜单、主题切换、Sheet（fixture） |
 | 物理路由器 | ⚠️ 未覆盖 |
 
@@ -70,8 +70,8 @@
 从 [Releases](https://github.com/Jas0n0ss/openwrt-theme-scalex/releases) 下载：
 
 ```sh
-opkg install luci-theme-scalex_4.0.0-1_all.ipk
-opkg install luci-app-scalex-config_4.0.0-1_all.ipk
+opkg install luci-theme-scalex_5.0.0-1_all.ipk
+opkg install luci-app-scalex-config_5.0.0-1_all.ipk
 
 uci set luci.main.mediaurlbase='/luci-static/scalex'
 uci commit luci
@@ -109,30 +109,33 @@ uci commit luci
 
 ### 升级后仍然看到旧布局？
 
-4.0 的桌面和手机都使用**顶部导航**：桌面是居中横向菜单 + L2 玻璃下拉；手机是顶部品牌栏 + 菜单按钮 + Sheet。
+5.0 沿用顶部导航结构，但视觉换成了极客风：桌面是居中横向文本菜单 + 实心 L2 下拉；手机是顶部品牌栏 + 菜单按钮 + Sheet。首页首屏为 WAN / LAN 双卡。
 
 ```sh
 opkg list-installed | grep scalex
-# 应显示 luci-theme-scalex 4.0.0-1 / luci-app-scalex-config 4.0.0-1
+# 应显示 luci-theme-scalex 5.0.0-1 / luci-app-scalex-config 5.0.0-1
 
 uci get luci.main.mediaurlbase
 # 应为 /luci-static/scalex
 ```
 
-- 如果看到侧边栏或底部 Tab Bar，说明仍是 3.1 / 3.0 包；升级到 4.0.0。
+- 如果看到侧边栏或底部 Tab Bar，说明仍是 3.1 / 3.0 包；升级到 5.0.0。
 - 浏览器缓存：`Cmd/Ctrl + Shift + R`，或开发者工具禁用缓存后刷新。
-- LEDE 18.06：预编译 IPK 面向 23.05+；18.06 需要从源码编译，4.0 的 Lua 模板也已改为顶部导航。
-- 页面底部会显示 `ScaleX 4.0.0`；确认版本号后再判断布局。
+- LEDE 18.06：预编译 IPK 面向 23.05+；18.06 需要从源码编译，5.0 的 Lua 模板同样沿用顶部导航壳层。
+- 页面底部会显示 `ScaleX 5.0.0`；确认版本号后再判断布局。
 
 ## 主题配置
 
-**System → ScaleX Theme**，或使用 UCI：
+**System → ScaleX Theme**，或使用 UCI。强调色留空即使用默认信号绿，无需手动写入：
+
+<img src="docs/settings.jpg" alt="ScaleX 5.0 主题设置" width="720">
+
 
 ```sh
-uci set scalex.global.primary='#0071E3'
-uci set scalex.global.dark_primary='#0A84FF'
+uci set scalex.global.primary='#0A8F4D'
+uci set scalex.global.dark_primary='#2ED97C'
 uci set scalex.global.font_size='16'
-uci set scalex.global.background_mode='gradient'   # gradient | none | custom
+uci set scalex.global.background_mode='dots'       # dots（点阵，默认）| none（纯色）| custom（自定义图片）
 uci set scalex.global.dashboard='1'
 uci commit scalex
 ```
@@ -150,7 +153,7 @@ uci commit scalex
 
 - `概览` / `主题设置` / `登录` 三个视图
 - 右下角浮层可切换视图
-- `?clean=1` 隐藏浮层，用于截图
+- `?clean=1` 隐藏浮层，`?theme=light|dark` 固定外观，`?view=login|settings` 直达视图，用于截图
 - 支持 `localStorage` 主题偏好
 
 ---

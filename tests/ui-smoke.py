@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ScaleX 4.0 browser smoke test.
+"""ScaleX 5.0 browser smoke test.
 
 Run against the static demo:
     python tests/ui-smoke.py --base-url http://127.0.0.1:9080/demo/ --channel chrome
@@ -109,14 +109,39 @@ def main() -> int:
         page.wait_for_timeout(120)
         check(page.evaluate("document.documentElement.dataset.theme") == "dark", "dark mode not applied")
         check(
-            page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgb(0, 0, 0)",
-            "dark canvas is not black",
+            page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgb(8, 8, 10)",
+            "dark canvas is not ink black",
         )
         page.click('[data-theme-mode="light"]')
         page.wait_for_timeout(120)
         check(page.evaluate("document.documentElement.dataset.theme") == "light", "light mode not applied")
         page.goto(clean, wait_until="load")
         page.wait_for_timeout(300)
+
+        # WAN / LAN links must lead the overview
+        wan = page.locator("#demo-wan-card")
+        lan = page.locator("#demo-lan-card")
+        check(wan.is_visible() and lan.is_visible(), "WAN / LAN link cards are missing")
+        wan_box = wan.bounding_box()
+        lan_box = lan.bounding_box()
+        vitals_box = page.locator(".scalex-vitals").bounding_box()
+        check(
+            wan_box and lan_box and vitals_box and wan_box["y"] < vitals_box["y"],
+            "WAN / LAN cards are not above the vitals",
+        )
+        check(
+            wan_box["y"] < 900,
+            "WAN card is not in the first screen",
+        )
+        check(
+            page.locator("#demo-wan-card .scalex-link-state").inner_text().strip() == "UP",
+            "WAN state text is missing",
+        )
+        check(
+            page.locator("#demo-wan-card .scalex-link-facts .scalex-fact").count() >= 4,
+            "WAN card facts are incomplete",
+        )
+
         page.screenshot(path=str(ARTIFACTS / "desktop-light.png"), full_page=True)
         page.click('[data-theme-mode="dark"]')
         page.wait_for_timeout(200)
@@ -129,6 +154,15 @@ def main() -> int:
         page.goto(clean, wait_until="load")
         check(page.is_visible("#scalex-menu-btn"), "mobile menu button is hidden")
         check(not page.is_visible("#top-nav"), "desktop top navigation should be hidden on mobile")
+        check(
+            page.locator("#demo-wan-card").bounding_box()["width"] <= 390,
+            "mobile WAN card overflows the viewport",
+        )
+        check(
+            page.locator("#demo-lan-card").bounding_box()["y"]
+            > page.locator("#demo-wan-card").bounding_box()["y"],
+            "mobile LAN card is not stacked under WAN",
+        )
         page.click("#scalex-menu-btn")
         page.wait_for_timeout(450)
         check("is-open" in (page.locator("#scalex-sheet").get_attribute("class") or ""), "sheet did not open")
@@ -153,12 +187,12 @@ def main() -> int:
         button_bg = page.eval_on_selector(
             "#demo-login-btn", "el => getComputedStyle(el).backgroundColor"
         )
-        check(button_bg == "rgb(0, 113, 227)", f"login button is not accent blue: {button_bg}")
+        check(button_bg == "rgb(10, 143, 77)", f"login button is not signal green: {button_bg}")
         check(page.is_visible("#view-login .theme-switch"), "login appearance switch is hidden")
         page.click('#view-login [data-theme-mode="dark"]')
         page.wait_for_timeout(150)
         check(
-            page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgb(0, 0, 0)",
+            page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgb(8, 8, 10)",
             "login dark mode did not apply",
         )
         page.click('#view-login [data-theme-mode="light"]')

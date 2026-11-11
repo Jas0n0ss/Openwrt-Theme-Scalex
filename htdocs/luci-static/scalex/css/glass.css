@@ -1,47 +1,10 @@
-/* ScaleX 4.0 — Liquid Glass on the functional layer only.
+/* ScaleX 5.0 — No translucency. Menus and the sheet are opaque panels.
  *
- * The top bar, dropdown menus and sheet are the only translucent surfaces.
- * Content cards stay opaque so text contrast never depends on the wallpaper.
+ * Glass was the 4.0 signature; the geek direction replaces it with a
+ * hairline rule and a solid surface. This file remains as the single
+ * place to reintroduce a translucent layer if a future design needs it.
  */
-
-#scalex-topbar,
-.scalex-sheet {
-	background: var(--scalex-glass-bg);
-	-webkit-backdrop-filter: blur(24px) saturate(180%);
-	backdrop-filter: blur(24px) saturate(180%);
-	box-shadow: 0 1px 0 var(--scalex-glass-highlight) inset;
-}
-
-#scalex-topbar {
-	border-bottom: 1px solid var(--scalex-separator);
-}
-
-.top-nav-menu,
-.scalex-sheet {
-	background: var(--scalex-glass-bg-strong);
-	-webkit-backdrop-filter: blur(30px) saturate(190%);
-	backdrop-filter: blur(30px) saturate(190%);
-	box-shadow: var(--scalex-shadow-popover), 0 1px 0 var(--scalex-glass-highlight) inset;
-}
 
 .scalex-scrim {
 	background: var(--scalex-scrim);
-}
-
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-	#scalex-topbar,
-	.top-nav-menu,
-	.scalex-sheet {
-		background: var(--scalex-bg-elevated);
-	}
-}
-
-@media (prefers-reduced-transparency: reduce) {
-	#scalex-topbar,
-	.top-nav-menu,
-	.scalex-sheet {
-		background: var(--scalex-bg-elevated);
-		-webkit-backdrop-filter: none;
-		backdrop-filter: none;
-	}
 }

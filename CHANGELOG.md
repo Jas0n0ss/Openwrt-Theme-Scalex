@@ -1,5 +1,35 @@
 # Changelog
 
+## 5.0.0 — 2026-11-11
+
+Turned the Apple / Liquid Glass direction into a minimal geek console, and made WAN / LAN the first thing the overview answers.
+
+### Added
+
+- Overview: a monospaced system line (`ONLINE / hostname / firmware / uptime`) replaces the old hero panel.
+- Overview: WAN and LAN link cards sit above everything else — state, address, protocol, ISP gateway, link uptime, live down/up traffic, LAN client count and port occupancy.
+- Overview: interface table now shows `↓ rx · ↑ up` under each address; status shown as a mono label instead of a pill.
+- `dashboard-scalex.js`: `buildMeta`, `buildLinks`, `linkCard`, `setLinkState`, `renderLink`, `pickIface`, `ifaceAddress`, `ifaceGateway`, `protocolLabel`, `updateMeta`, `renderInterfaces`; old `buildStatus` helpers removed.
+- zh_Hans strings for the new link vocabulary.
+
+### Changed
+
+- Design tokens: single signal green (`#0A8F4D` / `#2ED97C`), ink greys, 2–8px radii, mono data font, 24px dot-grid canvas, no shadows, no glass.
+- Shell: solid 48px top bar with a hairline rule; square L2 menus; segmented tabs; mono brand and footer; smaller page title.
+- Overview: hairline cards, mono uppercase section labels, 5px square status dots, mono numeric values.
+- Components: bordered cards, square toggles (38×22), outline buttons, mono table heads, label badges without fill.
+- Login: flat 380px panel on the dot grid; colour blobs removed.
+- Brand mark: monochrome disc with a signal-green dot.
+- Demo: rebuilt overview markup, flat toolbar, `?theme=` and `?view=` preview parameters.
+- Config: `background_mode` is now `dots` (default) / `none` / `custom`; accent fields can be left empty.
+- Docs: README / DESIGN rewritten; version bumped to 5.0.0 everywhere.
+
+### Removed
+
+- Liquid Glass surfaces (`backdrop-filter`) from the top bar, menus and sheet; `glass.css` now only holds the scrim.
+- Coloured blobs on the login page, gradient canvas, squircle corners, iOS-style round switches.
+- Hard-coded `#0071e3` / `#0a84ff` injection from `header.ut`: the accent layer is now emitted only when a colour is actually configured.
+
 ## 4.0.0 — 2026-11-10
 
 Returned primary navigation to the top, Apple.com style.

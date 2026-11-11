@@ -5,7 +5,7 @@
 
 include $(TOPDIR)/rules.mk
 
-LUCI_TITLE:=ScaleX 4.0 - Apple-inspired Liquid Glass theme for LuCI
+LUCI_TITLE:=ScaleX 5.0 - Minimal geek theme for LuCI with WAN/LAN overview
 LUCI_DEPENDS:=+luci-theme-bootstrap
 PKG_VERSION:=$(shell cat $(CURDIR)/ucode/template/themes/scalex/version 2>/dev/null | tr -d '[:space:]' || echo 1.0.0)
 PKG_RELEASE:=1

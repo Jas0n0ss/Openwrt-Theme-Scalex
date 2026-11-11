@@ -4,7 +4,7 @@
 'require menu-bootstrap-core as ScaleXMenu';
 
 /*
- * ScaleX 4.0 navigation — Apple.com-style horizontal top bar.
+ * ScaleX 5.0 navigation — Apple.com-style horizontal top bar.
  *
  * L1 lives in the top bar. Items with children open a glass L2 menu on
  * hover, focus or touch. Phones use the same tree in a bottom sheet.

@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#f2f2f7" id="meta-theme-color">
+  <meta name="theme-color" content="#f7f7f8" id="meta-theme-color">
   <link rel="icon" href="../htdocs/luci-static/scalex/img/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../htdocs/luci-static/scalex/img/favicon.svg">
-  <title>ScaleX 4.0 — OpenWrt theme preview</title>
+  <title>ScaleX 5.0 — OpenWrt theme preview</title>
   <script>
   (function () {
     var mode = 'auto';
@@ -16,7 +16,7 @@
     var dark = mode === 'dark' || (mode === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
     document.documentElement.setAttribute('data-darkmode', dark ? 'true' : 'false');
     var meta = document.getElementById('meta-theme-color');
-    if (meta) meta.setAttribute('content', dark ? '#000000' : '#f2f2f7');
+    if (meta) meta.setAttribute('content', dark ? '#08080a' : '#f7f7f8');
   })();
   </script>
   <link rel="stylesheet" href="../htdocs/luci-static/scalex/css/scalex.css">
@@ -72,66 +72,100 @@
     <div id="scalex-content-wrap">
       <main id="maincontent" tabindex="-1">
         <div id="scalex-overview" class="scalex-overview">
-          <section class="scalex-status" aria-labelledby="scalex-status-title">
-            <div class="scalex-status-icon" aria-hidden="true"><span class="scalex-symbol scalex-symbol-router"></span></div>
-            <div class="scalex-status-copy">
-              <p class="scalex-kicker">网络</p>
-              <h2 class="scalex-status-title" id="scalex-status-title" aria-live="polite">一切正常</h2>
-              <p class="scalex-status-sub" id="scalex-status-sub">ScaleX Router · OpenWrt 24.10 · 已运行 3 天</p>
+          <div class="scalex-meta">
+            <span class="scalex-meta-state"><span class="scalex-dot"></span><span id="demo-meta-state">ONLINE</span></span>
+            <span class="scalex-meta-sep">/</span>
+            <span class="scalex-meta-item">ScaleX-Router</span>
+            <span class="scalex-meta-sep">/</span>
+            <span class="scalex-meta-item is-dim">OpenWrt 24.10</span>
+            <span class="scalex-meta-sep">/</span>
+            <span class="scalex-meta-item is-dim">UP 3D 14H</span>
+          </div>
+
+          <section class="scalex-links" aria-label="WAN 与 LAN 连接">
+            <div class="scalex-section-head">
+              <h2 class="scalex-section-title">Links</h2>
+              <span class="scalex-section-note">Live · 10s</span>
             </div>
-            <div class="scalex-status-aside">
-              <span class="scalex-status-item"><span class="scalex-dot"></span><span>WAN</span><strong>在线</strong></span>
-              <span class="scalex-status-item"><span class="scalex-dot"></span><span>Wi-Fi</span><strong>3/3</strong></span>
-              <span class="scalex-status-item"><span class="scalex-dot"></span><span>客户端</span><strong>3</strong></span>
+            <div class="scalex-link-grid">
+              <article class="scalex-link is-up" id="demo-wan-card">
+                <div class="scalex-link-head">
+                  <span class="scalex-link-tag">WAN</span>
+                  <span class="scalex-link-state"><span class="scalex-dot"></span><span>UP</span></span>
+                </div>
+                <div class="scalex-link-value">203.0.113.42/32</div>
+                <div class="scalex-link-sub">wan · PPPoE · eth0</div>
+                <dl class="scalex-link-facts">
+                  <div class="scalex-fact"><dt>网关</dt><dd>203.0.113.1</dd></div>
+                  <div class="scalex-fact"><dt>在线</dt><dd>18h 42m</dd></div>
+                  <div class="scalex-fact"><dt>下行</dt><dd id="demo-wan-rx">18.2 GB</dd></div>
+                  <div class="scalex-fact"><dt>上行</dt><dd id="demo-wan-tx">6.4 GB</dd></div>
+                </dl>
+              </article>
+
+              <article class="scalex-link is-up" id="demo-lan-card">
+                <div class="scalex-link-head">
+                  <span class="scalex-link-tag">LAN</span>
+                  <span class="scalex-link-state"><span class="scalex-dot"></span><span>UP</span></span>
+                </div>
+                <div class="scalex-link-value">192.168.1.1/24</div>
+                <div class="scalex-link-sub">lan · Static · br-lan</div>
+                <dl class="scalex-link-facts">
+                  <div class="scalex-fact"><dt>客户端</dt><dd id="demo-lan-clients">3</dd></div>
+                  <div class="scalex-fact"><dt>端口</dt><dd id="demo-lan-ports">4/5</dd></div>
+                  <div class="scalex-fact"><dt>下行</dt><dd id="demo-lan-rx">42.1 GB</dd></div>
+                  <div class="scalex-fact"><dt>上行</dt><dd id="demo-lan-tx">38.5 GB</dd></div>
+                </dl>
+              </article>
             </div>
           </section>
 
           <section class="scalex-vitals" aria-label="系统状态">
             <div class="scalex-vital">
-              <span class="scalex-vital-label"><span class="scalex-symbol scalex-symbol-cpu" aria-hidden="true"></span><span>CPU</span></span>
+              <span class="scalex-vital-label"><span class="scalex-symbol scalex-symbol-cpu" aria-hidden="true"></span><span>CPU Load</span></span>
               <strong class="scalex-vital-value" id="demo-vital-cpu">0.42</strong>
-              <span class="scalex-vital-note" id="demo-vital-cpu-note">5 分钟 0.38 · 15 分钟 0.35</span>
+              <span class="scalex-vital-note" id="demo-vital-cpu-note">5M 0.38 · 15M 0.35</span>
             </div>
             <div class="scalex-vital">
-              <span class="scalex-vital-label"><span class="scalex-symbol scalex-symbol-memory" aria-hidden="true"></span><span>内存</span></span>
+              <span class="scalex-vital-label"><span class="scalex-symbol scalex-symbol-memory" aria-hidden="true"></span><span>MEM</span></span>
               <strong class="scalex-vital-value" id="demo-vital-memory">58%</strong>
               <span class="scalex-vital-note" id="demo-vital-memory-note">148 MB / 256 MB</span>
               <div class="scalex-vital-meter" aria-hidden="true"><span id="demo-vital-memory-bar" style="width:58%"></span></div>
             </div>
             <div class="scalex-vital">
-              <span class="scalex-vital-label"><span class="scalex-symbol scalex-symbol-clock" aria-hidden="true"></span><span>运行时间</span></span>
-              <strong class="scalex-vital-value">3 天 14 小时</strong>
-              <span class="scalex-vital-note">自上次启动</span>
+              <span class="scalex-vital-label"><span class="scalex-symbol scalex-symbol-clock" aria-hidden="true"></span><span>UP</span></span>
+              <strong class="scalex-vital-value">3D 14H</strong>
+              <span class="scalex-vital-note">since last boot</span>
             </div>
             <div class="scalex-vital">
-              <span class="scalex-vital-label"><span class="scalex-symbol scalex-symbol-devices" aria-hidden="true"></span><span>客户端</span></span>
+              <span class="scalex-vital-label"><span class="scalex-symbol scalex-symbol-devices" aria-hidden="true"></span><span>CLIENTS</span></span>
               <strong class="scalex-vital-value" id="demo-vital-clients">3</strong>
-              <span class="scalex-vital-note">活跃设备</span>
+              <span class="scalex-vital-note">active leases</span>
             </div>
           </section>
 
           <section class="scalex-card scalex-network">
             <div class="scalex-card-head">
-              <div class="scalex-card-title"><span class="scalex-symbol scalex-symbol-port" aria-hidden="true"></span><span>网络</span></div>
-              <span class="scalex-live"><span class="scalex-dot"></span><span>实时</span></span>
+              <div class="scalex-card-title"><span class="scalex-symbol scalex-symbol-port" aria-hidden="true"></span><span>Ports &amp; Radios</span></div>
+              <span class="scalex-live"><span class="scalex-dot"></span><span>Live</span></span>
             </div>
             <div class="scalex-network-grid">
               <div class="scalex-network-group scalex-network-ports">
-                <div class="scalex-group-label">端口</div>
+                <div class="scalex-group-label">Ports</div>
                 <div>
-                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-row-name">WAN</span><span class="scalex-row-meta">2.5G</span><span class="scalex-row-role">广域网</span></div>
-                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-row-name">LAN1</span><span class="scalex-row-meta">1G</span><span class="scalex-row-role">局域网</span></div>
-                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-row-name">LAN2</span><span class="scalex-row-meta">1G</span><span class="scalex-row-role">局域网</span></div>
-                  <div class="scalex-row"><span class="scalex-dot is-off"></span><span class="scalex-row-name">LAN3</span><span class="scalex-row-meta">1G</span><span class="scalex-row-role">局域网</span></div>
-                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-row-name">10G</span><span class="scalex-row-meta">10G</span><span class="scalex-row-role">局域网</span></div>
+                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-row-name">WAN</span><span class="scalex-row-meta">2.5G</span><span class="scalex-row-role">wan</span></div>
+                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-row-name">LAN1</span><span class="scalex-row-meta">1G</span><span class="scalex-row-role">lan</span></div>
+                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-row-name">LAN2</span><span class="scalex-row-meta">1G</span><span class="scalex-row-role">lan</span></div>
+                  <div class="scalex-row"><span class="scalex-dot is-off"></span><span class="scalex-row-name">LAN3</span><span class="scalex-row-meta">1G</span><span class="scalex-row-role">lan</span></div>
+                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-row-name">10G</span><span class="scalex-row-meta">10G</span><span class="scalex-row-role">lan</span></div>
                 </div>
               </div>
               <div class="scalex-network-group scalex-network-wifi">
-                <div class="scalex-group-label">Wi-Fi</div>
+                <div class="scalex-group-label">Radios</div>
                 <div>
-                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-wifi-band">2.4 GHz</span><span class="scalex-wifi-ssid">ScaleX</span><span class="scalex-wifi-gen">Wi-Fi 4</span><span class="scalex-row-status">1 个接入点</span></div>
-                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-wifi-band">5 GHz</span><span class="scalex-wifi-ssid">ScaleX-5G</span><span class="scalex-wifi-gen">Wi-Fi 6</span><span class="scalex-row-status">1 个接入点</span></div>
-                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-wifi-band">6 GHz</span><span class="scalex-wifi-ssid">ScaleX-6G</span><span class="scalex-wifi-gen">Wi-Fi 7</span><span class="scalex-row-status">1 个接入点</span></div>
+                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-wifi-band">2.4 GHz</span><span class="scalex-wifi-ssid">ScaleX</span><span class="scalex-wifi-gen">Wi-Fi 4</span><span class="scalex-row-status">1 SSID</span></div>
+                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-wifi-band">5 GHz</span><span class="scalex-wifi-ssid">ScaleX-5G</span><span class="scalex-wifi-gen">Wi-Fi 6</span><span class="scalex-row-status">1 SSID</span></div>
+                  <div class="scalex-row"><span class="scalex-dot"></span><span class="scalex-wifi-band">6 GHz</span><span class="scalex-wifi-ssid">ScaleX-6G</span><span class="scalex-wifi-gen">Wi-Fi 7</span><span class="scalex-row-status">1 SSID</span></div>
                 </div>
               </div>
             </div>
@@ -139,20 +173,20 @@
 
           <div class="scalex-grid">
             <section class="scalex-card scalex-panel">
-              <div class="scalex-card-head"><div class="scalex-card-title"><span class="scalex-symbol scalex-symbol-globe" aria-hidden="true"></span><span>接口</span></div></div>
+              <div class="scalex-card-head"><div class="scalex-card-title"><span class="scalex-symbol scalex-symbol-globe" aria-hidden="true"></span><span>Interfaces</span></div></div>
               <table class="scalex-data-table">
                 <caption class="scalex-sr-only">网络接口</caption>
                 <thead><tr><th scope="col">接口</th><th scope="col">地址</th><th scope="col" class="scalex-col-narrow">状态</th></tr></thead>
                 <tbody>
-                  <tr><td data-label="接口"><strong>wan</strong></td><td data-label="地址"><div class="scalex-address"><span class="scalex-mono">203.0.113.42</span><small class="scalex-cell-sub">↓ 18.2 GB · ↑ 6.4 GB</small></div></td><td data-label="状态" class="scalex-col-narrow"><span class="label success">在线</span></td></tr>
-                  <tr><td data-label="接口"><strong>lan</strong></td><td data-label="地址"><div class="scalex-address"><span class="scalex-mono">192.168.1.1/24</span><small class="scalex-cell-sub">↓ 42.1 GB · ↑ 38.5 GB</small></div></td><td data-label="状态" class="scalex-col-narrow"><span class="label success">在线</span></td></tr>
-                  <tr><td data-label="接口"><strong>wlan0</strong></td><td data-label="地址"><div class="scalex-address"><span class="scalex-mono">192.168.1.1/24</span><small class="scalex-cell-sub">↓ 7.8 GB · ↑ 1.9 GB</small></div></td><td data-label="状态" class="scalex-col-narrow"><span class="label success">在线</span></td></tr>
+                  <tr><td data-label="接口"><strong>wan</strong></td><td data-label="地址"><div class="scalex-address"><span class="scalex-mono">203.0.113.42/32</span><small class="scalex-cell-sub">↓ 18.2 GB · ↑ 6.4 GB</small></div></td><td data-label="状态" class="scalex-col-narrow"><span class="label success">Online</span></td></tr>
+                  <tr><td data-label="接口"><strong>lan</strong></td><td data-label="地址"><div class="scalex-address"><span class="scalex-mono">192.168.1.1/24</span><small class="scalex-cell-sub">↓ 42.1 GB · ↑ 38.5 GB</small></div></td><td data-label="状态" class="scalex-col-narrow"><span class="label success">Online</span></td></tr>
+                  <tr><td data-label="接口"><strong>wlan0</strong></td><td data-label="地址"><div class="scalex-address"><span class="scalex-mono">192.168.1.1/24</span><small class="scalex-cell-sub">↓ 7.8 GB · ↑ 1.9 GB</small></div></td><td data-label="状态" class="scalex-col-narrow"><span class="label success">Online</span></td></tr>
                 </tbody>
               </table>
             </section>
 
             <section class="scalex-card scalex-panel">
-              <div class="scalex-card-head"><div class="scalex-card-title"><span class="scalex-symbol scalex-symbol-devices" aria-hidden="true"></span><span>客户端</span></div></div>
+              <div class="scalex-card-head"><div class="scalex-card-title"><span class="scalex-symbol scalex-symbol-devices" aria-hidden="true"></span><span>Clients</span></div></div>
               <table class="scalex-data-table">
                 <caption class="scalex-sr-only">活跃 DHCP 客户端</caption>
                 <thead><tr><th scope="col">主机名</th><th scope="col">IP</th><th scope="col">MAC</th></tr></thead>
@@ -165,7 +199,7 @@
             </section>
           </div>
 
-          <p class="scalex-overview-note">核心状态一览。下方为 LuCI 原生详细指标（Demo 模拟）。</p>
+          <p class="scalex-overview-note">WAN / LAN 优先，其余指标在后。下方为 LuCI 原生区块（Demo 模拟）。</p>
         </div>
 
         <div id="demo-native-section">
@@ -186,13 +220,13 @@
           <section class="cbi-section">
             <div class="cbi-section-head">外观</div>
             <div class="cbi-value"><label class="cbi-value-title" for="cfg-model">路由器名称</label><div class="cbi-value-field"><input class="cbi-input-text" type="text" id="cfg-model" value="ScaleX-Router"></div></div>
-            <div class="cbi-value"><label class="cbi-value-title" for="cfg-primary">强调色</label><div class="cbi-value-field"><input class="cbi-color-well" type="color" id="cfg-primary" value="#0071e3"></div><div class="cbi-value-description">用于主要操作、焦点环和状态亮点。</div></div>
+            <div class="cbi-value"><label class="cbi-value-title" for="cfg-primary">强调色</label><div class="cbi-value-field"><input class="cbi-color-well" type="color" id="cfg-primary" value="#0a8f4d"></div><div class="cbi-value-description">用于主要操作、焦点环和状态亮点。</div></div>
             <div class="cbi-value"><label class="cbi-value-title" for="cfg-dashboard">仪表盘</label><div class="cbi-value-field"><label class="cbi-switch"><input type="checkbox" id="cfg-dashboard" checked><span class="cbi-switch-track" aria-hidden="true"></span><span class="cbi-switch-label">在概览页显示状态面板</span></label></div></div>
           </section>
 
           <section class="cbi-section">
             <div class="cbi-section-head">背景</div>
-            <div class="cbi-value"><label class="cbi-value-title" for="cfg-bg">样式</label><div class="cbi-value-field"><select class="cbi-input-select" id="cfg-bg"><option value="gradient">柔和渐变</option><option value="none">纯色</option><option value="custom">自定义图片</option></select></div><div class="cbi-value-description">自定义图片请放置于 /www/luci-static/scalex/background/bg.jpg。</div></div>
+            <div class="cbi-value"><label class="cbi-value-title" for="cfg-bg">样式</label><div class="cbi-value-field"><select class="cbi-input-select" id="cfg-bg"><option value="dots">点阵（默认）</option><option value="none">纯色</option><option value="custom">自定义图片</option></select></div><div class="cbi-value-description">自定义图片请放置于 /www/luci-static/scalex/background/bg.jpg。</div></div>
             <div class="settings-actions"><button class="cbi-button cbi-button-reset" type="button" id="cfg-cancel">取消</button><button class="cbi-button cbi-button-apply" id="cfg-apply" type="button">保存并应用</button></div>
           </section>
         </div>
@@ -201,7 +235,7 @@
 
     <footer id="scalex-footer">
       <div class="footer-inner">
-        <div class="footer-group"><span>ScaleX 4.0.0</span><span class="footer-dot" aria-hidden="true"></span><a class="footer-link" href="https://openwrt.org" target="_blank" rel="noopener noreferrer">OpenWrt</a></div>
+        <div class="footer-group"><span>ScaleX 5.0.0</span><span class="footer-dot" aria-hidden="true"></span><a class="footer-link" href="https://openwrt.org" target="_blank" rel="noopener noreferrer">OpenWrt</a></div>
         <div class="footer-group"><a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-scalex" target="_blank" rel="noopener noreferrer">主题源码</a><span class="footer-dot" aria-hidden="true"></span><a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-scalex/releases" target="_blank" rel="noopener noreferrer">版本发布</a></div>
       </div>
     </footer>
@@ -228,7 +262,7 @@
       <div class="cbi-value"><label class="cbi-value-title" for="demo-pass">密码</label><div class="cbi-value-field"><div class="scalex-password-wrap"><input class="cbi-input-password" type="password" id="demo-pass" autocomplete="current-password"><button type="button" class="scalex-password-toggle" id="demo-password-toggle" aria-label="显示密码" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3.1"/></svg></button></div></div></div>
       <div class="cbi-page-actions"><button class="cbi-button cbi-button-apply" type="button" id="demo-login-btn">登录</button></div>
     </form>
-    <div class="scalex-login-footer"><div class="scalex-login-hint"><span class="scalex-symbol scalex-symbol-shield" aria-hidden="true"></span><span>由 OpenWrt 保护</span></div><div style="margin-top:8px"><a class="footer-link" href="https://openwrt.org" target="_blank" rel="noopener noreferrer">OpenWrt</a><span class="footer-dot" aria-hidden="true" style="display:inline-block;margin:0 6px;vertical-align:middle"></span><a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-scalex" target="_blank" rel="noopener noreferrer">ScaleX 4.0.0</a></div></div>
+    <div class="scalex-login-footer"><div class="scalex-login-hint"><span class="scalex-symbol scalex-symbol-shield" aria-hidden="true"></span><span>由 OpenWrt 保护</span></div><div style="margin-top:8px"><a class="footer-link" href="https://openwrt.org" target="_blank" rel="noopener noreferrer">OpenWrt</a><span class="footer-dot" aria-hidden="true" style="display:inline-block;margin:0 6px;vertical-align:middle"></span><a class="footer-link" href="https://github.com/Jas0n0ss/openwrt-theme-scalex" target="_blank" rel="noopener noreferrer">ScaleX 5.0.0</a></div></div>
   </main>
 </div>
 

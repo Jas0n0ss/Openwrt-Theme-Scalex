@@ -1,4 +1,4 @@
-/* ScaleX 4.0 — legacy (Lua/LuCI 18.06) interaction layer.
+/* ScaleX 5.0 — legacy (Lua/LuCI 18.06) interaction layer.
  * ES5 only: theme and the top-bar menu sheet. */
 (function () {
 	'use strict';

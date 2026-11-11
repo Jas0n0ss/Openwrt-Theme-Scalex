@@ -14,12 +14,14 @@ return view.extend({
 		s = m.section(form.NamedSection, 'global', 'global', _('Global Settings'));
 
 		o = s.option(form.Value, 'primary', _('Primary Color (Light)'),
-			_('Main accent color for light mode. Example: #0071e3'));
-		o.placeholder = '#0071E3';
+			_('Accent used for actions and selection in light mode. Leave empty for the default signal green. Example: #0a8f4d'));
+		o.placeholder = '#0A8F4D';
+		o.rmempty = true;
 
 		o = s.option(form.Value, 'dark_primary', _('Primary Color (Dark)'),
-			_('Main accent color for dark mode. Example: #0a84ff'));
-		o.placeholder = '#0a84ff';
+			_('Accent used in dark mode. Leave empty for the default signal green. Example: #2ed97c'));
+		o.placeholder = '#2ED97C';
+		o.rmempty = true;
 
 		o = s.option(form.ListValue, 'font_size', _('Base Font Size'));
 		o.value('14', '14px');
@@ -28,16 +30,17 @@ return view.extend({
 		o.value('17', '17px');
 
 		o = s.option(form.Flag, 'dashboard', _('Enable Dashboard Cards'),
-			_('Show the network hero, vitals and status panels on the Overview page.'));
+			_('Show the WAN / LAN link cards, vitals and port panels on the Overview page.'));
 		o.default = '1';
 		o.rmempty = false;
 
 		s = m.section(form.NamedSection, 'global', 'global', _('Background'));
 
 		o = s.option(form.ListValue, 'background_mode', _('Background Mode'));
-		o.value('gradient', _('Default gradient'));
+		o.value('dots', _('Dot grid (default)'));
+		o.value('none', _('Solid'));
 		o.value('custom', _('Custom image'));
-		o.value('none', _('None'));
+		o.default = 'dots';
 
 		o = s.option(form.DummyValue, '_bg_help', _('Custom Background'),
 			_('Place an image at /www/luci-static/scalex/background/bg.jpg (or .png/.webp) on the router, then select Custom image.'));

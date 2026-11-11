@@ -1,17 +1,18 @@
-/* ScaleX 4.0 — LuCI components: quieter grouped surfaces */
+/* ScaleX 5.0 — LuCI components: flat surfaces, hairline rules */
 
 /* ── Cards and sections ─────────────────────────────────────────────── */
 
 .cbi-map {
-	margin-bottom: var(--scalex-space-6);
+	margin-bottom: var(--scalex-space-5);
 }
 
 .cbi-section,
 .scalex-card {
-	margin-bottom: var(--scalex-space-5);
+	margin-bottom: var(--scalex-space-4);
+	border: 1px solid var(--scalex-separator);
 	background: var(--scalex-bg-elevated);
 	border-radius: var(--scalex-card-radius);
-	box-shadow: var(--scalex-shadow-card);
+	box-shadow: none;
 }
 
 .cbi-section {
@@ -25,6 +26,7 @@
 
 .cbi-section .cbi-section {
 	margin: var(--scalex-space-3) 0;
+	border-color: var(--scalex-separator);
 	background: var(--scalex-bg-inset);
 	box-shadow: none;
 }
@@ -35,12 +37,13 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: var(--scalex-space-3);
-	padding: 14px 20px;
+	padding: 11px 18px;
 	border-bottom: 1px solid var(--scalex-separator);
 	color: var(--scalex-text);
-	font-size: var(--scalex-size-base);
+	font-size: 11px;
 	font-weight: var(--scalex-weight-semibold);
-	letter-spacing: -0.012em;
+	letter-spacing: var(--scalex-tracking-label);
+	text-transform: uppercase;
 }
 
 .cbi-section-head:last-child {
@@ -164,8 +167,8 @@ select.cbi-input-select {
 	max-width: 460px;
 	min-height: 36px;
 	padding: 7px 11px;
-	border: 1px solid transparent;
-	border-radius: 9px;
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-radius-sm);
 	background: var(--scalex-bg-inset);
 	color: var(--scalex-text);
 	font-size: var(--scalex-size-sm);
@@ -235,19 +238,19 @@ select.cbi-input-select {
 	cursor: pointer;
 }
 
-/* Apple-style switch for LuCI flag fields. */
+/* Square toggle for LuCI flag fields. */
 .cbi-value-field input[type="checkbox"] {
 	position: relative;
-	width: 42px;
-	height: 26px;
+	width: 38px;
+	height: 22px;
 	min-height: 0;
 	margin: 0;
 	padding: 0;
 	appearance: none;
 	-webkit-appearance: none;
-	border: 0;
-	border-radius: var(--scalex-radius-pill);
-	background: var(--scalex-fill-strong);
+	border: 1px solid var(--scalex-separator-strong);
+	border-radius: var(--scalex-radius-sm);
+	background: var(--scalex-bg-inset);
 	cursor: pointer;
 	transition: background-color var(--scalex-duration-base) var(--scalex-ease-out);
 }
@@ -255,21 +258,23 @@ select.cbi-input-select {
 .cbi-value-field input[type="checkbox"]::after {
 	content: "";
 	position: absolute;
-	top: 3px;
-	left: 3px;
-	width: 20px;
-	height: 20px;
-	border-radius: 50%;
-	background: #ffffff;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.24), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
-	transition: transform var(--scalex-duration-base) var(--scalex-ease-spring);
+	top: 2px;
+	left: 2px;
+	width: 16px;
+	height: 16px;
+	border-radius: 2px;
+	background: var(--scalex-text-tertiary);
+	transition: transform var(--scalex-duration-fast) var(--scalex-ease-out),
+		background-color var(--scalex-duration-fast) var(--scalex-ease-out);
 }
 
 .cbi-value-field input[type="checkbox"]:checked {
-	background: var(--scalex-success);
+	border-color: var(--scalex-accent);
+	background: var(--scalex-accent);
 }
 
 .cbi-value-field input[type="checkbox"]:checked::after {
+	background: var(--scalex-on-accent);
 	transform: translateX(16px);
 }
 
@@ -344,13 +349,14 @@ select.cbi-input-select {
 	justify-content: center;
 	gap: 6px;
 	min-height: var(--scalex-control-height);
-	padding: 7px 14px;
-	border: 1px solid transparent;
-	border-radius: 9px;
-	background: var(--scalex-fill);
+	padding: 6px 13px;
+	border: 1px solid var(--scalex-separator-strong);
+	border-radius: var(--scalex-radius-sm);
+	background: transparent;
 	color: var(--scalex-text);
-	font-size: var(--scalex-size-sm);
+	font-size: var(--scalex-size-xs);
 	font-weight: var(--scalex-weight-semibold);
+	letter-spacing: 0.02em;
 	line-height: 1.2;
 	text-decoration: none;
 	cursor: pointer;
@@ -358,8 +364,7 @@ select.cbi-input-select {
 	transition:
 		background-color var(--scalex-duration-fast) var(--scalex-ease-out),
 		border-color var(--scalex-duration-fast) var(--scalex-ease-out),
-		color var(--scalex-duration-fast) var(--scalex-ease-out),
-		transform var(--scalex-duration-instant) var(--scalex-ease-out);
+		color var(--scalex-duration-fast) var(--scalex-ease-out);
 }
 
 .cbi-button:hover,
@@ -371,7 +376,7 @@ select.cbi-input-select {
 
 .cbi-button:active,
 .btn:active {
-	transform: scale(0.975);
+	background: var(--scalex-fill);
 }
 
 .cbi-button:focus-visible,
@@ -395,7 +400,7 @@ select.cbi-input-select {
 .btn-primary {
 	background: var(--scalex-accent);
 	border-color: var(--scalex-accent);
-	color: #ffffff;
+	color: var(--scalex-on-accent);
 }
 
 .cbi-button-save:hover,
@@ -405,7 +410,7 @@ select.cbi-input-select {
 .btn-primary:hover {
 	background: var(--scalex-accent-hover);
 	border-color: var(--scalex-accent-hover);
-	color: #ffffff;
+	color: var(--scalex-on-accent);
 }
 
 .cbi-page-actions .cbi-button-save,
@@ -415,14 +420,14 @@ select.cbi-input-select {
 .cbi-page-actions button.cbi-button-apply {
 	background: var(--scalex-accent);
 	border-color: var(--scalex-accent);
-	color: #ffffff;
+	color: var(--scalex-on-accent);
 }
 
 .cbi-page-actions .cbi-button-save:hover,
 .cbi-page-actions .cbi-button-apply:hover {
 	background: var(--scalex-accent-hover);
 	border-color: var(--scalex-accent-hover);
-	color: #ffffff;
+	color: var(--scalex-on-accent);
 }
 
 .cbi-button-reset,
@@ -551,19 +556,21 @@ table {
 }
 
 table thead th {
-	padding: 9px 16px;
+	padding: 7px 16px;
 	text-align: left;
-	font-size: var(--scalex-size-2xs);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
 	font-weight: var(--scalex-weight-medium);
-	letter-spacing: 0;
-	color: var(--scalex-text-secondary);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--scalex-text-tertiary);
 	background: transparent;
 	border-bottom: 1px solid var(--scalex-separator);
 	white-space: nowrap;
 }
 
 table tbody td {
-	padding: 12px 16px;
+	padding: 10px 16px;
 	border-bottom: 1px solid var(--scalex-separator);
 	color: var(--scalex-text);
 	vertical-align: middle;
@@ -601,17 +608,32 @@ table .cbi-section-table-cell {
 
 /* ── Badges ─────────────────────────────────────────────────────────── */
 
-.label,
+.label {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 0;
+	border-radius: 0;
+	background: none;
+	color: var(--scalex-text-secondary);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
+	font-weight: var(--scalex-weight-medium);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	line-height: 1.4;
+	white-space: nowrap;
+}
+
 .cbi-tooltip {
 	display: inline-flex;
 	align-items: center;
 	gap: 5px;
 	padding: 3px 8px;
-	border-radius: var(--scalex-radius-pill);
-	background: var(--scalex-fill);
+	border-radius: var(--scalex-radius-xs);
+	background: var(--scalex-bg-inset);
 	color: var(--scalex-text-secondary);
 	font-size: var(--scalex-size-2xs);
-	font-weight: var(--scalex-weight-semibold);
 	line-height: 1.35;
 	white-space: nowrap;
 }
@@ -620,24 +642,21 @@ table .cbi-section-table-cell {
 	content: "";
 	width: 5px;
 	height: 5px;
-	border-radius: 50%;
+	border-radius: 1px;
 	background: currentColor;
 	flex-shrink: 0;
 }
 
 .label.success {
-	background: rgba(52, 199, 89, 0.13);
 	color: var(--scalex-success-text);
 }
 
 .label.warning {
-	background: rgba(255, 149, 0, 0.13);
 	color: var(--scalex-warning-text);
 }
 
 .label.important,
 .label.danger {
-	background: rgba(255, 59, 48, 0.1);
 	color: var(--scalex-danger-text);
 }
 

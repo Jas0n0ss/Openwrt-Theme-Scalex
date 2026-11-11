@@ -1,4 +1,4 @@
-/* ScaleX 4.0 — Sign-in */
+/* ScaleX 5.0 — Sign-in: a single flat panel on the dot grid */
 
 body.scalex-login {
 	display: flex;
@@ -9,35 +9,6 @@ body.scalex-login {
 	padding: 32px 20px;
 	position: relative;
 	overflow-x: hidden;
-}
-
-/* Soft light field behind the card. */
-body.scalex-login::before {
-	content: "";
-	position: fixed;
-	inset: 0;
-	z-index: -1;
-	background:
-		radial-gradient(ellipse 55% 48% at 28% 12%, rgba(0, 113, 227, 0.16), transparent 68%),
-		radial-gradient(ellipse 46% 42% at 80% 88%, rgba(48, 176, 199, 0.12), transparent 68%),
-		radial-gradient(ellipse 48% 40% at 58% 40%, rgba(175, 82, 222, 0.06), transparent 70%);
-	pointer-events: none;
-}
-
-html[data-theme="dark"] body.scalex-login::before {
-	background:
-		radial-gradient(ellipse 55% 48% at 28% 12%, rgba(10, 132, 255, 0.26), transparent 68%),
-		radial-gradient(ellipse 46% 42% at 80% 88%, rgba(48, 176, 199, 0.14), transparent 68%),
-		radial-gradient(ellipse 48% 40% at 58% 40%, rgba(175, 82, 222, 0.1), transparent 70%);
-}
-
-@media (prefers-color-scheme: dark) {
-	html:not([data-theme="light"]) body.scalex-login::before {
-		background:
-			radial-gradient(ellipse 55% 48% at 28% 12%, rgba(10, 132, 255, 0.26), transparent 68%),
-			radial-gradient(ellipse 46% 42% at 80% 88%, rgba(48, 176, 199, 0.14), transparent 68%),
-			radial-gradient(ellipse 48% 40% at 58% 40%, rgba(175, 82, 222, 0.1), transparent 70%);
-	}
 }
 
 .login-theme {
@@ -52,28 +23,18 @@ html[data-theme="dark"] body.scalex-login::before {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	max-width: 408px;
-	padding: 38px 38px 30px;
+	max-width: 380px;
+	padding: 32px 32px 26px;
+	border: 1px solid var(--scalex-separator);
 	border-radius: var(--scalex-radius-2xl);
 	background: var(--scalex-bg-elevated);
-	box-shadow:
-		0 0 0 1px var(--scalex-separator),
-		0 30px 80px rgba(0, 0, 0, 0.16),
-		0 2px 8px rgba(0, 0, 0, 0.05);
 	animation: scalex-login-in var(--scalex-duration-slow) var(--scalex-ease-out) both;
-}
-
-html[data-theme="dark"] .scalex-login-card {
-	box-shadow:
-		0 0 0 1px var(--scalex-separator),
-		0 30px 90px rgba(0, 0, 0, 0.7),
-		0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes scalex-login-in {
 	from {
 		opacity: 0;
-		transform: translateY(14px) scale(0.985);
+		transform: translateY(8px);
 	}
 	to {
 		opacity: 1;
@@ -86,17 +47,14 @@ html[data-theme="dark"] .scalex-login-card {
 	flex-direction: column;
 	align-items: center;
 	text-align: center;
-	margin-bottom: 24px;
+	margin-bottom: 22px;
 }
 
 .scalex-login-mark {
-	width: 58px;
-	height: 58px;
-	margin-bottom: 18px;
-	border-radius: 15px;
-	box-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.28) inset,
-		0 12px 30px rgba(0, 0, 0, 0.24);
+	width: 44px;
+	height: 44px;
+	margin-bottom: 14px;
+	border-radius: 4px;
 }
 
 .scalex-login-hostname {
@@ -104,35 +62,38 @@ html[data-theme="dark"] .scalex-login-card {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	font-size: var(--scalex-size-xl);
+	font-family: var(--scalex-font-mono);
+	font-size: var(--scalex-size-lg);
 	font-weight: var(--scalex-weight-semibold);
-	letter-spacing: -0.025em;
+	letter-spacing: 0.02em;
 	color: var(--scalex-text);
 }
 
 .scalex-login-subtitle {
-	margin-top: 5px;
-	color: var(--scalex-text-secondary);
-	font-size: var(--scalex-size-sm);
+	margin-top: 6px;
+	color: var(--scalex-text-tertiary);
+	font-family: var(--scalex-font-mono);
+	font-size: 11px;
+	letter-spacing: 0.02em;
 }
 
 .scalex-login-error {
-	margin-bottom: 18px;
-	padding: 10px 12px;
-	border: 1px solid rgba(255, 59, 48, 0.28);
-	border-radius: var(--scalex-radius-md);
-	background: rgba(255, 59, 48, 0.08);
+	margin-bottom: 16px;
+	padding: 9px 11px;
+	border: 1px solid var(--scalex-danger);
+	border-left-width: 2px;
+	border-radius: var(--scalex-radius-xs);
+	background: transparent;
 	color: var(--scalex-danger-text);
 	font-size: var(--scalex-size-xs);
 	font-weight: var(--scalex-weight-medium);
 	line-height: var(--scalex-leading-relaxed);
-	text-align: center;
 }
 
 .scalex-login-form {
 	display: flex;
 	flex-direction: column;
-	gap: 15px;
+	gap: 14px;
 	width: 100%;
 }
 
@@ -146,9 +107,11 @@ html[data-theme="dark"] .scalex-login-card {
 }
 
 .scalex-login-form .cbi-value-title {
-	font-size: var(--scalex-size-xs);
+	font-size: 10px;
 	font-weight: var(--scalex-weight-medium);
-	color: var(--scalex-text-secondary);
+	letter-spacing: var(--scalex-tracking-label);
+	text-transform: uppercase;
+	color: var(--scalex-text-tertiary);
 }
 
 .scalex-login-form .cbi-value-field {
@@ -159,10 +122,12 @@ html[data-theme="dark"] .scalex-login-card {
 	width: 100%;
 	max-width: none;
 	min-height: 44px;
-	padding: 10px 13px;
-	border-radius: var(--scalex-radius-md);
+	padding: 10px 12px;
+	border: 1px solid var(--scalex-separator);
+	border-radius: var(--scalex-radius-sm);
 	background: var(--scalex-bg-inset);
-	font-size: var(--scalex-size-md);
+	font-family: var(--scalex-font-mono);
+	font-size: var(--scalex-size-sm);
 }
 
 .scalex-login-form .cbi-page-actions {
@@ -175,23 +140,25 @@ html[data-theme="dark"] .scalex-login-card {
 
 .scalex-login-form .cbi-button-apply {
 	width: 100%;
-	min-height: 46px;
-	border-radius: var(--scalex-radius-md);
-	font-size: var(--scalex-size-base);
+	min-height: 44px;
+	border-radius: var(--scalex-radius-sm);
+	font-size: var(--scalex-size-sm);
 	font-weight: var(--scalex-weight-semibold);
+	letter-spacing: 0.06em;
 }
 
 .scalex-login-footer {
 	margin-top: 22px;
-	padding-top: 18px;
+	padding-top: 16px;
 	border-top: 1px solid var(--scalex-separator);
 	color: var(--scalex-text-tertiary);
-	font-size: var(--scalex-size-2xs);
+	font-family: var(--scalex-font-mono);
+	font-size: 10px;
 	text-align: center;
 }
 
 .scalex-login-footer .footer-link {
-	color: var(--scalex-text-secondary);
+	color: var(--scalex-text-tertiary);
 }
 
 .scalex-login-hint {
@@ -199,14 +166,14 @@ html[data-theme="dark"] .scalex-login-card {
 	align-items: center;
 	justify-content: center;
 	gap: 6px;
-	margin-top: 12px;
+	margin-top: 10px;
 	color: var(--scalex-text-tertiary);
-	font-size: var(--scalex-size-2xs);
+	font-size: 10px;
 }
 
 .scalex-login-hint .scalex-symbol {
-	width: 13px;
-	height: 13px;
+	width: 12px;
+	height: 12px;
 }
 
 @media (max-width: 520px) {
@@ -217,21 +184,15 @@ html[data-theme="dark"] .scalex-login-card {
 
 	.scalex-login-card {
 		max-width: 100%;
-		padding: 28px 22px 24px;
-		border-radius: var(--scalex-radius-xl);
+		padding: 26px 20px 22px;
+		border: 0;
+		border-radius: 0;
 		background: transparent;
-		box-shadow: none;
-	}
-
-	html[data-theme="dark"] .scalex-login-card {
-		background: transparent;
-		box-shadow: none;
 	}
 
 	.scalex-login-mark {
-		width: 52px;
-		height: 52px;
-		border-radius: 14px;
+		width: 40px;
+		height: 40px;
 	}
 
 	.login-theme {
@@ -247,7 +208,7 @@ html[data-theme="dark"] .scalex-login-card {
 }
 
 .scalex-password-wrap input {
-	padding-right: 48px;
+	padding-right: 46px;
 }
 
 .scalex-password-toggle {
@@ -256,11 +217,11 @@ html[data-theme="dark"] .scalex-login-card {
 	right: 4px;
 	display: grid;
 	place-items: center;
-	width: 38px;
-	height: 38px;
+	width: 36px;
+	height: 36px;
 	padding: 0;
 	border: 0;
-	border-radius: var(--scalex-radius-sm);
+	border-radius: var(--scalex-radius-xs);
 	background: transparent;
 	color: var(--scalex-text-tertiary);
 	cursor: pointer;

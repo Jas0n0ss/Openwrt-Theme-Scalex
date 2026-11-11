@@ -334,3 +334,30 @@ msgstr "已用内存"
 
 msgid "More clients"
 msgstr "更多客户端"
+
+msgid "WAN and LAN links"
+msgstr "WAN 与 LAN 链路"
+
+msgid "Links"
+msgstr "链路"
+
+msgid "Live · 10s"
+msgstr "实时 · 10 秒"
+
+msgid "Gateway"
+msgstr "网关"
+
+msgid "Ports"
+msgstr "端口"
+
+msgid "Reading…"
+msgstr "读取中…"
+
+msgid "Not configured"
+msgstr "未配置"
+
+msgid "Up"
+msgstr "已连接"
+
+msgid "WAN and LAN first, everything else below. Native LuCI panels follow."
+msgstr "先看 WAN 与 LAN，其余指标在后。下方为 LuCI 原生区块。"
